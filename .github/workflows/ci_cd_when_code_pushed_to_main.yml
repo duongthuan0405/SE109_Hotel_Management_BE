@@ -1,0 +1,20 @@
+name: CI/CD when code pushed to main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    # Môi trường chạy
+    runs-on: ubuntu-latest
+
+    # Các bước thực hiện
+    steps:
+      - name: Checkout code from branch main
+        uses: actions/checkout@v4
+
+      - name: Preview current branch
+        run: |
+          echo "Current branch: ${{ github.head_ref }}"
