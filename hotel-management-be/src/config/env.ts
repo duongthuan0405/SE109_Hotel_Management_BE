@@ -4,7 +4,7 @@ import { z } from 'zod';
 dotenv.config();
 
 const envSchema = z.object({
-  MDB_CONNECTION_STRING: z.string().min(1, "Invalid DB connection string"),
+  DB_CONNECTION_STRING: z.string().min(1, "Invalid DB connection string"),
   JWT_SECRET: z.string().length(32, "Invalid JWT secret (must be 32 characters)"),
   PORT: z.string().regex(/^\d+$/).transform(Number).default("4000"),
   EMAIL_USER: z.string().email("Invalid email"),
