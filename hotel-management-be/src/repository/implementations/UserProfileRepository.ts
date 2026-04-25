@@ -4,6 +4,10 @@ import { type IUserProfileRepository } from "../types/IUserProfileRepository.js"
 const mockProfiles: UserProfile[] = [];
 
 const userProfileRepository: IUserProfileRepository = {
+  findByUserId: async (userId: string): Promise<UserProfile | null> => {
+    const profile = mockProfiles.find((p) => p.userId === userId);
+    return profile || null;
+  },
   findByEmail: async (email: string): Promise<UserProfile | null> => {
     const profile = mockProfiles.find((p) => p.email === email);
     return profile || null;
@@ -15,6 +19,12 @@ const userProfileRepository: IUserProfileRepository = {
     };
     mockProfiles.push(newProfile);
     return newProfile;
+  },
+  save: async (profile: UserProfile): Promise<void> => {
+    const index = mockProfiles.findIndex((p) => p.id === profile.id);
+    if (index !== -1) {
+      mockProfiles[index] = profile;
+    }
   },
 };
 
