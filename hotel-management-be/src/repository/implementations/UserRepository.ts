@@ -20,9 +20,28 @@ const mockUsers: User[] = [
 ];
 
 const userRepository: IUserRepository = {
+  findById: async (id: string): Promise<User | null> => {
+    const user = mockUsers.find((u) => u.id === id);
+    return user || null;
+  },
   findByUsername: async (username: string): Promise<User | null> => {
     const user = mockUsers.find((u) => u.username === username);
     return user || null;
+  },
+  create: async (user: Omit<User, "id">): Promise<User> => {
+    const newUser: User = {
+      ...user,
+      id: `user-${mockUsers.length + 1}`,
+    };
+    mockUsers.push(newUser);
+    return newUser;
+  },
+  save: async (user: User): Promise<User> => {
+    const index = mockUsers.findIndex((u) => u.id === user.id);
+    if (index !== -1) {
+      mockUsers[index] = user;
+    }
+    return user;
   },
 };
 
