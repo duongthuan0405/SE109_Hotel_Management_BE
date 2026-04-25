@@ -48,6 +48,8 @@ jobs:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
           STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          OTP_LENGTH: ${{ secrets.OTP_LENGTH }}
+          OTP_DURATION_IN_MINUTES: ${{ secrets.OTP_DURATION_IN_MINUTES }}
         run: |
           npm ci
           npm run build
