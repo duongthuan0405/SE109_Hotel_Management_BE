@@ -1,6 +1,6 @@
-import { userRepository } from "@/repository/index.js";
-import { type ILoginUseCase, type LoginUCInput, type LoginUCOutput } from "@/useCases/types/ILoginUseCase.js";
-import { passwordService, jwtService } from "@/services/index.js";
+import { userRepository } from "../../repository/index.js";
+import { type ILoginUseCase, type LoginUCInput, type LoginUCOutput } from "../types/ILoginUseCase.js";
+import { passwordService, jwtService } from "../../services/index.js";
 
 const loginUseCase: ILoginUseCase = {
   execute: async (input: LoginUCInput): Promise<LoginUCOutput> => {

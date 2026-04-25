@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import request from "supertest";
-import app from "@/server.js";
+import app from "../../../server.js";
 
 describe("Auth API Integration Tests - Login", () => {
   it("should return 400 if missing username or password", async () => {

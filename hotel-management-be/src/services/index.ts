@@ -1,4 +1,5 @@
-import passwordService from "@/services/implementations/PasswordService.js";
-import jwtService from "@/services/implementations/JwtService.js";
+import passwordServiceImpl from "./implementations/PasswordService.js";
+import jwtServiceImpl from "./implementations/JwtService.js";
 
-export { passwordService, jwtService };
+export const passwordService = passwordServiceImpl;
+export const jwtService = jwtServiceImpl;

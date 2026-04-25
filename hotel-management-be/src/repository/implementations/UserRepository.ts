@@ -1,5 +1,5 @@
-import { type IUserRepository } from "@/repository/types/IUserRepository.js";
-import { type User } from "@/models/User.js";
+import { type IUserRepository } from "../types/IUserRepository.js";
+import { type User } from "../../models/User.js";
 import bcrypt from "bcryptjs";
 
 const mockPasswordHash = bcrypt.hashSync("123456", 10);
@@ -19,9 +19,11 @@ const mockUsers: User[] = [
   },
 ];
 
-export const userRepository: IUserRepository = {
+const userRepository: IUserRepository = {
   findByUsername: async (username: string): Promise<User | null> => {
     const user = mockUsers.find((u) => u.username === username);
     return user || null;
   },
 };
+
+export default userRepository;
