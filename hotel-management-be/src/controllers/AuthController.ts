@@ -1,29 +1,104 @@
 import { type Request, type Response, type NextFunction } from "express";
-import { type LoginRequestDTO, type LoginResponseDTO } from "../dtos/AuthDTO.js";
-import { loginUseCase } from "../useCases/index.js";
+import { type LoginRequestDTO, type LoginResponseDTO, type RegisterRequestDTO, type RegisterResponseDTO, type ForgotPasswordRequestDTO, type ForgotPasswordResponseDTO, type ResetPasswordRequestDTO, type ResetPasswordResponseDTO } from "../dtos/AuthDTO.js";
+import { loginUseCase, registerUseCase, forgotPasswordUseCase, resetPasswordUseCase } from "../useCases/index.js";
 import type { LoginUCInput } from "../useCases/types/ILoginUseCase.js";
+import type { RegisterUCInput } from "../useCases/types/IRegisterUseCase.js";
 
 const authController = {
+  register: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const body = req.body as RegisterRequestDTO;
+      const input: RegisterUCInput = {
+        username: body.TenDangNhap,
+        password: body.MatKhau,
+        role: body.VaiTro,
+      };
+      
+      if (body.HoTen !== undefined) input.fullName = body.HoTen;
+      if (body.CMND !== undefined) input.identityCard = body.CMND;
+      if (body.SDT !== undefined) input.phone = body.SDT;
+      if (body.Email !== undefined) input.email = body.Email;
+      if (body.DiaChi !== undefined) input.address = body.DiaChi;
+
+      const result = await registerUseCase.execute(input);
+
+      const response: RegisterResponseDTO = {
+        id: result.id,
+        TenDangNhap: result.username,
+        VaiTro: result.role,
+      };
+
+      res.status(201).json(response);
+    } catch (error: any) {
+      if (error.status) {
+        res.status(error.status).json({ message: error.message, details: error.details });
+        return;
+      }
+      next(error);
+    }
+  },
   login: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const body = req.body as LoginRequestDTO;
       
-      const input : LoginUCInput = {
+      const input: LoginUCInput = {
         username: body.TenDangNhap,
         password: body.MatKhau,
       };
 
-      // Call UseCase
       const result = await loginUseCase.execute(input);
 
-      // Map UCOutput to DTO
       const response: LoginResponseDTO = {
         token: result.token,
         VaiTro: result.role,
       };
 
       res.json(response);
-    } catch (error) {
+    } catch (error: any) {
+      if (error.status) {
+        res.status(error.status).json({ message: error.message });
+        return;
+      }
+      next(error);
+    }
+  },
+  forgotPassword: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const body = req.body as ForgotPasswordRequestDTO;
+      const input = { email: body.Email };
+      const result = await forgotPasswordUseCase.execute(input);
+      const response: ForgotPasswordResponseDTO = {
+        message: result.message,
+      };
+      if (result.otp !== undefined) response.otp = result.otp;
+
+      res.json(response);
+    } catch (error: any) {
+      if (error.status) {
+        res.status(error.status).json({ message: error.message, details: error.details });
+        return;
+      }
+      next(error);
+    }
+  },
+  resetPasswordWithOTP: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const body = req.body as ResetPasswordRequestDTO;
+      const input = {
+        email: body.Email,
+        otp: body.OTP,
+        newPassword: body.MatKhau,
+      };
+      const result = await resetPasswordUseCase.execute(input);
+      const response: ResetPasswordResponseDTO = {
+        message: result.message,
+      };
+      res.json(response);
+    } catch (error: any) {
+      if (error.status) {
+        res.status(error.status).json({ message: error.message });
+        return;
+      }
       next(error);
     }
   }

@@ -10,6 +10,8 @@ const envSchema = z.object({
   EMAIL_USER: z.string().email("Invalid email"),
   EMAIL_PASS: z.string().min(1, "Invalid email password"),
   STRIPE_SECRET_KEY: z.string().min(1, "Invalid Stripe secret key"),
+  OTP_LENGTH: z.string().length(1, "Invalid OTP length (must be 1 digit)").regex(/^\d+$/).transform(Number),
+  OTP_DURATION_IN_MINUTES: z.string().regex(/^\d+$/).transform(Number),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
