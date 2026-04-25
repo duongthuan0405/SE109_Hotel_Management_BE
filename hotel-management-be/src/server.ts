@@ -2,12 +2,15 @@ import express, { type Request, type Response } from "express";
 import env from "./config/env.js";
 import authRoutes from "./routes/authRoutes.js";
 
+import accountRoutes from "./routes/accountRoutes.js";
+
 const app = express();
 const PORT = env.PORT;
 
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
+app.use("/api/accounts", accountRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello từ Express + TypeScript!");

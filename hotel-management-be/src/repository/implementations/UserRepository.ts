@@ -20,6 +20,9 @@ const mockUsers: User[] = [
 ];
 
 const userRepository: IUserRepository = {
+  findAll: async (): Promise<User[]> => {
+    return mockUsers;
+  },
   findById: async (id: string): Promise<User | null> => {
     const user = mockUsers.find((u) => u.id === id);
     return user || null;
@@ -42,6 +45,14 @@ const userRepository: IUserRepository = {
       mockUsers[index] = user;
     }
     return user;
+  },
+  deleteById: async (id: string): Promise<boolean> => {
+    const index = mockUsers.findIndex((u) => u.id === id);
+    if (index !== -1) {
+      mockUsers.splice(index, 1);
+      return true;
+    }
+    return false;
   },
 };
 
