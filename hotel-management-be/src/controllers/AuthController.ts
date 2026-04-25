@@ -1,13 +1,14 @@
 import { type Request, type Response, type NextFunction } from "express";
-import { type LoginRequestDTO, type LoginResponseDTO } from "@/dtos/AuthDTO.js";
-import { loginUseCase } from "@/useCases/index.js";
+import { type LoginRequestDTO, type LoginResponseDTO } from "../dtos/AuthDTO.js";
+import { loginUseCase } from "../useCases/index.js";
+import type { LoginUCInput } from "../useCases/types/ILoginUseCase.js";
 
-class AuthController {
-  async login(req: Request, res: Response, next: NextFunction) {
+const authController = {
+  login: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const body = req.body as LoginRequestDTO;
       
-      const input = {
+      const input : LoginUCInput = {
         username: body.TenDangNhap,
         password: body.MatKhau,
       };
@@ -26,6 +27,6 @@ class AuthController {
       next(error);
     }
   }
-}
+};
 
-export default new AuthController();
+export default authController;

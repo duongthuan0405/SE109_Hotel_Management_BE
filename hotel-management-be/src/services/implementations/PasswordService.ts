@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { type IPasswordService } from "@/services/types/IPasswordService.js";
+import { type IPasswordService } from "../types/IPasswordService.js";
 
 const passwordService: IPasswordService = {
   hashPassword: async (password: string): Promise<string> => {

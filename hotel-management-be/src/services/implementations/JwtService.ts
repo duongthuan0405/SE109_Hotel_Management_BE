@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import { type IJwtService, type TokenPayload } from "@/services/types/IJwtService.js";
-import env from "@/config/env.js";
+import { type IJwtService, type TokenPayload } from "../types/IJwtService.js";
+import env from "../../config/env.js";
 
 const jwtService: IJwtService = {
   generateToken: async (payload: TokenPayload): Promise<string> => {

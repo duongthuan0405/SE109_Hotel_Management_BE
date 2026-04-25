@@ -1,4 +1,4 @@
-import { type IUseCase } from "@/useCases/types/IUseCase.js";
+import { type IUseCase } from "./IUseCase.js";
 
 export type LoginUCInput = {
   username: string;

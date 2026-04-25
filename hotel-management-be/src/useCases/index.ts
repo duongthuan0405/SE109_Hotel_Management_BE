@@ -1,3 +1,3 @@
-import loginUseCase from "@/useCases/implementations/LoginUseCase.js";
+import loginUseCaseImpl from "./implementations/LoginUseCase.js";
 
-export { loginUseCase };
+export const loginUseCase = loginUseCaseImpl;

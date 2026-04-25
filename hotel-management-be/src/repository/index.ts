@@ -1,3 +1,3 @@
-import { userRepository as userRepositoryImpl } from "@/repository/implementations/UserRepository.js";
+import userRepositoryImpl from "./implementations/UserRepository.js";
 
 export const userRepository = userRepositoryImpl;
