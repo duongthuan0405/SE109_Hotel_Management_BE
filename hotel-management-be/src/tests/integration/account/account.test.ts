@@ -23,7 +23,7 @@ describe("Account API Integration Tests (Self-Service)", () => {
 
   it("should get personal account info via GET /", async () => {
     const res = await request(app)
-      .get("/api/accounts/")
+      .get("/api/accounts/me")
       .set("Authorization", `Bearer ${token}`);
     
     expect(res.status).toBe(200);
@@ -34,7 +34,7 @@ describe("Account API Integration Tests (Self-Service)", () => {
 
   it("should update personal profile info via PUT /", async () => {
     const res = await request(app)
-      .put("/api/accounts/")
+      .put("/api/accounts/me")
       .set("Authorization", `Bearer ${token}`)
       .send({
         HoTen: "Nguyen Van Me",
@@ -51,14 +51,14 @@ describe("Account API Integration Tests (Self-Service)", () => {
     
     // Verify changes persisted
     const getRes = await request(app)
-      .get("/api/accounts/")
+      .get("/api/accounts/me")
       .set("Authorization", `Bearer ${token}`);
     expect(getRes.body.data.fullName).toBe("Nguyen Van Me");
   });
 
   it("should fail to change password with wrong old password", async () => {
     const res = await request(app)
-      .put("/api/accounts/change-password")
+      .put("/api/accounts/me/change-password")
       .set("Authorization", `Bearer ${token}`)
       .send({
         MatKhauCu: "wrongpass",
@@ -71,7 +71,7 @@ describe("Account API Integration Tests (Self-Service)", () => {
 
   it("should change personal password successfully via PUT /change-password", async () => {
     const res = await request(app)
-      .put("/api/accounts/change-password")
+      .put("/api/accounts/me/change-password")
       .set("Authorization", `Bearer ${token}`)
       .send({
         MatKhauCu: "123456",

@@ -11,9 +11,9 @@ const accountRoutes = Router();
 // accountRoutes.delete("/:id", roleMiddleware(["Admin"]), accountController.deleteAccount);
 
 // API cá nhân (Self-service)
-accountRoutes.get("/", accountController.getMe);
-accountRoutes.put("/", accountController.updateMe);
-accountRoutes.put("/change-password", accountController.changePassword); 
+accountRoutes.get("/me", accountController.getMe);
+accountRoutes.put("/me", accountController.updateMe);
+accountRoutes.put("/me/change-password", accountController.changePassword); 
 
 
 export default accountRoutes;
