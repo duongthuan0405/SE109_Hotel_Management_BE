@@ -6,4 +6,5 @@ export type TokenPayload = {
 
 export type IJwtService = {
   generateToken(payload: TokenPayload): Promise<string>;
+  verifyToken(token: string): TokenPayload;
 };

@@ -14,6 +14,14 @@ const jwtService: IJwtService = {
       { expiresIn: "8h" }
     );
   },
+  verifyToken: (token: string): TokenPayload => {
+    const decoded = jwt.verify(token, env.JWT_SECRET) as any;
+    return {
+      id: decoded.id,
+      role: decoded.VaiTro,
+      username: decoded.TenDangNhap,
+    };
+  },
 };
 
 export default jwtService;
