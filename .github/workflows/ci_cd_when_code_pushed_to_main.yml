@@ -31,7 +31,7 @@ jobs:
         run: |
           npm ci
           npm run build
-          # npm test
+          npm test
 
   build-container-and-push-to-registry:
     runs-on: ubuntu-latest
