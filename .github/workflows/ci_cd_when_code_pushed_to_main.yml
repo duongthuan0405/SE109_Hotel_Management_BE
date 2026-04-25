@@ -8,8 +8,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  checkout-and-build:
+  checkout-build-test:
     runs-on: ubuntu-latest
+    environment:
+      name: test
 
     strategy:
       matrix:

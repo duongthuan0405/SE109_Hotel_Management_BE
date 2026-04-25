@@ -10,9 +10,11 @@ on:
       - main
 
 jobs:
-  checkout-and-build:
+  checkout-build-test:
     # Môi trường chạy
     runs-on: ubuntu-latest
+    environment:
+      name: test
 
     strategy:
       matrix:
