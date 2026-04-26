@@ -4,6 +4,10 @@ import authRoutes from "./routes/authRoutes.js";
 import accountRoutes from "./routes/accountRoutes.js";
 import roomTypeRoutes from "./routes/roomTypeRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
+import serviceRoutes from "./routes/serviceRoutes.js";
+import roomRoutes from "./routes/roomRoutes.js";
+import customerRoutes from "./routes/customerRoutes.js";
+import staffRoutes from "./routes/staffRoutes.js";
 
 const app = express();
 const PORT = env.PORT;
@@ -14,6 +18,10 @@ app.use("/api/auth", authRoutes);
 app.use("/api/accounts", accountRoutes);
 app.use("/api/room-types", roomTypeRoutes);
 app.use("/api/bookings", bookingRoutes);
+app.use("/api/services", serviceRoutes);
+app.use("/api/rooms", roomRoutes);
+app.use("/api/customers", customerRoutes);
+app.use("/api/staffs", staffRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello từ Express + TypeScript!");

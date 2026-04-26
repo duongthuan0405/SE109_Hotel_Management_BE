@@ -3,21 +3,19 @@ import request from "supertest";
 import app from "../../../server.js";
 
 describe("Auth API Integration Tests - Register", () => {
-  it("should return 400 if missing username, password, or role", async () => {
+  it("should return 400 if missing username or password", async () => {
     const res = await request(app).post("/api/auth/register").send({
       TenDangNhap: "newuser",
-      MatKhau: "password123",
-      // Missing VaiTro
+      // Missing MatKhau
     });
     expect(res.status).toBe(400);
-    expect(res.body.message).toBe("Tên đăng nhập, mật khẩu và vai trò là bắt buộc");
+    expect(res.body.message).toBe("Tên đăng nhập và mật khẩu là bắt buộc");
   });
 
   it("should return 400 if password is less than 6 characters", async () => {
     const res = await request(app).post("/api/auth/register").send({
       TenDangNhap: "newuser",
       MatKhau: "12345",
-      VaiTro: "Customer",
     });
     expect(res.status).toBe(400);
     expect(res.body.message).toBe("Mật khẩu phải có ít nhất 6 ký tự");
@@ -27,23 +25,22 @@ describe("Auth API Integration Tests - Register", () => {
     const res = await request(app).post("/api/auth/register").send({
       TenDangNhap: "admin",
       MatKhau: "password123",
-      VaiTro: "Admin",
     });
     expect(res.status).toBe(409);
     expect(res.body.message).toBe("Tài khoản đã tồn tại");
   });
 
-  it("should successfully register a new user and return 201", async () => {
+  it("should successfully register a new user as Customer and ignore provided VaiTro", async () => {
     const res = await request(app).post("/api/auth/register").send({
-      TenDangNhap: "newuser123",
+      TenDangNhap: "newuser123_reg",
       MatKhau: "password123",
-      VaiTro: "Customer",
+      VaiTro: "Admin", // Should be ignored
       HoTen: "New User",
       Email: "newuser@example.com",
     });
     expect(res.status).toBe(201);
     expect(res.body).toHaveProperty("id");
-    expect(res.body.TenDangNhap).toBe("newuser123");
-    expect(res.body.VaiTro).toBe("Customer");
+    expect(res.body.TenDangNhap).toBe("newuser123_reg");
+    expect(res.body.VaiTro).toBe("Customer"); // Must be Customer
   });
 });

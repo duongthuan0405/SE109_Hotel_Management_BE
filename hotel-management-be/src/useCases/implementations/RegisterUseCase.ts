@@ -1,14 +1,15 @@
-import { userRepository, userProfileRepository } from "../../repository/index.js";
+import { userRepository } from "../../repository/index.js";
 import { type IRegisterUseCase, type RegisterUCInput, type RegisterUCOutput } from "../types/IRegisterUseCase.js";
 import { passwordService } from "../../services/index.js";
+import { createCustomerUseCase } from "../index.js";
 import type { User } from "../../models/User.js";
 
 const registerUseCase: IRegisterUseCase = {
   execute: async (input: RegisterUCInput): Promise<RegisterUCOutput> => {
-    const { username, password, role, fullName, identityCard, phone, email, address } = input;
+    const { username, password, fullName, identityCard, phone, email, address } = input;
 
-    if (!username || !password || !role) {
-      throw { status: 400, message: "Tên đăng nhập, mật khẩu và vai trò là bắt buộc" };
+    if (!username || !password) {
+      throw { status: 400, message: "Tên đăng nhập và mật khẩu là bắt buộc" };
     }
 
     if (password.length < 6) {
@@ -25,21 +26,20 @@ const registerUseCase: IRegisterUseCase = {
     const userToCreate: Omit<User, "id"> = {
       username,
       passwordHash,
-      role,
+      role: "Customer",
     };
     
     const newUser = await userRepository.create(userToCreate);
 
-    if (role === "Customer" || email) {
-      await userProfileRepository.create({
-        userId: newUser.id,
-        fullName: fullName || "Khách hàng mới",
-        identityCard: identityCard || "CMND_" + Date.now(),
-        phone: phone || "0000000000",
-        email: email || username,
-        address: address || "",
-      });
-    }
+    // Sử dụng CreateCustomerUseCase để tạo profile khách hàng (có MaKH)
+    await createCustomerUseCase.execute({
+      HoTen: fullName || "Khách hàng mới",
+      CMND: identityCard || "CMND_" + Date.now(),
+      SDT: phone || "0000000000",
+      Email: email || username,
+      DiaChi: address || "",
+      TaiKhoanId: newUser.id,
+    });
 
     return {
       id: newUser.id,

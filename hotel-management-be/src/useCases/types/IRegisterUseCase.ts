@@ -3,7 +3,6 @@ import { type IUseCase } from "./IUseCase.js";
 export type RegisterUCInput = {
   username: string;
   password: string;
-  role: string;
   fullName?: string;
   identityCard?: string;
   phone?: string;

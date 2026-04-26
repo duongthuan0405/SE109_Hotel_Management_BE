@@ -1,13 +1,7 @@
 import { type IUseCase } from "./IUseCase.js";
 import { type User } from "../../models/User.js";
 
-export type AccountUCOutput = Omit<User, "passwordHash"> & {
-  fullName?: string | undefined;
-  identityCard?: string | undefined;
-  phone?: string | undefined;
-  email?: string | undefined;
-  address?: string | undefined;
-};
+export type AccountUCOutput = Omit<User, "passwordHash">;
 
 export type IGetAllAccountsUseCase = IUseCase<void, AccountUCOutput[]>;
 
@@ -23,11 +17,6 @@ export type ICreateAccountUseCase = IUseCase<CreateAccountUCInput, AccountUCOutp
 
 export type UpdateAccountUCInput = {
   id: string;
-  fullName?: string | undefined;
-  identityCard?: string | undefined;
-  phone?: string | undefined;
-  email?: string | undefined;
-  address?: string | undefined;
   role?: string | undefined;
 };
 export type IUpdateAccountUseCase = IUseCase<UpdateAccountUCInput, AccountUCOutput>;

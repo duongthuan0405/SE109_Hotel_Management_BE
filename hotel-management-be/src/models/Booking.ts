@@ -13,6 +13,7 @@ export type Booking = {
   endDate: Date; // NgayDi
   guestCount: number; // SoKhach
   deposit: number; // TienCoc
+  totalAmount: number; // TongTien
   details: BookingDetail[]; // ChiTietDatPhong
   status: "Pending" | "Confirmed" | "CheckedIn" | "CheckedOut" | "Cancelled" | "NoShow"; // TrangThai
   createdAt?: Date | undefined;

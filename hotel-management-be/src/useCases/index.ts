@@ -49,6 +49,12 @@ import customerUpdateBookingUseCaseImpl from "./implementations/CustomerUpdateBo
 import customerCancelBookingUseCaseImpl from "./implementations/CustomerCancelBookingUseCase.js";
 import customerDeleteBookingUseCaseImpl from "./implementations/CustomerDeleteBookingUseCase.js";
 
+import getAllServicesUseCaseImpl from "./implementations/GetAllServicesUseCase.js";
+import getServiceByIdUseCaseImpl from "./implementations/GetServiceByIdUseCase.js";
+import createServiceUseCaseImpl from "./implementations/CreateServiceUseCase.js";
+import updateServiceUseCaseImpl from "./implementations/UpdateServiceUseCase.js";
+import deleteServiceUseCaseImpl from "./implementations/DeleteServiceUseCase.js";
+
 export const staffGetAllBookingsUseCase = staffGetAllBookingsUseCaseImpl;
 export const staffGetBookingByIdUseCase = staffGetBookingByIdUseCaseImpl;
 export const staffCreateBookingUseCase = staffCreateBookingUseCaseImpl;
@@ -63,3 +69,51 @@ export const customerCreateBookingUseCase = customerCreateBookingUseCaseImpl;
 export const customerUpdateBookingUseCase = customerUpdateBookingUseCaseImpl;
 export const customerCancelBookingUseCase = customerCancelBookingUseCaseImpl;
 export const customerDeleteBookingUseCase = customerDeleteBookingUseCaseImpl;
+
+export const getAllServicesUseCase = getAllServicesUseCaseImpl;
+export const getServiceByIdUseCase = getServiceByIdUseCaseImpl;
+export const createServiceUseCase = createServiceUseCaseImpl;
+export const updateServiceUseCase = updateServiceUseCaseImpl;
+export const deleteServiceUseCase = deleteServiceUseCaseImpl;
+
+import getAllRoomsUseCaseImpl from "./implementations/GetAllRoomsUseCase.js";
+import getRoomByIdUseCaseImpl from "./implementations/GetRoomByIdUseCase.js";
+import createRoomUseCaseImpl from "./implementations/CreateRoomUseCase.js";
+import updateRoomUseCaseImpl from "./implementations/UpdateRoomUseCase.js";
+import deleteRoomUseCaseImpl from "./implementations/DeleteRoomUseCase.js";
+import updateRoomStatusUseCaseImpl from "./implementations/UpdateRoomStatusUseCase.js";
+
+export const getAllRoomsUseCase = getAllRoomsUseCaseImpl;
+export const getRoomByIdUseCase = getRoomByIdUseCaseImpl;
+export const createRoomUseCase = createRoomUseCaseImpl;
+export const updateRoomUseCase = updateRoomUseCaseImpl;
+export const deleteRoomUseCase = deleteRoomUseCaseImpl;
+export const updateRoomStatusUseCase = updateRoomStatusUseCaseImpl;
+
+import getAllCustomersUseCaseImpl from "./implementations/GetAllCustomersUseCase.js";
+import getCustomerByIdUseCaseImpl from "./implementations/GetCustomerByIdUseCase.js";
+import getCustomerByUserIdUseCaseImpl from "./implementations/GetCustomerByUserIdUseCase.js";
+import createCustomerUseCaseImpl from "./implementations/CreateCustomerUseCase.js";
+import updateCustomerUseCaseImpl from "./implementations/UpdateCustomerUseCase.js";
+import deleteCustomerUseCaseImpl from "./implementations/DeleteCustomerUseCase.js";
+
+export const getAllCustomersUseCase = getAllCustomersUseCaseImpl;
+export const getCustomerByIdUseCase = getCustomerByIdUseCaseImpl;
+export const getCustomerByUserIdUseCase = getCustomerByUserIdUseCaseImpl;
+export const createCustomerUseCase = createCustomerUseCaseImpl;
+export const updateCustomerUseCase = updateCustomerUseCaseImpl;
+export const deleteCustomerUseCase = deleteCustomerUseCaseImpl;
+
+import getAllStaffsUseCaseImpl from "./implementations/GetAllStaffsUseCase.js";
+import getStaffByIdUseCaseImpl from "./implementations/GetStaffByIdUseCase.js";
+import getStaffByUserIdUseCaseImpl from "./implementations/GetStaffByUserIdUseCase.js";
+import createStaffUseCaseImpl from "./implementations/CreateStaffUseCase.js";
+import updateStaffUseCaseImpl from "./implementations/UpdateStaffUseCase.js";
+import deleteStaffUseCaseImpl from "./implementations/DeleteStaffUseCase.js";
+
+export const getAllStaffsUseCase = getAllStaffsUseCaseImpl;
+export const getStaffByIdUseCase = getStaffByIdUseCaseImpl;
+export const getStaffByUserIdUseCase = getStaffByUserIdUseCaseImpl;
+export const createStaffUseCase = createStaffUseCaseImpl;
+export const updateStaffUseCase = updateStaffUseCaseImpl;
+export const deleteStaffUseCase = deleteStaffUseCaseImpl;

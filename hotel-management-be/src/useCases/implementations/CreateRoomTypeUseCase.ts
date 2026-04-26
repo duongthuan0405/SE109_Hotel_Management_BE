@@ -11,6 +11,8 @@ const createRoomTypeUseCase: ICreateRoomTypeUseCase = {
     return await roomTypeRepository.create({
       code: input.code,
       name: input.name,
+      price: input.price,
+      maxOccupancy: input.maxOccupancy,
     });
   },
 };

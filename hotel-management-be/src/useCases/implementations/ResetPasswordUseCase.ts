@@ -1,4 +1,4 @@
-import { userRepository, userProfileRepository, resetPasswordOTPRepository } from "../../repository/index.js";
+import { userRepository, staffRepository, customerRepository, resetPasswordOTPRepository } from "../../repository/index.js";
 import { type IResetPasswordUseCase, type ResetPasswordUCInput, type ResetPasswordUCOutput } from "../types/IResetPasswordUseCase.js";
 import { passwordService } from "../../services/index.js";
 
@@ -14,17 +14,29 @@ const resetPasswordUseCase: IResetPasswordUseCase = {
       throw { status: 400, message: "Mật khẩu mới phải có ít nhất 6 ký tự" };
     }
 
-    const profile = await userProfileRepository.findByEmail(email);
-    if (!profile) {
+    // Tìm userId từ email (kiểm tra cả Staff và Customer)
+    let userId: string | undefined;
+    
+    const staff = await staffRepository.findByEmail(email);
+    if (staff) {
+      userId = staff.userId;
+    } else {
+      const customer = await customerRepository.findByEmail(email);
+      if (customer) {
+        userId = customer.userId;
+      }
+    }
+
+    if (!userId) {
       throw { status: 404, message: "Tài khoản không tồn tại" };
     }
 
-    const otpRecord = await resetPasswordOTPRepository.findByUserIdAndOtp(profile.userId, otp);
+    const otpRecord = await resetPasswordOTPRepository.findByUserIdAndOtp(userId, otp);
     if (!otpRecord || otpRecord.expiresAt < Date.now()) {
       throw { status: 400, message: "Mã OTP không chính xác hoặc đã hết hạn" };
     }
 
-    const user = await userRepository.findById(profile.userId);
+    const user = await userRepository.findById(userId);
     if (!user) {
       throw { status: 404, message: "Tài khoản không tồn tại" };
     }

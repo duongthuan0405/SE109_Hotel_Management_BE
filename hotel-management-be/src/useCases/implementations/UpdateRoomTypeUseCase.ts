@@ -20,6 +20,14 @@ const updateRoomTypeUseCase: IUpdateRoomTypeUseCase = {
       roomType.name = input.name;
     }
 
+    if (input.price !== undefined) {
+      roomType.price = input.price;
+    }
+
+    if (input.maxOccupancy !== undefined) {
+      roomType.maxOccupancy = input.maxOccupancy;
+    }
+
     return await roomTypeRepository.save(roomType);
   },
 };

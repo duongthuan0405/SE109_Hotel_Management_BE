@@ -135,15 +135,19 @@ const bookingController = {
   },
   staffCreateWalkIn: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const body = req.body as CreateBookingRequestDTO;
+      const body = req.body;
       const result = await staffCreateWalkInBookingUseCase.execute({
         customerId: body.KhachHang,
+        fullName: body.HoTen,
+        identityCard: body.CMND,
+        phone: body.SDT,
+        email: body.Email,
         roomClass: body.HangPhong,
         startDate: new Date(body.NgayDen),
         endDate: new Date(body.NgayDi),
         guestCount: body.SoKhach,
         deposit: body.TienCoc,
-        details: body.ChiTietDatPhong?.map(d => ({ code: d.MaCTDP, roomId: d.Phong }))
+        details: body.ChiTietDatPhong?.map((d: any) => ({ code: d.MaCTDP, roomId: d.Phong }))
       });
       res.status(201).json(mapToDTO(result));
     } catch (error) { next(error); }
