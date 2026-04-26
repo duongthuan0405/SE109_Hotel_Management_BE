@@ -12,6 +12,13 @@ import {
   updateRoomTypeUseCase,
   deleteRoomTypeUseCase,
 } from "../useCases/index.js";
+import { type RoomTypeUCOutput } from "../useCases/types/IRoomTypeUseCases.js";
+
+const mapToDTO = (roomType: RoomTypeUCOutput): RoomTypeDataDTO => ({
+  _id: roomType.id,
+  MaLoaiPhong: roomType.code,
+  TenLoaiPhong: roomType.name,
+});
 
 const roomTypeController = {
   getAllRoomTypes: async (req: Request, res: Response, next: NextFunction) => {
@@ -20,7 +27,7 @@ const roomTypeController = {
       const response: RoomTypeResponseWrapper<RoomTypeDataDTO[]> = {
         success: true,
         message: "Lấy danh sách loại phòng thành công",
-        data: result,
+        data: result.map(mapToDTO),
       };
       res.status(200).json(response);
     } catch (error: any) {
@@ -39,7 +46,7 @@ const roomTypeController = {
       const response: RoomTypeResponseWrapper<RoomTypeDataDTO> = {
         success: true,
         message: "Lấy thông tin loại phòng thành công",
-        data: result,
+        data: mapToDTO(result),
       };
       res.status(200).json(response);
     } catch (error: any) {
@@ -62,7 +69,7 @@ const roomTypeController = {
       const response: RoomTypeResponseWrapper<RoomTypeDataDTO> = {
         success: true,
         message: "Tạo loại phòng thành công",
-        data: result,
+        data: mapToDTO(result),
       };
       res.status(201).json(response);
     } catch (error: any) {
@@ -86,7 +93,7 @@ const roomTypeController = {
       const response: RoomTypeResponseWrapper<RoomTypeDataDTO> = {
         success: true,
         message: "Cập nhật loại phòng thành công",
-        data: result,
+        data: mapToDTO(result),
       };
       res.status(200).json(response);
     } catch (error: any) {
@@ -101,10 +108,11 @@ const roomTypeController = {
 
   deleteRoomType: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await deleteRoomTypeUseCase.execute({ id: req.params.id as string });
-      const response: RoomTypeResponseWrapper<undefined> = {
+      const result = await deleteRoomTypeUseCase.execute({ id: req.params.id as string });
+      const response: RoomTypeResponseWrapper<RoomTypeDataDTO> = {
         success: true,
         message: "Xóa loại phòng thành công",
+        data: mapToDTO(result),
       };
       res.status(200).json(response);
     } catch (error: any) {

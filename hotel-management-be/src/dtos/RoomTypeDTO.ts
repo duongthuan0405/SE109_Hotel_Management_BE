@@ -7,7 +7,11 @@ export type RoomTypeResponseWrapper<T = undefined> = {
   error?: string;
 };
 
-export type RoomTypeDataDTO = RoomType;
+export type RoomTypeDataDTO = {
+  _id: string;
+  MaLoaiPhong: string;
+  TenLoaiPhong: string;
+};
 
 export type CreateRoomTypeRequestDTO = {
   MaLoaiPhong: string;

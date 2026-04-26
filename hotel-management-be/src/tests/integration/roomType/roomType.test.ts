@@ -45,7 +45,7 @@ describe("RoomType API Integration Tests", () => {
       const res = await request(app).get("/api/room-types/1");
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.code).toBe("STD");
+      expect(res.body.data.MaLoaiPhong).toBe("STD");
     });
 
     it("should return 404 for non-existent room type", async () => {
@@ -85,10 +85,10 @@ describe("RoomType API Integration Tests", () => {
         });
       expect(res.status).toBe(201);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.code).toBe("SUI");
-      expect(res.body.data.name).toBe("Phòng Suite");
+      expect(res.body.data.MaLoaiPhong).toBe("SUI");
+      expect(res.body.data.TenLoaiPhong).toBe("Phòng Suite");
       
-      createdRoomTypeId = res.body.data.id;
+      createdRoomTypeId = res.body.data._id;
     });
 
     it("should deny creation if code already exists", async () => {
@@ -99,7 +99,7 @@ describe("RoomType API Integration Tests", () => {
           MaLoaiPhong: "SUI", // Duplicate code
           TenLoaiPhong: "Phòng Suite 2",
         });
-      expect(res.status).toBe(400);
+      expect(res.status).toBe(409);
       expect(res.body.success).toBe(false);
     });
 
@@ -113,8 +113,8 @@ describe("RoomType API Integration Tests", () => {
         });
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.code).toBe("SUI-PRO");
-      expect(res.body.data.name).toBe("Phòng Suite Pro");
+      expect(res.body.data.MaLoaiPhong).toBe("SUI-PRO");
+      expect(res.body.data.TenLoaiPhong).toBe("Phòng Suite Pro");
     });
 
     it("should deny deletion if authenticated as Customer", async () => {

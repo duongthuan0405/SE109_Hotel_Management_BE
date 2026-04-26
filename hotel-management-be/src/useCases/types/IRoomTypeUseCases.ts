@@ -22,4 +22,4 @@ export type UpdateRoomTypeUCInput = {
 export type IUpdateRoomTypeUseCase = IUseCase<UpdateRoomTypeUCInput, RoomTypeUCOutput>;
 
 export type DeleteRoomTypeUCInput = { id: string };
-export type IDeleteRoomTypeUseCase = IUseCase<DeleteRoomTypeUCInput, void>;
+export type IDeleteRoomTypeUseCase = IUseCase<DeleteRoomTypeUCInput, RoomTypeUCOutput>;
