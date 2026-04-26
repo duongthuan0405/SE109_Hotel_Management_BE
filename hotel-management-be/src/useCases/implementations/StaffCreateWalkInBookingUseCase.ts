@@ -61,6 +61,11 @@ const staffCreateWalkInBookingUseCase: IStaffCreateWalkInBookingUseCase = {
 
       let assignedRoomId: string | null = null;
       for (const room of availableRoomsOfClass) {
+        // Kiểm tra trạng thái phòng thực tế nếu ngày nhận phòng là hôm nay
+        if (start <= now && ["Occupied", "Cleaning"].includes(room.status)) {
+          continue;
+        }
+
         const overlap = await bookingRepository.findOverlappingByRoom(room.id, start, end);
         if (!overlap) {
           assignedRoomId = room.id;

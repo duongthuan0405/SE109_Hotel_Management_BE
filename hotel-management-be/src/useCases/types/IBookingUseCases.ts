@@ -33,13 +33,17 @@ export type UpdateBookingUCInput = {
   details?: { code: string; roomId: string }[] | undefined;
 };
 
+export type CancelBookingUCInput = {
+  id: string;
+};
+
 // --- Staff UseCases ---
 export type IStaffGetAllBookingsUseCase = IUseCase<void, BookingUCOutput[]>;
 export type IStaffGetBookingByIdUseCase = IUseCase<{ id: string }, BookingUCOutput>;
 export type IStaffCreateBookingUseCase = IUseCase<CreateBookingUCInput, BookingUCOutput>;
 export type IStaffCreateWalkInBookingUseCase = IUseCase<CreateWalkInBookingUCInput, BookingUCOutput>;
 export type IStaffUpdateBookingUseCase = IUseCase<UpdateBookingUCInput, BookingUCOutput>;
-export type IStaffCancelBookingUseCase = IUseCase<{ id: string }, BookingUCOutput>;
+export type IStaffCancelBookingUseCase = IUseCase<CancelBookingUCInput, BookingUCOutput>;
 export type IStaffDeleteBookingUseCase = IUseCase<{ id: string }, BookingUCOutput>;
 
 // --- Customer UseCases ---
@@ -47,5 +51,5 @@ export type ICustomerGetMyBookingsUseCase = IUseCase<{ customerId: string }, Boo
 export type ICustomerGetBookingByIdUseCase = IUseCase<{ id: string, customerId: string }, BookingUCOutput>;
 export type ICustomerCreateBookingUseCase = IUseCase<CreateBookingUCInput, BookingUCOutput>;
 export type ICustomerUpdateBookingUseCase = IUseCase<UpdateBookingUCInput & { customerId: string }, BookingUCOutput>;
-export type ICustomerCancelBookingUseCase = IUseCase<{ id: string, customerId: string }, BookingUCOutput>;
+export type ICustomerCancelBookingUseCase = IUseCase<CancelBookingUCInput & { customerId: string }, BookingUCOutput>;
 export type ICustomerDeleteBookingUseCase = IUseCase<{ id: string, customerId: string }, BookingUCOutput>;

@@ -13,7 +13,38 @@ const staffUpdateBookingUseCase: IStaffUpdateBookingUseCase = {
     // 1. Nếu có thay đổi ngày tháng hoặc phòng, kiểm tra trùng lịch
     const newStart = startDate ? new Date(startDate) : existingBooking.startDate;
     const newEnd = endDate ? new Date(endDate) : existingBooking.endDate;
-    const newDetails = details || existingBooking.details;
+    let newDetails = details || existingBooking.details;
+
+    // Logic tự động gán phòng nếu chuyển sang CheckedIn mà chưa có phòng
+    if (status === "CheckedIn" && (!newDetails || newDetails.length === 0)) {
+      const allRooms = await roomRepository.findAll();
+      const availableRoomsOfClass = allRooms.filter(r => r.roomTypeId === existingBooking.roomClass && r.status !== "Maintenance");
+
+      let assignedRoomId: string | null = null;
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+
+      for (const room of availableRoomsOfClass) {
+        // Kiểm tra trạng thái thực tế
+        if (newStart <= now && ["Occupied", "Cleaning"].includes(room.status)) {
+          continue;
+        }
+        const overlap = await bookingRepository.findOverlappingByRoom(room.id, newStart, newEnd, id);
+        if (!overlap) {
+          assignedRoomId = room.id;
+          break;
+        }
+      }
+
+      if (assignedRoomId) {
+        newDetails = [{
+          code: `CTDP-AUTO-${Date.now()}`,
+          roomId: assignedRoomId
+        }];
+      } else {
+        throw { status: 400, message: "Không thể tự động gán phòng vì không còn phòng trống cho hạng phòng này" };
+      }
+    }
 
     if (startDate || endDate || details) {
       for (const detail of newDetails) {

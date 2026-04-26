@@ -1,20 +1,32 @@
-import { bookingRepository } from "../../repository/index.js";
-import type { ICustomerCancelBookingUseCase, BookingUCOutput } from "../types/IBookingUseCases.js";
+import { bookingRepository, roomRepository } from "../../repository/index.js";
+import type { ICustomerCancelBookingUseCase, CancelBookingUCInput, BookingUCOutput } from "../types/IBookingUseCases.js";
 
 const customerCancelBookingUseCase: ICustomerCancelBookingUseCase = {
-  execute: async (input: { id: string, customerId: string }): Promise<BookingUCOutput> => {
-    const booking = await bookingRepository.findById(input.id);
+  execute: async (input: CancelBookingUCInput & { customerId: string }): Promise<BookingUCOutput> => {
+    const { id, customerId } = input;
+
+    const booking = await bookingRepository.findById(id);
     if (!booking) {
-      throw { status: 404, message: "Đặt phòng không tồn tại" };
+      throw { status: 404, message: "Đơn đặt phòng không tồn tại" };
     }
 
-    // Ownership check
-    if (booking.customerId !== input.customerId) {
-      throw { status: 403, message: "Bạn không có quyền hủy đặt phòng này" };
+    // Kiểm tra quyền sở hữu
+    if (booking.customerId !== customerId) {
+      throw { status: 403, message: "Bạn không có quyền hủy đơn đặt phòng này" };
     }
 
+    // 1. Cập nhật trạng thái đơn đặt phòng
     booking.status = "Cancelled";
-    return await bookingRepository.save(booking);
+    const updatedBooking = await bookingRepository.save(booking);
+
+    // 2. Giải phóng các phòng liên quan
+    if (updatedBooking.details && updatedBooking.details.length > 0) {
+      for (const detail of updatedBooking.details) {
+        await roomRepository.updateStatus(detail.roomId, "Available");
+      }
+    }
+
+    return updatedBooking;
   },
 };
 
