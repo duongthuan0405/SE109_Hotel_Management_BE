@@ -1,0 +1,193 @@
+import { type Request, type Response, type NextFunction } from "express";
+import { type CreateBookingRequestDTO, type UpdateBookingRequestDTO, type BookingDataDTO } from "../dtos/BookingDTO.js";
+import {
+  staffCreateBookingUseCase,
+  staffCreateWalkInBookingUseCase,
+  staffGetAllBookingsUseCase,
+  staffGetBookingByIdUseCase,
+  staffUpdateBookingUseCase,
+  staffCancelBookingUseCase,
+  staffDeleteBookingUseCase,
+  customerCreateBookingUseCase,
+  customerGetMyBookingsUseCase,
+  customerGetBookingByIdUseCase,
+  customerUpdateBookingUseCase,
+  customerCancelBookingUseCase,
+  customerDeleteBookingUseCase,
+} from "../useCases/index.js";
+import type { BookingUCOutput } from "../useCases/types/IBookingUseCases.js";
+
+const mapToDTO = (booking: BookingUCOutput): BookingDataDTO => ({
+  _id: booking.id,
+  MaDatPhong: booking.code,
+  KhachHang: booking.customerId,
+  HangPhong: booking.roomClass,
+  NgayDen: booking.startDate,
+  NgayDi: booking.endDate,
+  SoKhach: booking.guestCount,
+  TienCoc: booking.deposit,
+  ChiTietDatPhong: booking.details.map(d => ({
+    MaCTDP: d.code,
+    Phong: d.roomId
+  })),
+  TrangThai: booking.status,
+  createdAt: booking.createdAt,
+  updatedAt: booking.updatedAt,
+});
+
+const bookingController = {
+  // ==========================================
+  // CUSTOMER ENDPOINTS (Wrapped DTOs + Ownership Check)
+  // ==========================================
+  customerCreate: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const body = req.body as CreateBookingRequestDTO;
+      const customerId = (req as any).user?.role === 'Customer' ? (req as any).user.id : body.KhachHang;
+      
+      const result = await customerCreateBookingUseCase.execute({
+        customerId,
+        roomClass: body.HangPhong,
+        startDate: new Date(body.NgayDen),
+        endDate: new Date(body.NgayDi),
+        guestCount: body.SoKhach,
+        deposit: body.TienCoc,
+        details: body.ChiTietDatPhong?.map(d => ({ code: d.MaCTDP, roomId: d.Phong }))
+      });
+      res.status(201).json({ success: true, message: "Tạo đặt phòng thành công", data: mapToDTO(result) });
+    } catch (error) { next(error); }
+  },
+  customerGetAll: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = (req as any).user;
+      const result = await customerGetMyBookingsUseCase.execute({ customerId: user.id });
+      res.status(200).json({ success: true, message: "Lấy danh sách đặt phòng thành công", data: result.map(mapToDTO) });
+    } catch (error) { next(error); }
+  },
+  customerGetByCustomerId: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const customerId = req.params.customerId as string;
+      const result = await customerGetMyBookingsUseCase.execute({ customerId });
+      res.status(200).json({ success: true, message: "Lấy danh sách đặt phòng thành công", data: result.map(mapToDTO) });
+    } catch (error) { next(error); }
+  },
+  customerGetById: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await customerGetBookingByIdUseCase.execute({ 
+        id: req.params.id as string,
+        customerId: (req as any).user.id
+      });
+      res.status(200).json({ success: true, message: "Lấy thông tin đặt phòng thành công", data: mapToDTO(result) });
+    } catch (error) { next(error); }
+  },
+  customerUpdate: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const body = req.body as UpdateBookingRequestDTO;
+      const result = await customerUpdateBookingUseCase.execute({
+        id: req.params.id as string,
+        customerId: (req as any).user.id,
+        roomClass: body.HangPhong,
+        startDate: body.NgayDen ? new Date(body.NgayDen) : undefined,
+        endDate: body.NgayDi ? new Date(body.NgayDi) : undefined,
+        guestCount: body.SoKhach,
+        deposit: body.TienCoc,
+        status: body.TrangThai,
+        details: body.ChiTietDatPhong?.map(d => ({ code: d.MaCTDP, roomId: d.Phong }))
+      });
+      res.status(200).json({ success: true, message: "Cập nhật đặt phòng thành công", data: mapToDTO(result) });
+    } catch (error) { next(error); }
+  },
+  customerCancel: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await customerCancelBookingUseCase.execute({ 
+        id: req.params.id as string,
+        customerId: (req as any).user.id
+      });
+      res.status(200).json({ success: true, message: "Hủy đặt phòng thành công", data: mapToDTO(result) });
+    } catch (error) { next(error); }
+  },
+  customerDelete: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await customerDeleteBookingUseCase.execute({ 
+        id: req.params.id as string,
+        customerId: (req as any).user.id
+      });
+      res.status(200).json({ success: true, message: "Xóa đặt phòng thành công", data: mapToDTO(result) });
+    } catch (error) { next(error); }
+  },
+
+  // ==========================================
+  // STAFF ENDPOINTS (Raw JSON - No Ownership Check)
+  // ==========================================
+  staffCreate: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const body = req.body as CreateBookingRequestDTO;
+      const result = await staffCreateBookingUseCase.execute({
+        customerId: body.KhachHang,
+        roomClass: body.HangPhong,
+        startDate: new Date(body.NgayDen),
+        endDate: new Date(body.NgayDi),
+        guestCount: body.SoKhach,
+        deposit: body.TienCoc,
+        details: body.ChiTietDatPhong?.map(d => ({ code: d.MaCTDP, roomId: d.Phong }))
+      });
+      res.status(201).json(mapToDTO(result));
+    } catch (error) { next(error); }
+  },
+  staffCreateWalkIn: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const body = req.body as CreateBookingRequestDTO;
+      const result = await staffCreateWalkInBookingUseCase.execute({
+        customerId: body.KhachHang,
+        roomClass: body.HangPhong,
+        startDate: new Date(body.NgayDen),
+        endDate: new Date(body.NgayDi),
+        guestCount: body.SoKhach,
+        deposit: body.TienCoc,
+        details: body.ChiTietDatPhong?.map(d => ({ code: d.MaCTDP, roomId: d.Phong }))
+      });
+      res.status(201).json(mapToDTO(result));
+    } catch (error) { next(error); }
+  },
+  staffGetAll: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await staffGetAllBookingsUseCase.execute();
+      res.status(200).json(result.map(mapToDTO));
+    } catch (error) { next(error); }
+  },
+  staffGetById: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await staffGetBookingByIdUseCase.execute({ id: req.params.id as string});
+      res.status(200).json(mapToDTO(result));
+    } catch (error) { next(error); }
+  },
+  staffUpdate: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const body = req.body as UpdateBookingRequestDTO;
+      const result = await staffUpdateBookingUseCase.execute({
+        id: req.params.id as string,
+        roomClass: body.HangPhong,
+        startDate: body.NgayDen ? new Date(body.NgayDen) : undefined,
+        endDate: body.NgayDi ? new Date(body.NgayDi) : undefined,
+        guestCount: body.SoKhach,
+        deposit: body.TienCoc,
+        status: body.TrangThai,
+        details: body.ChiTietDatPhong?.map(d => ({ code: d.MaCTDP, roomId: d.Phong }))
+      });
+      res.status(200).json(mapToDTO(result));
+    } catch (error) { next(error); }
+  },
+  staffCancel: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await staffCancelBookingUseCase.execute({ id: req.params.id as string });
+      res.status(200).json(mapToDTO(result));
+    } catch (error) { next(error); }
+  },
+  staffDelete: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await staffDeleteBookingUseCase.execute({ id: req.params.id as string });
+      res.status(200).json({ ok: true });
+    } catch (error) { next(error); }
+  },
+};
+
+export default bookingController;

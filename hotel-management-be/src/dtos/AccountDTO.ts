@@ -3,16 +3,16 @@ import { type User } from "../models/User.js";
 export type AccountResponseWrapper<T = undefined> = {
   success: boolean;
   message: string;
-  data?: T;
-  error?: string;
+  data?: T | undefined;
+  error?: string | undefined;
 };
 
 export type AccountDataDTO = Omit<User, "passwordHash"> & {
-  fullName?: string;
-  identityCard?: string;
-  phone?: string;
-  email?: string;
-  address?: string;
+  fullName?: string | undefined;
+  identityCard?: string | undefined;
+  phone?: string | undefined;
+  email?: string | undefined;
+  address?: string | undefined;
 };
 
 export type CreateAccountRequestDTO = {
@@ -22,12 +22,12 @@ export type CreateAccountRequestDTO = {
 };
 
 export type UpdateAccountRequestDTO = {
-  HoTen?: string;
-  CMND?: string;
-  SDT?: string;
-  Email?: string;
-  DiaChi?: string;
-  VaiTro?: string;
+  HoTen?: string | undefined;
+  CMND?: string | undefined;
+  SDT?: string | undefined;
+  Email?: string | undefined;
+  DiaChi?: string | undefined;
+  VaiTro?: string | undefined;
 };
 
 export type ChangePasswordRequestDTO = {

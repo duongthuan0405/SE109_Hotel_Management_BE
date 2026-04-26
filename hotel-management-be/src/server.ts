@@ -3,6 +3,7 @@ import env from "./config/env.js";
 import authRoutes from "./routes/authRoutes.js";
 import accountRoutes from "./routes/accountRoutes.js";
 import roomTypeRoutes from "./routes/roomTypeRoutes.js";
+import bookingRoutes from "./routes/bookingRoutes.js";
 
 const app = express();
 const PORT = env.PORT;
@@ -12,6 +13,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/accounts", accountRoutes);
 app.use("/api/room-types", roomTypeRoutes);
+app.use("/api/bookings", bookingRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello từ Express + TypeScript!");

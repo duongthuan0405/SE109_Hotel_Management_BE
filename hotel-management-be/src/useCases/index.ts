@@ -33,3 +33,33 @@ export const getRoomTypeByIdUseCase = getRoomTypeByIdUseCaseImpl;
 export const createRoomTypeUseCase = createRoomTypeUseCaseImpl;
 export const updateRoomTypeUseCase = updateRoomTypeUseCaseImpl;
 export const deleteRoomTypeUseCase = deleteRoomTypeUseCaseImpl;
+
+import staffGetAllBookingsUseCaseImpl from "./implementations/StaffGetAllBookingsUseCase.js";
+import staffGetBookingByIdUseCaseImpl from "./implementations/StaffGetBookingByIdUseCase.js";
+import staffCreateBookingUseCaseImpl from "./implementations/StaffCreateBookingUseCase.js";
+import staffCreateWalkInBookingUseCaseImpl from "./implementations/StaffCreateWalkInBookingUseCase.js";
+import staffUpdateBookingUseCaseImpl from "./implementations/StaffUpdateBookingUseCase.js";
+import staffCancelBookingUseCaseImpl from "./implementations/StaffCancelBookingUseCase.js";
+import staffDeleteBookingUseCaseImpl from "./implementations/StaffDeleteBookingUseCase.js";
+
+import customerGetMyBookingsUseCaseImpl from "./implementations/CustomerGetMyBookingsUseCase.js";
+import customerGetBookingByIdUseCaseImpl from "./implementations/CustomerGetBookingByIdUseCase.js";
+import customerCreateBookingUseCaseImpl from "./implementations/CustomerCreateBookingUseCase.js";
+import customerUpdateBookingUseCaseImpl from "./implementations/CustomerUpdateBookingUseCase.js";
+import customerCancelBookingUseCaseImpl from "./implementations/CustomerCancelBookingUseCase.js";
+import customerDeleteBookingUseCaseImpl from "./implementations/CustomerDeleteBookingUseCase.js";
+
+export const staffGetAllBookingsUseCase = staffGetAllBookingsUseCaseImpl;
+export const staffGetBookingByIdUseCase = staffGetBookingByIdUseCaseImpl;
+export const staffCreateBookingUseCase = staffCreateBookingUseCaseImpl;
+export const staffCreateWalkInBookingUseCase = staffCreateWalkInBookingUseCaseImpl;
+export const staffUpdateBookingUseCase = staffUpdateBookingUseCaseImpl;
+export const staffCancelBookingUseCase = staffCancelBookingUseCaseImpl;
+export const staffDeleteBookingUseCase = staffDeleteBookingUseCaseImpl;
+
+export const customerGetMyBookingsUseCase = customerGetMyBookingsUseCaseImpl;
+export const customerGetBookingByIdUseCase = customerGetBookingByIdUseCaseImpl;
+export const customerCreateBookingUseCase = customerCreateBookingUseCaseImpl;
+export const customerUpdateBookingUseCase = customerUpdateBookingUseCaseImpl;
+export const customerCancelBookingUseCase = customerCancelBookingUseCaseImpl;
+export const customerDeleteBookingUseCase = customerDeleteBookingUseCaseImpl;

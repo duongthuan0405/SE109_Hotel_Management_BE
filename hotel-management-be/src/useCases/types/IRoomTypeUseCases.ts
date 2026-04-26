@@ -16,8 +16,8 @@ export type ICreateRoomTypeUseCase = IUseCase<CreateRoomTypeUCInput, RoomTypeUCO
 
 export type UpdateRoomTypeUCInput = {
   id: string;
-  code?: string;
-  name?: string;
+  code?: string | undefined;
+  name?: string | undefined;
 };
 export type IUpdateRoomTypeUseCase = IUseCase<UpdateRoomTypeUCInput, RoomTypeUCOutput>;
 
