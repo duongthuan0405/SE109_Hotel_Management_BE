@@ -3,10 +3,10 @@ import { type ICreateStaffUseCase, type CreateStaffUCInput, type StaffUCOutput }
 
 const createStaffUseCase: ICreateStaffUseCase = {
   execute: async (input: CreateStaffUCInput): Promise<StaffUCOutput> => {
-    const { TaiKhoanId, HoTen, ChucVu, SDT, Email } = input;
+    const { userId, fullName, position, phone, email } = input;
 
     // Kiểm tra Email tồn tại
-    const existingEmail = await staffRepository.findByEmail(Email);
+    const existingEmail = await staffRepository.findByEmail(email);
     if (existingEmail) {
       throw { status: 409, message: "Email nhân viên đã tồn tại" };
     }
@@ -15,12 +15,12 @@ const createStaffUseCase: ICreateStaffUseCase = {
     const MaNV = await staffRepository.generateNextId();
 
     const newStaff = await staffRepository.create({
-      userId: TaiKhoanId,
+      userId,
       staffId: MaNV,
-      fullName: HoTen,
-      position: ChucVu,
-      phone: SDT,
-      email: Email,
+      fullName,
+      position,
+      phone,
+      email,
     });
 
     return newStaff;

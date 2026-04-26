@@ -9,6 +9,13 @@ export type UpdateServiceRequestDTO = {
   DonGia?: number | undefined;
 };
 
+export type ServiceResponseWrapper<T = undefined> = {
+  success: boolean;
+  message: string;
+  data?: T | undefined;
+  error?: string | undefined;
+};
+
 export type ServiceResponseDTO = {
   _id: string;
   MaDV: string;

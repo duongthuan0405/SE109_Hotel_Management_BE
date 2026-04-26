@@ -12,20 +12,20 @@ export type GetStaffByUserIdUCInput = { userId: string };
 export type IGetStaffByUserIdUseCase = IUseCase<GetStaffByUserIdUCInput, StaffUCOutput>;
 
 export type CreateStaffUCInput = {
-  TaiKhoanId: string;
-  HoTen: string;
-  ChucVu: string;
-  SDT: string;
-  Email: string;
+  userId: string;
+  fullName: string;
+  position: string;
+  phone: string;
+  email: string;
 };
 export type ICreateStaffUseCase = IUseCase<CreateStaffUCInput, StaffUCOutput>;
 
 export type UpdateStaffUCInput = {
   id: string;
-  HoTen?: string | undefined;
-  ChucVu?: string | undefined;
-  SDT?: string | undefined;
-  Email?: string | undefined;
+  fullName?: string | undefined;
+  position?: string | undefined;
+  phone?: string | undefined;
+  email?: string | undefined;
 };
 export type IUpdateStaffUseCase = IUseCase<UpdateStaffUCInput, StaffUCOutput>;
 

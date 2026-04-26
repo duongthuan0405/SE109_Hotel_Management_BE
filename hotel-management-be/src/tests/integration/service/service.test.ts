@@ -29,8 +29,9 @@ describe("Service API Integration Tests", () => {
       .set("Authorization", `Bearer ${adminToken}`);
 
     expect(res.status).toBe(200);
-    expect(Array.isArray(res.body)).toBe(true);
-    expect(res.body.length).toBeGreaterThan(0);
+    expect(res.body.success).toBe(true);
+    expect(Array.isArray(res.body.data)).toBe(true);
+    expect(res.body.data.length).toBeGreaterThan(0);
   });
 
   it("should allow CUSTOMER to view services via GET /api/services/", async () => {
@@ -39,7 +40,8 @@ describe("Service API Integration Tests", () => {
       .set("Authorization", `Bearer ${customerToken}`);
 
     expect(res.status).toBe(200);
-    expect(Array.isArray(res.body)).toBe(true);
+    expect(res.body.success).toBe(true);
+    expect(Array.isArray(res.body.data)).toBe(true);
   });
 
   it("should create a new service via POST /api/services/", async () => {
@@ -53,8 +55,9 @@ describe("Service API Integration Tests", () => {
       });
 
     expect(res.status).toBe(201);
-    expect(res.body.MaDV).toBe("DV999");
-    testServiceId = res.body._id;
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.MaDV).toBe("DV999");
+    testServiceId = res.body.data._id;
   });
 
   it("should get service by ID via GET /api/services/:id", async () => {
@@ -63,7 +66,8 @@ describe("Service API Integration Tests", () => {
       .set("Authorization", `Bearer ${adminToken}`);
 
     expect(res.status).toBe(200);
-    expect(res.body.MaDV).toBe("DV999");
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.MaDV).toBe("DV999");
   });
 
   it("should update service via PUT /api/services/:id", async () => {
@@ -76,8 +80,9 @@ describe("Service API Integration Tests", () => {
       });
 
     expect(res.status).toBe(200);
-    expect(res.body.TenDV).toBe("Dịch vụ Test Updated");
-    expect(res.body.DonGia).toBe(120000);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.TenDV).toBe("Dịch vụ Test Updated");
+    expect(res.body.data.DonGia).toBe(120000);
   });
 
   it("should return 403 if customer tries to create a service", async () => {
@@ -99,7 +104,7 @@ describe("Service API Integration Tests", () => {
       .set("Authorization", `Bearer ${adminToken}`);
 
     expect(res.status).toBe(200);
-    expect(res.body.ok).toBe(true);
+    expect(res.body.success).toBe(true);
 
     // Verify deletion
     const checkRes = await request(app)

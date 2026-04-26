@@ -123,7 +123,7 @@ const roomController = {
   updateStatus: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { status } = req.body;
-      const result = await updateRoomStatusUseCase.execute(req.params.id as string, status);
+      const result = await updateRoomStatusUseCase.execute({ id: req.params.id as string, status });
       if (!result) {
         throw { status: 404, message: "Không tìm thấy phòng" };
       }

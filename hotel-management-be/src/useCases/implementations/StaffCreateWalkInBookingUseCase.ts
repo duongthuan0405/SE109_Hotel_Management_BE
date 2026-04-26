@@ -36,11 +36,11 @@ const staffCreateWalkInBookingUseCase: IStaffCreateWalkInBookingUseCase = {
         finalCustomerId = customer.id;
       } else {
         const newCustomer = await createCustomerUseCase.execute({
-          HoTen: fullName,
-          CMND: identityCard,
-          SDT: phone,
-          Email: email || `walkin_${Date.now()}@hotel.com`,
-          DiaChi: "",
+          fullName,
+          identityCard,
+          phone,
+          email: email || `walkin_${Date.now()}@hotel.com`,
+          address: "",
         });
         finalCustomerId = newCustomer.id;
       }

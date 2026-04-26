@@ -73,7 +73,10 @@ const staffController = {
       const body = req.body as UpdateStaffRequestDTO;
       const result = await updateStaffUseCase.execute({
         id: staff.id,
-        ...body
+        fullName: body.HoTen,
+        position: body.ChucVu,
+        phone: body.SDT,
+        email: body.Email,
       });
       
       const response: StaffResponseWrapper<StaffDataDTO> = {
@@ -115,7 +118,13 @@ const staffController = {
   createStaff: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const body = req.body as CreateStaffRequestDTO;
-      const result = await createStaffUseCase.execute(body);
+      const result = await createStaffUseCase.execute({
+        userId: body.TaiKhoanId,
+        fullName: body.HoTen,
+        position: body.ChucVu,
+        phone: body.SDT,
+        email: body.Email,
+      });
       const response: StaffResponseWrapper<StaffDataDTO> = {
         success: true,
         message: "Tạo hồ sơ nhân viên thành công",
@@ -138,7 +147,10 @@ const staffController = {
       const body = req.body as UpdateStaffRequestDTO;
       const result = await updateStaffUseCase.execute({
         id,
-        ...body
+        fullName: body.HoTen,
+        position: body.ChucVu,
+        phone: body.SDT,
+        email: body.Email,
       });
       const response: StaffResponseWrapper<StaffDataDTO> = {
         success: true,

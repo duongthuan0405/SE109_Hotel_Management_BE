@@ -54,6 +54,7 @@ describe("Customer API Integration Tests", () => {
         });
       
       expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
       expect(res.body.data.HoTen).toBe("Nguyễn Văn Updated");
       expect(res.body.data.DiaChi).toBe("456 Đường XYZ");
     });
@@ -66,6 +67,7 @@ describe("Customer API Integration Tests", () => {
         .set("Authorization", `Bearer ${adminToken}`);
       
       expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
       expect(Array.isArray(res.body.data)).toBe(true);
     });
 
@@ -75,6 +77,7 @@ describe("Customer API Integration Tests", () => {
         .set("Authorization", `Bearer ${adminToken}`);
       
       expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
       expect(res.body.data.HoTen).toBe("Nguyễn Văn Updated");
     });
 
@@ -90,6 +93,7 @@ describe("Customer API Integration Tests", () => {
         .delete(`/api/customers/${customerId}`)
         .set("Authorization", `Bearer ${adminToken}`);
       expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
     });
   });
 });

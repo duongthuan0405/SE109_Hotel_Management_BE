@@ -33,12 +33,12 @@ const registerUseCase: IRegisterUseCase = {
 
     // Sử dụng CreateCustomerUseCase để tạo profile khách hàng (có MaKH)
     await createCustomerUseCase.execute({
-      HoTen: fullName || "Khách hàng mới",
-      CMND: identityCard || "CMND_" + Date.now(),
-      SDT: phone || "0000000000",
-      Email: email || username,
-      DiaChi: address || "",
-      TaiKhoanId: newUser.id,
+      fullName: fullName || "Khách hàng mới",
+      identityCard: identityCard || "CMND_" + Date.now(),
+      phone: phone || "0000000000",
+      email: email || username,
+      address: address || "",
+      userId: newUser.id,
     });
 
     return {
