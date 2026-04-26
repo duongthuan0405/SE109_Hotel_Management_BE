@@ -12,11 +12,11 @@ export type RegisterRequestDTO = {
   TenDangNhap: string;
   MatKhau: string;
   VaiTro: string;
-  HoTen?: string;
-  CMND?: string;
-  SDT?: string;
-  Email?: string;
-  DiaChi?: string;
+  HoTen?: string | undefined;
+  CMND?: string | undefined;
+  SDT?: string | undefined;
+  Email?: string | undefined;
+  DiaChi?: string | undefined;
 };
 
 export type RegisterResponseDTO = {
@@ -31,7 +31,7 @@ export type ForgotPasswordRequestDTO = {
 
 export type ForgotPasswordResponseDTO = {
   message: string;
-  otp?: string;
+  otp?: string | undefined;
 };
 
 export type ResetPasswordRequestDTO = {

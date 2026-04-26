@@ -3,8 +3,8 @@ import { type RoomType } from "../models/RoomType.js";
 export type RoomTypeResponseWrapper<T = undefined> = {
   success: boolean;
   message: string;
-  data?: T;
-  error?: string;
+  data?: T | undefined;
+  error?: string | undefined;
 };
 
 export type RoomTypeDataDTO = {
@@ -19,6 +19,6 @@ export type CreateRoomTypeRequestDTO = {
 };
 
 export type UpdateRoomTypeRequestDTO = {
-  MaLoaiPhong?: string;
-  TenLoaiPhong?: string;
+  MaLoaiPhong?: string | undefined;
+  TenLoaiPhong?: string | undefined;
 };
