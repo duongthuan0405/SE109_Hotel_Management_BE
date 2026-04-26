@@ -1,5 +1,5 @@
 import { customerRepository } from "../../repository/index.js";
-import { type IDeleteCustomerUseCase, type DeleteCustomerUCInput } from "../types/ICustomerUseCases.ts";
+import { type IDeleteCustomerUseCase, type DeleteCustomerUCInput } from "../types/ICustomerUseCases.js";
 
 const deleteCustomerUseCase: IDeleteCustomerUseCase = {
   execute: async (input: DeleteCustomerUCInput): Promise<void> => {

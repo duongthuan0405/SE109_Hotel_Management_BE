@@ -18,6 +18,8 @@ const mapToDTO = (roomType: RoomTypeUCOutput): RoomTypeDataDTO => ({
   _id: roomType.id,
   MaLoaiPhong: roomType.code,
   TenLoaiPhong: roomType.name,
+  DonGia: roomType.price,
+  SoKhachToiDa: roomType.maxOccupancy,
 });
 
 const roomTypeController = {
@@ -65,6 +67,8 @@ const roomTypeController = {
       const result = await createRoomTypeUseCase.execute({
         code: body.MaLoaiPhong,
         name: body.TenLoaiPhong,
+        price: body.DonGia,
+        maxOccupancy: body.SoKhachToiDa,
       });
       const response: RoomTypeResponseWrapper<RoomTypeDataDTO> = {
         success: true,
@@ -89,6 +93,8 @@ const roomTypeController = {
         id: req.params.id as string,
         code: body.MaLoaiPhong as string,
         name: body.TenLoaiPhong as string,
+        price: body.DonGia,
+        maxOccupancy: body.SoKhachToiDa,
       });
       const response: RoomTypeResponseWrapper<RoomTypeDataDTO> = {
         success: true,
