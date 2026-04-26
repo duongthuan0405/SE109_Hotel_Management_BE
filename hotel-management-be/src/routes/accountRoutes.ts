@@ -1,19 +1,21 @@
 import { Router } from "express";
 import accountController from "../controllers/AccountController.js";
 import { roleMiddleware } from "../middlewares/roleMiddleware.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 
 const accountRoutes = Router();
 
-// accountRoutes.post("/", roleMiddleware(["Admin"]), accountController.createAccount);
-// accountRoutes.get("/", roleMiddleware(["Admin"]), accountController.getAllAccounts);
-// accountRoutes.get("/:id", roleMiddleware(["Admin"]), accountController.getAccountById);
-// accountRoutes.put("/:id", roleMiddleware(["Admin"]), accountController.updateAccount);
-// accountRoutes.delete("/:id", roleMiddleware(["Admin"]), accountController.deleteAccount);
+// API cá nhân (Self-service - Cần xác thực, ai đăng nhập cũng dùng được)
+accountRoutes.get("/me", authMiddleware, accountController.getMe);
+accountRoutes.put("/me", authMiddleware, accountController.updateMe);
+accountRoutes.put("/me/change-password", authMiddleware, accountController.changePassword);
 
-// API cá nhân (Self-service)
-accountRoutes.get("/me", accountController.getMe);
-accountRoutes.put("/me", accountController.updateMe);
-accountRoutes.put("/me/change-password", accountController.changePassword); 
+// Các API cho Admin (Cần xác thực và kiểm tra quyền Admin)
+accountRoutes.post("/", authMiddleware, roleMiddleware(["Admin"]), accountController.createAccount);
+accountRoutes.get("/", authMiddleware, roleMiddleware(["Admin"]), accountController.getAllAccounts);
+accountRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin"]), accountController.getAccountById);
+accountRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin"]), accountController.updateAccount);
+accountRoutes.delete("/:id", authMiddleware, roleMiddleware(["Admin"]), accountController.deleteAccount);
 
 
 export default accountRoutes;
