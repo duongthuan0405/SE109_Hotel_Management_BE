@@ -10,6 +10,12 @@ import {
 } from "../useCases/index.js";
 import type { AccountUCOutput, UpdateAccountUCInput } from "../useCases/types/IAccountUseCases.js";
 
+const mapToDTO = (account: AccountUCOutput): AccountDataDTO => ({
+  _id: account.id,
+  TenDangNhap: account.username,
+  VaiTro: account.role,
+});
+
 const accountController = {
   getMe: async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -18,7 +24,7 @@ const accountController = {
       const response: AccountResponseWrapper<AccountDataDTO> = {
         success: true,
         message: "Lấy thông tin tài khoản cá nhân thành công",
-        data: result,
+        data: mapToDTO(result),
       };
       res.status(200).json(response);
     } catch (error: any) {
@@ -31,34 +37,6 @@ const accountController = {
     }
   },
 
-  updateMe: async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const currentUser = (req as any).user;
-      const body = req.body as UpdateAccountRequestDTO;
-
-      const input: UpdateAccountUCInput = { id: currentUser.id as string };
-      if (body.HoTen !== undefined) input.fullName = body.HoTen;
-      if (body.CMND !== undefined) input.identityCard = body.CMND;
-      if (body.SDT !== undefined) input.phone = body.SDT;
-      if (body.Email !== undefined) input.email = body.Email;
-      if (body.DiaChi !== undefined) input.address = body.DiaChi;
-
-      const result : AccountUCOutput = await updateAccountUseCase.execute(input);
-      const response: AccountResponseWrapper<AccountDataDTO> = {
-        success: true,
-        message: "Cập nhật tài khoản cá nhân thành công",
-        data: result,
-      };
-      res.status(200).json(response);
-    } catch (error: any) {
-      const response: AccountResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi cập nhật tài khoản",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
-    }
-  },
 
   changePassword: async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -92,7 +70,7 @@ const accountController = {
       const response: AccountResponseWrapper<AccountDataDTO[]> = {
         success: true,
         message: "Lấy danh sách tài khoản thành công",
-        data: result,
+        data: result.map(mapToDTO),
       };
       res.status(200).json(response);
     } catch (error: any) {
@@ -119,7 +97,7 @@ const accountController = {
       const response: AccountResponseWrapper<AccountDataDTO> = {
         success: true,
         message: "Lấy thông tin tài khoản thành công",
-        data: result,
+        data: mapToDTO(result),
       };
       res.status(200).json(response);
     } catch (error: any) {
@@ -143,7 +121,7 @@ const accountController = {
       const response: AccountResponseWrapper<AccountDataDTO> = {
         success: true,
         message: "Tạo tài khoản thành công",
-        data: result,
+        data: mapToDTO(result),
       };
       res.status(201).json(response);
     } catch (error: any) {
@@ -161,18 +139,13 @@ const accountController = {
       const body = req.body as UpdateAccountRequestDTO;
       
       const input: UpdateAccountUCInput = { id: req.params.id as string };
-      if (body.HoTen !== undefined) input.fullName = body.HoTen;
-      if (body.CMND !== undefined) input.identityCard = body.CMND;
-      if (body.SDT !== undefined) input.phone = body.SDT;
-      if (body.Email !== undefined) input.email = body.Email;
-      if (body.DiaChi !== undefined) input.address = body.DiaChi;
       if (body.VaiTro !== undefined) input.role = body.VaiTro;
 
       const result = await updateAccountUseCase.execute(input);
       const response: AccountResponseWrapper<AccountDataDTO> = {
         success: true,
         message: "Cập nhật tài khoản thành công",
-        data: result,
+        data: mapToDTO(result),
       };
       res.status(200).json(response);
     } catch (error: any) {

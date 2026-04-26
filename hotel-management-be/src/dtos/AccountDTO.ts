@@ -7,12 +7,10 @@ export type AccountResponseWrapper<T = undefined> = {
   error?: string | undefined;
 };
 
-export type AccountDataDTO = Omit<User, "passwordHash"> & {
-  fullName?: string | undefined;
-  identityCard?: string | undefined;
-  phone?: string | undefined;
-  email?: string | undefined;
-  address?: string | undefined;
+export type AccountDataDTO = {
+  _id: string;
+  TenDangNhap: string;
+  VaiTro: string;
 };
 
 export type CreateAccountRequestDTO = {
@@ -22,11 +20,6 @@ export type CreateAccountRequestDTO = {
 };
 
 export type UpdateAccountRequestDTO = {
-  HoTen?: string | undefined;
-  CMND?: string | undefined;
-  SDT?: string | undefined;
-  Email?: string | undefined;
-  DiaChi?: string | undefined;
   VaiTro?: string | undefined;
 };
 

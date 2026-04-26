@@ -1,4 +1,4 @@
-import { userProfileRepository, resetPasswordOTPRepository } from "../../repository/index.js";
+import { staffRepository, customerRepository, resetPasswordOTPRepository } from "../../repository/index.js";
 import { type IForgotPasswordUseCase, type ForgotPasswordUCInput, type ForgotPasswordUCOutput } from "../types/IForgotPasswordUseCase.js";
 import { emailService, otpService } from "../../services/index.js";
 import env from "../../config/env.js";
@@ -10,14 +10,26 @@ const forgotPasswordUseCase: IForgotPasswordUseCase = {
       throw { status: 400, message: "Email là bắt buộc" };
     }
 
-    const profile = await userProfileRepository.findByEmail(email);
-    if (!profile) {
+    // Tìm kiếm trong cả Staff (Nhân viên) và Customer (Khách hàng)
+    let userId: string | undefined;
+    
+    const staff = await staffRepository.findByEmail(email);
+    if (staff) {
+      userId = staff.userId;
+    } else {
+      const customer = await customerRepository.findByEmail(email);
+      if (customer) {
+        userId = customer.userId;
+      }
+    }
+
+    if (!userId) {
       throw { status: 404, message: "Không tìm thấy tài khoản với email này" };
     }
 
     const generatedOtp = otpService.generateOTP();
     await resetPasswordOTPRepository.create({
-      userId: profile.userId,
+      userId: userId,
       otp: generatedOtp.otp,
       expiresAt: generatedOtp.expiresAt,
     });

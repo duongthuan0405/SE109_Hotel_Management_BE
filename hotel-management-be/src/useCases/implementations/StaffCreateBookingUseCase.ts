@@ -1,29 +1,75 @@
-import { bookingRepository } from "../../repository/index.js";
+import { bookingRepository, roomRepository } from "../../repository/index.js";
 import type { IStaffCreateBookingUseCase, CreateBookingUCInput, BookingUCOutput } from "../types/IBookingUseCases.js";
 
 const staffCreateBookingUseCase: IStaffCreateBookingUseCase = {
   execute: async (input: CreateBookingUCInput): Promise<BookingUCOutput> => {
-    if (!input.roomClass || !input.startDate || !input.endDate || !input.guestCount) {
+    const { customerId, roomClass, startDate, endDate, guestCount, deposit, details } = input;
+
+    if (!customerId || !roomClass || !startDate || !endDate || !guestCount) {
       throw { status: 400, message: "Vui lòng cung cấp đủ thông tin đặt phòng" };
     }
 
-    let finalDetails = input.details || [];
-    if (finalDetails.length === 0) {
-      finalDetails = [{
-        code: `CTDP${Date.now()}`,
-        roomId: `room-auto-${Math.floor(Math.random() * 1000)}`
-      }];
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
+    // 1. Kiểm tra tính hợp lệ của ngày tháng
+    if (start < now) {
+      throw { status: 400, message: "Ngày nhận phòng không thể trong quá khứ" };
+    }
+    if (start >= end) {
+      throw { status: 400, message: "Ngày trả phòng phải sau ngày nhận phòng" };
     }
 
+    // 2. Tìm phòng trống thực tế
+    let finalDetails = details || [];
+    
+    if (finalDetails.length === 0) {
+      const allRooms = await roomRepository.findAll();
+      const availableRoomsOfClass = allRooms.filter(r => r.roomTypeId === roomClass && r.status !== "Maintenance");
+
+      let assignedRoomId: string | null = null;
+      for (const room of availableRoomsOfClass) {
+        // Kiểm tra trạng thái phòng thực tế nếu ngày nhận phòng là hôm nay
+        if (start <= now && ["Occupied", "Cleaning"].includes(room.status)) {
+          continue;
+        }
+
+        const overlap = await bookingRepository.findOverlappingByRoom(room.id, start, end);
+        if (!overlap) {
+          assignedRoomId = room.id;
+          break;
+        }
+      }
+
+      if (!assignedRoomId) {
+        throw { status: 400, message: `Không còn phòng trống cho hạng phòng ${roomClass} trong khoảng thời gian này` };
+      }
+
+      finalDetails = [{
+        code: `CTDP-STAFF-${Date.now()}`,
+        roomId: assignedRoomId
+      }];
+    } else {
+      for (const detail of finalDetails) {
+        const overlap = await bookingRepository.findOverlappingByRoom(detail.roomId, start, end);
+        if (overlap) {
+          throw { status: 400, message: `Phòng ${detail.roomId} đã bị trùng lịch trong khoảng thời gian này` };
+        }
+      }
+    }
+
+    // 3. Tạo đơn đặt phòng
     const booking = await bookingRepository.create({
-      customerId: input.customerId,
-      roomClass: input.roomClass,
-      startDate: input.startDate,
-      endDate: input.endDate,
-      guestCount: input.guestCount,
-      deposit: input.deposit || 0,
+      customerId,
+      roomClass,
+      startDate: start,
+      endDate: end,
+      guestCount,
+      deposit: deposit || 0,
       details: finalDetails,
-      status: "Pending",
+      status: "Confirmed", // Nhân viên tạo mặc định là Confirmed
     });
 
     return booking;

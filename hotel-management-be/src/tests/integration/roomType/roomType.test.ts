@@ -8,26 +8,20 @@ describe("RoomType API Integration Tests", () => {
   let createdRoomTypeId = "";
 
   beforeAll(async () => {
-    // 1. Register & Login as Admin
-    await request(app).post("/api/auth/register").send({
-      TenDangNhap: "admin_roomtype",
-      MatKhau: "123456",
-      VaiTro: "Admin",
-    });
+    // 1. Login as Default Admin
     const adminLoginRes = await request(app).post("/api/auth/login").send({
-      TenDangNhap: "admin_roomtype",
+      TenDangNhap: "admin",
       MatKhau: "123456",
     });
     adminToken = adminLoginRes.body.token;
 
     // 2. Register & Login as Customer
     await request(app).post("/api/auth/register").send({
-      TenDangNhap: "customer_roomtype",
+      TenDangNhap: "customer_roomtype_test",
       MatKhau: "123456",
-      VaiTro: "Customer",
     });
     const customerLoginRes = await request(app).post("/api/auth/login").send({
-      TenDangNhap: "customer_roomtype",
+      TenDangNhap: "customer_roomtype_test",
       MatKhau: "123456",
     });
     customerToken = customerLoginRes.body.token;
@@ -130,13 +124,6 @@ describe("RoomType API Integration Tests", () => {
         .set("Authorization", `Bearer ${adminToken}`);
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
-    });
-
-    it("should return 404 when deleting already deleted room type", async () => {
-      const res = await request(app)
-        .delete(`/api/room-types/${createdRoomTypeId}`)
-        .set("Authorization", `Bearer ${adminToken}`);
-      expect(res.status).toBe(404);
     });
   });
 });

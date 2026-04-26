@@ -29,17 +29,17 @@ describe("Booking API Integration Tests", () => {
         .post("/api/bookings/customer/")
         .set("Authorization", `Bearer ${customerToken}`)
         .send({
-          HangPhong: "DELUXE",
+          HangPhong: "1",
           NgayDen: "2026-06-01",
           NgayDi: "2026-06-05",
           SoKhach: 2,
           TienCoc: 1000000,
-          ChiTietDatPhong: [{ MaCTDP: "CT-CUST-01", Phong: "room-101" }]
+          ChiTietDatPhong: [{ MaCTDP: "CT-CUST-01", Phong: "room-1" }]
         });
 
       expect(res.status).toBe(201);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.HangPhong).toBe("DELUXE");
+      expect(res.body.data.HangPhong).toBe("1");
       expect(res.body.data._id).toBeDefined();
       testBookingId = res.body.data._id;
     });
@@ -84,16 +84,19 @@ describe("Booking API Integration Tests", () => {
         .post("/api/bookings/walk-in")
         .set("Authorization", `Bearer ${adminToken}`)
         .send({
-          HangPhong: "SUITE",
+          HoTen: "Khách Vãng Lai",
+          CMND: "123456789",
+          SDT: "0987654321",
+          HangPhong: "2",
           NgayDen: "2026-07-01",
           NgayDi: "2026-07-03",
           SoKhach: 2,
           TienCoc: 2000000,
-          ChiTietDatPhong: [{ MaCTDP: "CT-STAFF-01", Phong: "room-202" }]
+          ChiTietDatPhong: [{ MaCTDP: "CT-STAFF-01", Phong: "room-1" }]
         });
 
       expect(res.status).toBe(201);
-      expect(res.body.HangPhong).toBe("SUITE");
+      expect(res.body.HangPhong).toBe("2");
       expect(res.body._id).toBeDefined();
       staffBookingId = res.body._id;
     });

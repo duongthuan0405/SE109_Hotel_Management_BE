@@ -1,4 +1,4 @@
-import { type Booking, type BookingDetail } from "../../models/Booking.js";
+import { type Booking } from "../../models/Booking.js";
 
 export type IBookingRepository = {
   findAll: () => Promise<Booking[]>;
@@ -8,4 +8,8 @@ export type IBookingRepository = {
   save: (booking: Booking) => Promise<Booking>;
   deleteById: (id: string) => Promise<void>;
   count: () => Promise<number>;
+  
+  // Các phương thức bổ trợ logic nghiệp vụ
+  generateNextCode: () => Promise<string>;
+  findOverlappingByRoom: (roomId: string, startDate: Date, endDate: Date, excludeBookingId?: string) => Promise<Booking | null>;
 };

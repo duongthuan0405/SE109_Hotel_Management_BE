@@ -11,7 +11,6 @@ const authController = {
       const input: RegisterUCInput = {
         username: body.TenDangNhap,
         password: body.MatKhau,
-        role: body.VaiTro,
       };
       
       if (body.HoTen !== undefined) input.fullName = body.HoTen;

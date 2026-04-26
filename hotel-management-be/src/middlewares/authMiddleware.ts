@@ -17,3 +17,14 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     return;
   }
 };
+
+export const roleMiddleware = (allowedRoles: string[]) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const user = (req as any).user;
+    if (!user || !allowedRoles.includes(user.role)) {
+      res.status(403).json({ success: false, message: "Bạn không có quyền thực hiện thao tác này" });
+      return;
+    }
+    next();
+  };
+};

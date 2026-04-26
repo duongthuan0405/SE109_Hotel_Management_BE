@@ -3,27 +3,43 @@ import type { ICustomerUpdateBookingUseCase, UpdateBookingUCInput, BookingUCOutp
 
 const customerUpdateBookingUseCase: ICustomerUpdateBookingUseCase = {
   execute: async (input: UpdateBookingUCInput & { customerId: string }): Promise<BookingUCOutput> => {
-    const booking = await bookingRepository.findById(input.id);
-    if (!booking) {
-      throw { status: 404, message: "Đặt phòng không tồn tại" };
+    const { id, customerId, status, details, startDate, endDate } = input;
+
+    const existingBooking = await bookingRepository.findById(id);
+    if (!existingBooking) {
+      throw { status: 404, message: "Đơn đặt phòng không tồn tại" };
     }
 
-    // Ownership check
-    if (booking.customerId !== input.customerId) {
-      throw { status: 403, message: "Bạn không có quyền cập nhật thông tin đặt phòng này" };
+    // Kiểm tra quyền sở hữu
+    if (existingBooking.customerId !== customerId) {
+      throw { status: 403, message: "Bạn không có quyền chỉnh sửa đơn đặt phòng này" };
     }
 
-    if (input.roomClass !== undefined) booking.roomClass = input.roomClass;
-    if (input.startDate !== undefined) booking.startDate = input.startDate;
-    if (input.endDate !== undefined) booking.endDate = input.endDate;
-    if (input.guestCount !== undefined) booking.guestCount = input.guestCount;
-    if (input.deposit !== undefined) booking.deposit = input.deposit;
-    if (input.status !== undefined) booking.status = input.status as any;
-    if (input.details !== undefined) {
-      booking.details = input.details.map(d => ({ code: d.code, roomId: d.roomId }));
+    // 1. Nếu có thay đổi ngày tháng hoặc phòng, kiểm tra trùng lịch
+    const newStart = startDate ? new Date(startDate) : existingBooking.startDate;
+    const newEnd = endDate ? new Date(endDate) : existingBooking.endDate;
+    const newDetails = details || existingBooking.details;
+
+    if (startDate || endDate || details) {
+      for (const detail of newDetails) {
+        const overlap = await bookingRepository.findOverlappingByRoom(detail.roomId, newStart, newEnd, id);
+        if (overlap) {
+          throw { status: 400, message: `Phòng ${detail.roomId} đã bị trùng lịch trong khoảng thời gian mới` };
+        }
+      }
     }
 
-    return await bookingRepository.save(booking);
+    // 2. Cập nhật thông tin đơn đặt phòng
+    const updatedBooking = await bookingRepository.save({
+      ...existingBooking,
+      ...input,
+      startDate: newStart,
+      endDate: newEnd,
+      details: newDetails,
+      updatedAt: new Date(),
+    } as any);
+
+    return updatedBooking;
   },
 };
 

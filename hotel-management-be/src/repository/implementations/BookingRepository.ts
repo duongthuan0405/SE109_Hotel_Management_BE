@@ -32,11 +32,11 @@ const bookingRepositoryImpl: IBookingRepository = {
     return mockBookings.filter((b) => b.customerId === customerId);
   },
   create: async (bookingData: Omit<Booking, "id" | "code" | "createdAt" | "updatedAt">): Promise<Booking> => {
-    const nextId = mockBookings.length + 1;
+    const code = await bookingRepositoryImpl.generateNextCode();
     const newBooking: Booking = {
       ...bookingData,
       id: `booking-${Math.random().toString(36).substring(7)}`,
-      code: `DP${String(nextId).padStart(3, "0")}`,
+      code: code,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -47,7 +47,7 @@ const bookingRepositoryImpl: IBookingRepository = {
     const index = mockBookings.findIndex((b) => b.id === booking.id);
     if (index !== -1) {
       mockBookings[index] = { ...booking, updatedAt: new Date() };
-      return mockBookings[index];
+      return mockBookings[index]!;
     }
     return booking;
   },
@@ -59,6 +59,30 @@ const bookingRepositoryImpl: IBookingRepository = {
   },
   count: async (): Promise<number> => {
     return mockBookings.length;
+  },
+  generateNextCode: async (): Promise<string> => {
+    const lastBooking = [...mockBookings].sort((a, b) => b.code.localeCompare(a.code))[0];
+    let nextId = 1;
+    if (lastBooking && lastBooking.code) {
+      const match = lastBooking.code.match(/DP(\d+)/);
+      if (match) {
+        nextId = parseInt(match[1]!, 10) + 1;
+      }
+    }
+    return `DP${String(nextId).padStart(3, "0")}`;
+  },
+  findOverlappingByRoom: async (roomId: string, startDate: Date, endDate: Date, excludeBookingId?: string): Promise<Booking | null> => {
+    const overlap = mockBookings.find((b) => {
+      if (excludeBookingId && b.id === excludeBookingId) return false;
+      if (["Cancelled", "CheckedOut", "NoShow", "Pending"].includes(b.status)) return false;
+      
+      const hasRoom = b.details.some(d => d.roomId === roomId);
+      if (!hasRoom) return false;
+
+      // Logic kiểm tra chồng chéo: (StartA < EndB) AND (EndA > StartB)
+      return startDate < b.endDate && endDate > b.startDate;
+    });
+    return overlap || null;
   }
 };
 
