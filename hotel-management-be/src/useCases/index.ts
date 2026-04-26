@@ -49,6 +49,12 @@ import customerUpdateBookingUseCaseImpl from "./implementations/CustomerUpdateBo
 import customerCancelBookingUseCaseImpl from "./implementations/CustomerCancelBookingUseCase.js";
 import customerDeleteBookingUseCaseImpl from "./implementations/CustomerDeleteBookingUseCase.js";
 
+import getAllServicesUseCaseImpl from "./implementations/GetAllServicesUseCase.js";
+import getServiceByIdUseCaseImpl from "./implementations/GetServiceByIdUseCase.js";
+import createServiceUseCaseImpl from "./implementations/CreateServiceUseCase.js";
+import updateServiceUseCaseImpl from "./implementations/UpdateServiceUseCase.js";
+import deleteServiceUseCaseImpl from "./implementations/DeleteServiceUseCase.js";
+
 export const staffGetAllBookingsUseCase = staffGetAllBookingsUseCaseImpl;
 export const staffGetBookingByIdUseCase = staffGetBookingByIdUseCaseImpl;
 export const staffCreateBookingUseCase = staffCreateBookingUseCaseImpl;
@@ -63,3 +69,9 @@ export const customerCreateBookingUseCase = customerCreateBookingUseCaseImpl;
 export const customerUpdateBookingUseCase = customerUpdateBookingUseCaseImpl;
 export const customerCancelBookingUseCase = customerCancelBookingUseCaseImpl;
 export const customerDeleteBookingUseCase = customerDeleteBookingUseCaseImpl;
+
+export const getAllServicesUseCase = getAllServicesUseCaseImpl;
+export const getServiceByIdUseCase = getServiceByIdUseCaseImpl;
+export const createServiceUseCase = createServiceUseCaseImpl;
+export const updateServiceUseCase = updateServiceUseCaseImpl;
+export const deleteServiceUseCase = deleteServiceUseCaseImpl;

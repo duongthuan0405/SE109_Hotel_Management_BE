@@ -4,6 +4,7 @@ import authRoutes from "./routes/authRoutes.js";
 import accountRoutes from "./routes/accountRoutes.js";
 import roomTypeRoutes from "./routes/roomTypeRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
+import serviceRoutes from "./routes/serviceRoutes.js";
 
 const app = express();
 const PORT = env.PORT;
@@ -14,6 +15,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/accounts", accountRoutes);
 app.use("/api/room-types", roomTypeRoutes);
 app.use("/api/bookings", bookingRoutes);
+app.use("/api/services", serviceRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello từ Express + TypeScript!");
