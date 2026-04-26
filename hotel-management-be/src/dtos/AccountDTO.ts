@@ -27,6 +27,7 @@ export type UpdateAccountRequestDTO = {
   SDT?: string;
   Email?: string;
   DiaChi?: string;
+  VaiTro?: string;
 };
 
 export type ChangePasswordRequestDTO = {

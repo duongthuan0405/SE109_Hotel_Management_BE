@@ -21,3 +21,15 @@ export const createAccountUseCase = createAccountUseCaseImpl;
 export const updateAccountUseCase = updateAccountUseCaseImpl;
 export const changePasswordUseCase = changePasswordUseCaseImpl;
 export const deleteAccountUseCase = deleteAccountUseCaseImpl;
+
+import getAllRoomTypesUseCaseImpl from "./implementations/GetAllRoomTypesUseCase.js";
+import getRoomTypeByIdUseCaseImpl from "./implementations/GetRoomTypeByIdUseCase.js";
+import createRoomTypeUseCaseImpl from "./implementations/CreateRoomTypeUseCase.js";
+import updateRoomTypeUseCaseImpl from "./implementations/UpdateRoomTypeUseCase.js";
+import deleteRoomTypeUseCaseImpl from "./implementations/DeleteRoomTypeUseCase.js";
+
+export const getAllRoomTypesUseCase = getAllRoomTypesUseCaseImpl;
+export const getRoomTypeByIdUseCase = getRoomTypeByIdUseCaseImpl;
+export const createRoomTypeUseCase = createRoomTypeUseCaseImpl;
+export const updateRoomTypeUseCase = updateRoomTypeUseCaseImpl;
+export const deleteRoomTypeUseCase = deleteRoomTypeUseCaseImpl;

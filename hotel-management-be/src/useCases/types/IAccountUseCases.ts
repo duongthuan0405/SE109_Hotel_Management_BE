@@ -28,6 +28,7 @@ export type UpdateAccountUCInput = {
   phone?: string;
   email?: string;
   address?: string;
+  role?: string;
 };
 export type IUpdateAccountUseCase = IUseCase<UpdateAccountUCInput, AccountUCOutput>;
 

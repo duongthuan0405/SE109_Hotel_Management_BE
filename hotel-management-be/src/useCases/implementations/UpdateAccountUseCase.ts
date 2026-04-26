@@ -3,11 +3,16 @@ import { type IUpdateAccountUseCase, type UpdateAccountUCInput, type AccountUCOu
 
 const updateAccountUseCase: IUpdateAccountUseCase = {
   execute: async (input: UpdateAccountUCInput): Promise<AccountUCOutput> => {
-    const { id, fullName, identityCard, phone, email, address } = input;
+    const { id, fullName, identityCard, phone, email, address, role } = input;
 
     const user = await userRepository.findById(id);
     if (!user) {
       throw { status: 404, message: "Tài khoản không tồn tại" };
+    }
+
+    if (role !== undefined) {
+      user.role = role;
+      await userRepository.save(user);
     }
 
     let profile = await userProfileRepository.findByUserId(id);
