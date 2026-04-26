@@ -11,6 +11,7 @@ const mockBookings: Booking[] = [
     endDate: new Date("2026-05-03"),
     guestCount: 2,
     deposit: 500000,
+    totalAmount: 1000000,
     details: [
       { code: "CTDP1", roomId: "room-1" }
     ],
@@ -74,7 +75,7 @@ const bookingRepositoryImpl: IBookingRepository = {
   findOverlappingByRoom: async (roomId: string, startDate: Date, endDate: Date, excludeBookingId?: string): Promise<Booking | null> => {
     const overlap = mockBookings.find((b) => {
       if (excludeBookingId && b.id === excludeBookingId) return false;
-      if (["Cancelled", "CheckedOut", "NoShow", "Pending"].includes(b.status)) return false;
+      if (["Cancelled", "CheckedOut", "NoShow"].includes(b.status)) return false;
       
       const hasRoom = b.details.some(d => d.roomId === roomId);
       if (!hasRoom) return false;

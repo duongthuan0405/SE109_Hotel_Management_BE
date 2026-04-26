@@ -92,7 +92,7 @@ describe("Booking API Integration Tests", () => {
           NgayDi: "2026-07-03",
           SoKhach: 2,
           TienCoc: 2000000,
-          ChiTietDatPhong: [{ MaCTDP: "CT-STAFF-01", Phong: "room-1" }]
+          ChiTietDatPhong: [{ MaCTDP: "CT-STAFF-01", Phong: "room-3" }]
         });
 
       expect(res.status).toBe(201);

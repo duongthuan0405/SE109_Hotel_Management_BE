@@ -1,4 +1,4 @@
-import { bookingRepository, roomRepository, customerRepository } from "../../repository/index.js";
+import { bookingRepository, roomRepository, customerRepository, roomTypeRepository } from "../../repository/index.js";
 import { createCustomerUseCase } from "../index.js";
 import type { IStaffCreateWalkInBookingUseCase, CreateWalkInBookingUCInput, BookingUCOutput } from "../types/IBookingUseCases.js";
 
@@ -10,6 +10,15 @@ const staffCreateWalkInBookingUseCase: IStaffCreateWalkInBookingUseCase = {
       roomClass, startDate, endDate, guestCount, deposit, details 
     } = input;
 
+    // 0. Kiểm tra hạng phòng và sức chứa
+    const roomType = await roomTypeRepository.findById(roomClass);
+    if (!roomType) {
+      throw { status: 404, message: "Hạng phòng không tồn tại" };
+    }
+    if (guestCount > roomType.maxOccupancy) {
+      throw { status: 400, message: `Số khách vượt quá sức chứa tối đa của hạng phòng (${roomType.maxOccupancy} người)` };
+    }
+
     let finalCustomerId = inputCustomerId;
 
     // 1. Tìm hoặc tạo khách hàng nếu chưa có customerId
@@ -18,7 +27,6 @@ const staffCreateWalkInBookingUseCase: IStaffCreateWalkInBookingUseCase = {
         throw { status: 400, message: "Thông tin khách hàng (Họ tên, CMND, SĐT) là bắt buộc cho khách vãng lai" };
       }
 
-      // Thử tìm khách hàng cũ theo CMND hoặc Email
       let customer = await customerRepository.findByIdentityCard(identityCard);
       if (!customer && email) {
         customer = await customerRepository.findByEmail(email);
@@ -27,7 +35,6 @@ const staffCreateWalkInBookingUseCase: IStaffCreateWalkInBookingUseCase = {
       if (customer) {
         finalCustomerId = customer.id;
       } else {
-        // Tạo khách hàng mới
         const newCustomer = await createCustomerUseCase.execute({
           HoTen: fullName,
           CMND: identityCard,
@@ -61,7 +68,6 @@ const staffCreateWalkInBookingUseCase: IStaffCreateWalkInBookingUseCase = {
 
       let assignedRoomId: string | null = null;
       for (const room of availableRoomsOfClass) {
-        // Kiểm tra trạng thái phòng thực tế nếu ngày nhận phòng là hôm nay
         if (start <= now && ["Occupied", "Cleaning"].includes(room.status)) {
           continue;
         }
@@ -74,7 +80,7 @@ const staffCreateWalkInBookingUseCase: IStaffCreateWalkInBookingUseCase = {
       }
 
       if (!assignedRoomId) {
-        throw { status: 400, message: `Không còn phòng trống cho hạng phòng ${roomClass} trong khoảng thời gian này` };
+        throw { status: 400, message: `Không còn phòng trống cho hạng phòng ${roomType.name} trong khoảng thời gian này` };
       }
 
       finalDetails = [{
@@ -83,14 +89,29 @@ const staffCreateWalkInBookingUseCase: IStaffCreateWalkInBookingUseCase = {
       }];
     } else {
       for (const detail of finalDetails) {
+        const room = await roomRepository.findById(detail.roomId);
+        if (!room || room.roomTypeId !== roomClass || room.status === "Maintenance") {
+          throw { status: 400, message: `Phòng ${detail.roomId} không khả dụng` };
+        }
         const overlap = await bookingRepository.findOverlappingByRoom(detail.roomId, start, end);
         if (overlap) {
-          throw { status: 400, message: `Phòng ${detail.roomId} đã bị trùng lịch trong khoảng thời gian này` };
+          throw { status: 400, message: `Phòng ${detail.roomId} đã bị trùng lịch` };
         }
       }
     }
 
-    // 4. Tạo đơn đặt phòng
+    // 4. Tính toán tổng tiền
+    const nights = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+    const totalAmount = roomType.price * nights;
+
+    if (deposit && deposit > totalAmount) {
+      throw { status: 400, message: "Tiền cọc không thể lớn hơn tổng tiền phòng" };
+    }
+
+    // 5. Tạo đơn đặt phòng (Xử lý linh hoạt dựa trên ngày nhận phòng)
+    const isToday = start.getTime() === now.getTime();
+    const status = isToday ? "CheckedIn" : "Confirmed";
+
     const booking = await bookingRepository.create({
       customerId: finalCustomerId!,
       roomClass,
@@ -98,9 +119,17 @@ const staffCreateWalkInBookingUseCase: IStaffCreateWalkInBookingUseCase = {
       endDate: end,
       guestCount,
       deposit: deposit || 0,
+      totalAmount,
       details: finalDetails,
-      status: "Confirmed",
+      status: status,
     });
+
+    // 6. Chỉ cập nhật trạng thái phòng sang Occupied nếu khách nhận phòng ngay hôm nay
+    if (isToday) {
+      for (const detail of finalDetails) {
+        await roomRepository.updateStatus(detail.roomId, "Occupied");
+      }
+    }
 
     return booking;
   },

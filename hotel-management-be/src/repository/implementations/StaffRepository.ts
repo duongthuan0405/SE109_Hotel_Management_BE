@@ -41,7 +41,6 @@ const staffRepository: IStaffRepository = {
   update: async (id: string, data: Partial<Staff>): Promise<Staff | null> => {
     const index = mockStaffs.findIndex(s => s.id === id);
     if (index === -1) return null;
-    
     const current = mockStaffs[index]!;
     const updatedStaff: Staff = {
       id: current.id,

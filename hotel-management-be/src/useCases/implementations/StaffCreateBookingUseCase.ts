@@ -1,4 +1,4 @@
-import { bookingRepository, roomRepository } from "../../repository/index.js";
+import { bookingRepository, roomRepository, roomTypeRepository } from "../../repository/index.js";
 import type { IStaffCreateBookingUseCase, CreateBookingUCInput, BookingUCOutput } from "../types/IBookingUseCases.js";
 
 const staffCreateBookingUseCase: IStaffCreateBookingUseCase = {
@@ -7,6 +7,15 @@ const staffCreateBookingUseCase: IStaffCreateBookingUseCase = {
 
     if (!customerId || !roomClass || !startDate || !endDate || !guestCount) {
       throw { status: 400, message: "Vui lòng cung cấp đủ thông tin đặt phòng" };
+    }
+
+    // 0. Kiểm tra hạng phòng tồn tại và sức chứa
+    const roomType = await roomTypeRepository.findById(roomClass);
+    if (!roomType) {
+      throw { status: 404, message: "Hạng phòng không tồn tại" };
+    }
+    if (guestCount > roomType.maxOccupancy) {
+      throw { status: 400, message: `Số khách vượt quá sức chứa tối đa của hạng phòng (${roomType.maxOccupancy} người)` };
     }
 
     const start = new Date(startDate);
@@ -31,7 +40,6 @@ const staffCreateBookingUseCase: IStaffCreateBookingUseCase = {
 
       let assignedRoomId: string | null = null;
       for (const room of availableRoomsOfClass) {
-        // Kiểm tra trạng thái phòng thực tế nếu ngày nhận phòng là hôm nay
         if (start <= now && ["Occupied", "Cleaning"].includes(room.status)) {
           continue;
         }
@@ -44,7 +52,7 @@ const staffCreateBookingUseCase: IStaffCreateBookingUseCase = {
       }
 
       if (!assignedRoomId) {
-        throw { status: 400, message: `Không còn phòng trống cho hạng phòng ${roomClass} trong khoảng thời gian này` };
+        throw { status: 400, message: `Không còn phòng trống cho hạng phòng ${roomType.name} trong khoảng thời gian này` };
       }
 
       finalDetails = [{
@@ -53,14 +61,33 @@ const staffCreateBookingUseCase: IStaffCreateBookingUseCase = {
       }];
     } else {
       for (const detail of finalDetails) {
+        const room = await roomRepository.findById(detail.roomId);
+        if (!room) {
+          throw { status: 404, message: `Phòng ${detail.roomId} không tồn tại` };
+        }
+        if (room.roomTypeId !== roomClass) {
+          throw { status: 400, message: `Phòng ${room.roomNumber} không thuộc hạng phòng ${roomType.name}` };
+        }
+        if (room.status === "Maintenance") {
+          throw { status: 400, message: `Phòng ${room.roomNumber} đang bảo trì, không thể đặt` };
+        }
+
         const overlap = await bookingRepository.findOverlappingByRoom(detail.roomId, start, end);
         if (overlap) {
-          throw { status: 400, message: `Phòng ${detail.roomId} đã bị trùng lịch trong khoảng thời gian này` };
+          throw { status: 400, message: `Phòng ${room.roomNumber} đã bị trùng lịch trong khoảng thời gian này` };
         }
       }
     }
 
-    // 3. Tạo đơn đặt phòng
+    // 3. Tính toán tổng tiền
+    const nights = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+    const totalAmount = roomType.price * nights;
+
+    if (deposit && deposit > totalAmount) {
+      throw { status: 400, message: "Tiền cọc không thể lớn hơn tổng tiền phòng" };
+    }
+
+    // 4. Tạo đơn đặt phòng
     const booking = await bookingRepository.create({
       customerId,
       roomClass,
@@ -68,8 +95,9 @@ const staffCreateBookingUseCase: IStaffCreateBookingUseCase = {
       endDate: end,
       guestCount,
       deposit: deposit || 0,
+      totalAmount,
       details: finalDetails,
-      status: "Confirmed", // Nhân viên tạo mặc định là Confirmed
+      status: "Confirmed",
     });
 
     return booking;

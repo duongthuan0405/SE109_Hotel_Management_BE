@@ -4,8 +4,8 @@ import crypto from "crypto";
 
 // Mock data
 let roomTypes: RoomType[] = [
-  { id: "1", code: "STD", name: "Phòng Tiêu Chuẩn" },
-  { id: "2", code: "VIP", name: "Phòng VIP" },
+  { id: "1", code: "STD", name: "Phòng Tiêu Chuẩn", price: 500000, maxOccupancy: 2 },
+  { id: "2", code: "VIP", name: "Phòng VIP", price: 1200000, maxOccupancy: 4 },
 ];
 
 const roomTypeRepository: IRoomTypeRepository = {
