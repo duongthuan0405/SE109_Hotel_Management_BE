@@ -8,6 +8,7 @@ import serviceRoutes from "./routes/serviceRoutes.js";
 import roomRoutes from "./routes/roomRoutes.js";
 import customerRoutes from "./routes/customerRoutes.js";
 import staffRoutes from "./routes/staffRoutes.js";
+import rentalReceiptRoutes from "./routes/rentalReceiptRoutes.js";
 
 const app = express();
 const PORT = env.PORT;
@@ -22,6 +23,7 @@ app.use("/api/services", serviceRoutes);
 app.use("/api/rooms", roomRoutes);
 app.use("/api/customers", customerRoutes);
 app.use("/api/staffs", staffRoutes);
+app.use("/api/rental-receipts", rentalReceiptRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello từ Express + TypeScript!");
