@@ -3,7 +3,7 @@ import { type IGetStaffByUserIdUseCase, type GetStaffByUserIdUCInput, type Staff
 
 const getStaffByUserIdUseCase: IGetStaffByUserIdUseCase = {
   execute: async (input: GetStaffByUserIdUCInput): Promise<StaffUCOutput> => {
-    const staff = await staffRepository.findByUserId(input.userId);
+    const staff = await staffRepository.findByUserId(input.userId, { user: true });
     if (!staff) {
       throw { status: 404, message: "Hồ sơ nhân viên không tồn tại" };
     }

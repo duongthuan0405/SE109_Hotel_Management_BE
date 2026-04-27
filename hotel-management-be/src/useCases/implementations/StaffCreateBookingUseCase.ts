@@ -100,7 +100,7 @@ const staffCreateBookingUseCase: IStaffCreateBookingUseCase = {
       status: "Confirmed",
     });
 
-    return booking;
+    return (await bookingRepository.findById(booking.id, { customer: true, rooms: true }))!;
   },
 };
 

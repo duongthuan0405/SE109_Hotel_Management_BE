@@ -8,7 +8,8 @@ const createRoomUseCase: ICreateRoomUseCase = {
       throw { status: 400, message: "Mã phòng đã tồn tại" };
     }
 
-    return await roomRepository.create(data);
+    const newRoom = await roomRepository.create(data);
+    return (await roomRepository.findById(newRoom.id, { roomType: true }))!;
   },
 };
 

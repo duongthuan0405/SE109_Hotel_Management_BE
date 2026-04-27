@@ -7,7 +7,7 @@ export type StaffResponseWrapper<T = undefined> = {
 
 export type StaffDataDTO = {
   _id: string;
-  TaiKhoanId: string;
+  TaiKhoan: any; // Populated object
   MaNV: string;
   HoTen: string;
   ChucVu: string;

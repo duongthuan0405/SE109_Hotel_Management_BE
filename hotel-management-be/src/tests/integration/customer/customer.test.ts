@@ -2,73 +2,85 @@ import { describe, it, expect, beforeAll } from "vitest";
 import request from "supertest";
 import app from "../../../server.js";
 
-describe("Customer API Integration Tests", () => {
+describe("Customer API Integration Tests (Legacy Compatibility)", () => {
   let adminToken = "";
   let customerToken = "";
   let customerId = "";
 
   beforeAll(async () => {
-    // 1. Login as Admin
+    // Login as Admin
     const adminLoginRes = await request(app).post("/api/auth/login").send({
       TenDangNhap: "admin",
       MatKhau: "123456",
     });
     adminToken = adminLoginRes.body.token;
 
-    // 2. Register & Login as Customer
+    // Register & Login as Customer
+    const cmnd = "TEST_" + Date.now();
     await request(app).post("/api/auth/register").send({
-      TenDangNhap: "customer_test_profile",
+      TenDangNhap: "customer_test_compat",
       MatKhau: "123456",
-      HoTen: "Nguyễn Văn Test",
-      CMND: "TEST_" + Date.now(),
+      HoTen: "Khách Hàng Test",
+      CMND: cmnd,
       SDT: "0123456789",
-      Email: "test@customer.com",
+      Email: `test_${Date.now()}@customer.com`,
     });
     const customerLoginRes = await request(app).post("/api/auth/login").send({
-      TenDangNhap: "customer_test_profile",
+      TenDangNhap: "customer_test_compat",
       MatKhau: "123456",
     });
     customerToken = customerLoginRes.body.token;
   });
 
-  describe("Customer Self-Service (GET/PUT /me)", () => {
-    it("should get my own profile", async () => {
+  describe("Customer Profile & Compatibility", () => {
+    it("should return customer profile with legacy fields and populated account", async () => {
       const res = await request(app)
         .get("/api/customers/me")
         .set("Authorization", `Bearer ${customerToken}`);
       
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.HoTen).toBe("Nguyễn Văn Test");
-      expect(res.body.data.MaKH).toBeDefined();
-      customerId = res.body.data._id;
+      
+      const data = res.body.data;
+      expect(data._id).toBeDefined();
+      expect(data.MaKH).toBeDefined();
+      expect(data.HoTen).toBe("Khách Hàng Test");
+      expect(data.CMND).toBeDefined();
+      
+      // Kiểm tra populate TaiKhoan (Account)
+      expect(data.TaiKhoan).toBeDefined();
+      expect(data.TaiKhoan.TenDangNhap).toBe("customer_test_compat");
+      
+      customerId = data._id;
     });
 
-    it("should update my own profile", async () => {
+    it("should allow updating profile with Vietnamese keys", async () => {
       const res = await request(app)
         .put("/api/customers/me")
         .set("Authorization", `Bearer ${customerToken}`)
         .send({
-          HoTen: "Nguyễn Văn Updated",
-          DiaChi: "456 Đường XYZ",
+          HoTen: "Khách Hàng Updated",
+          DiaChi: "123 Legacy Street",
         });
       
       expect(res.status).toBe(200);
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.HoTen).toBe("Nguyễn Văn Updated");
-      expect(res.body.data.DiaChi).toBe("456 Đường XYZ");
+      expect(res.body.data.HoTen).toBe("Khách Hàng Updated");
+      expect(res.body.data.DiaChi).toBe("123 Legacy Street");
     });
   });
 
-  describe("Admin Management (GET /api/customers)", () => {
-    it("should allow admin to get all customers", async () => {
+  describe("Admin Management Compatibility", () => {
+    it("should allow admin to list all customers with full data", async () => {
       const res = await request(app)
         .get("/api/customers")
         .set("Authorization", `Bearer ${adminToken}`);
       
       expect(res.status).toBe(200);
-      expect(res.body.success).toBe(true);
       expect(Array.isArray(res.body.data)).toBe(true);
+      
+      const customer = res.body.data.find((c: any) => c._id === customerId);
+      expect(customer).toBeDefined();
+      expect(customer.MaKH).toBeDefined();
     });
 
     it("should allow admin to get customer by id", async () => {
@@ -77,8 +89,7 @@ describe("Customer API Integration Tests", () => {
         .set("Authorization", `Bearer ${adminToken}`);
       
       expect(res.status).toBe(200);
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.HoTen).toBe("Nguyễn Văn Updated");
+      expect(res.body.data.HoTen).toBe("Khách Hàng Updated");
     });
 
     it("should deny customer from deleting themselves via admin API", async () => {

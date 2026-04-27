@@ -1,11 +1,16 @@
 import { type Booking } from "../../models/Booking.js";
 
+export type BookingInclude = {
+  customer?: boolean;
+  rooms?: boolean; // Populate rooms in details
+};
+
 export type IBookingRepository = {
-  findAll: () => Promise<Booking[]>;
-  findById: (id: string) => Promise<Booking | null>;
-  findByCustomerId: (customerId: string) => Promise<Booking[]>;
-  create: (booking: Omit<Booking, "id" | "code" | "createdAt" | "updatedAt">) => Promise<Booking>;
-  save: (booking: Booking) => Promise<Booking>;
+  findAll: (include?: BookingInclude) => Promise<Booking[]>;
+  findById: (id: string, include?: BookingInclude) => Promise<Booking | null>;
+  findByCustomerId: (customerId: string, include?: BookingInclude) => Promise<Booking[]>;
+  create: (booking: Omit<Booking, "id" | "code" | "createdAt" | "updatedAt" | "customer">) => Promise<Booking>;
+  save: (booking: Booking, include?: BookingInclude) => Promise<Booking>;
   deleteById: (id: string) => Promise<void>;
   count: () => Promise<number>;
   

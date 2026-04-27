@@ -13,7 +13,7 @@ export type CustomerDataDTO = {
   SDT: string;
   Email: string;
   DiaChi?: string | undefined;
-  TaiKhoanId?: string | undefined;
+  TaiKhoan?: any | undefined;
 };
 
 export type CreateCustomerRequestDTO = {

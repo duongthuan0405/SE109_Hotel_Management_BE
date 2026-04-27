@@ -19,7 +19,13 @@ import type { RoomStatus } from "../models/Room.js";
 const mapToDTO = (room: RoomUCOutput): RoomDataDTO => ({
   _id: room.id,
   MaPhong: room.roomNumber,
-  LoaiPhong: room.roomTypeId,
+  LoaiPhong: room.roomType ? {
+    _id: room.roomType.id,
+    MaLoaiPhong: room.roomType.code,
+    TenLoaiPhong: room.roomType.name,
+    DonGia: room.roomType.price,
+    SoKhachToiDa: room.roomType.maxOccupancy,
+  } : room.roomTypeId,
   GiaPhong: room.price,
   TrangThai: room.status,
 });

@@ -3,7 +3,10 @@ import type { ICustomerGetBookingByIdUseCase, BookingUCOutput } from "../types/I
 
 const customerGetBookingByIdUseCase: ICustomerGetBookingByIdUseCase = {
   execute: async (input: { id: string, customerId: string }): Promise<BookingUCOutput> => {
-    const booking = await bookingRepository.findById(input.id);
+    const booking = await bookingRepository.findById(input.id, {
+      customer: true,
+      rooms: true,
+    });
     if (!booking) {
       throw { status: 404, message: "Đặt phòng không tồn tại" };
     }

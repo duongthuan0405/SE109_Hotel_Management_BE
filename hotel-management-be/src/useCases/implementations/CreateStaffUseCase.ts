@@ -23,7 +23,9 @@ const createStaffUseCase: ICreateStaffUseCase = {
       email,
     });
 
-    return newStaff;
+    const populatedStaff = await staffRepository.findById(newStaff.id, { user: true });
+
+    return populatedStaff!;
   },
 };
 

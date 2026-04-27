@@ -20,7 +20,15 @@ import type { BookingUCOutput } from "../useCases/types/IBookingUseCases.js";
 const mapToDTO = (booking: BookingUCOutput): BookingDataDTO => ({
   _id: booking.id,
   MaDatPhong: booking.code,
-  KhachHang: booking.customerId,
+  KhachHang: booking.customer ? {
+    _id: booking.customer.id,
+    MaKH: booking.customer.customerId,
+    HoTen: booking.customer.fullName,
+    CMND: booking.customer.identityCard,
+    SDT: booking.customer.phone,
+    Email: booking.customer.email,
+    DiaChi: booking.customer.address,
+  } : booking.customerId,
   HangPhong: booking.roomClass,
   NgayDen: booking.startDate,
   NgayDi: booking.endDate,
@@ -28,7 +36,12 @@ const mapToDTO = (booking: BookingUCOutput): BookingDataDTO => ({
   TienCoc: booking.deposit,
   ChiTietDatPhong: booking.details.map(d => ({
     MaCTDP: d.code,
-    Phong: d.roomId
+    Phong: d.room ? {
+      _id: d.room.id,
+      MaPhong: d.room.roomNumber,
+      GiaPhong: d.room.price,
+      TrangThai: d.room.status,
+    } : d.roomId
   })),
   TrangThai: booking.status,
   createdAt: booking.createdAt,

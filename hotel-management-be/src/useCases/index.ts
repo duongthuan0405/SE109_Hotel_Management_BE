@@ -117,3 +117,17 @@ export const getStaffByUserIdUseCase = getStaffByUserIdUseCaseImpl;
 export const createStaffUseCase = createStaffUseCaseImpl;
 export const updateStaffUseCase = updateStaffUseCaseImpl;
 export const deleteStaffUseCase = deleteStaffUseCaseImpl;
+
+import { createRentalReceipt as createRentalReceiptUseCaseImpl } from "./implementations/CreateRentalReceiptUseCase.js";
+import { getAllRentalReceipts as getAllRentalReceiptsUseCaseImpl } from "./implementations/GetAllRentalReceiptsUseCase.js";
+import { getRentalReceiptById as getRentalReceiptByIdUseCaseImpl } from "./implementations/GetRentalReceiptByIdUseCase.js";
+import { updateRentalReceipt as updateRentalReceiptUseCaseImpl } from "./implementations/UpdateRentalReceiptUseCase.js";
+import { checkOut as checkOutUseCaseImpl } from "./implementations/CheckOutUseCase.js";
+import { deleteRentalReceipt as deleteRentalReceiptUseCaseImpl } from "./implementations/DeleteRentalReceiptUseCase.js";
+
+export const createRentalReceiptUseCase = createRentalReceiptUseCaseImpl;
+export const getAllRentalReceiptsUseCase = getAllRentalReceiptsUseCaseImpl;
+export const getRentalReceiptByIdUseCase = getRentalReceiptByIdUseCaseImpl;
+export const updateRentalReceiptUseCase = updateRentalReceiptUseCaseImpl;
+export const checkOutUseCase = checkOutUseCaseImpl;
+export const deleteRentalReceiptUseCase = deleteRentalReceiptUseCaseImpl;

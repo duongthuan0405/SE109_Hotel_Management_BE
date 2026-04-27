@@ -3,7 +3,7 @@ import { type IGetAllCustomersUseCase, type CustomerUCOutput } from "../types/IC
 
 const getAllCustomersUseCase: IGetAllCustomersUseCase = {
   execute: async (): Promise<CustomerUCOutput[]> => {
-    return await customerRepository.findAll();
+    return await customerRepository.findAll({ user: true });
   },
 };
 

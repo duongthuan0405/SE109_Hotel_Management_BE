@@ -1,5 +1,6 @@
-import { type IStaffRepository } from "../types/IStaffRepository.js";
+import { type IStaffRepository, type StaffInclude } from "../types/IStaffRepository.js";
 import { type Staff } from "../../models/Staff.js";
+import userRepository from "./UserRepository.js";
 
 const mockStaffs: Staff[] = [
   {
@@ -15,20 +16,38 @@ const mockStaffs: Staff[] = [
   }
 ];
 
+const applyInclude = async (staff: Staff, include?: StaffInclude): Promise<Staff> => {
+  if (!include) return { ...staff };
+
+  const result = { ...staff };
+
+  if (include.user) {
+    result.user = (await userRepository.findById(staff.userId)) || undefined;
+  }
+
+  return result;
+};
+
 const staffRepository: IStaffRepository = {
-  findAll: async (): Promise<Staff[]> => {
-    return mockStaffs;
+  findAll: async (include): Promise<Staff[]> => {
+    return Promise.all(mockStaffs.map(s => applyInclude(s, include)));
   },
-  findById: async (id: string): Promise<Staff | null> => {
-    return mockStaffs.find(s => s.id === id) || null;
+  findById: async (id, include): Promise<Staff | null> => {
+    const staff = mockStaffs.find(s => s.id === id);
+    if (!staff) return null;
+    return applyInclude(staff, include);
   },
-  findByUserId: async (userId: string): Promise<Staff | null> => {
-    return mockStaffs.find(s => s.userId === userId) || null;
+  findByUserId: async (userId, include): Promise<Staff | null> => {
+    const staff = mockStaffs.find(s => s.userId === userId);
+    if (!staff) return null;
+    return applyInclude(staff, include);
   },
-  findByEmail: async (email: string): Promise<Staff | null> => {
-    return mockStaffs.find(s => s.email === email) || null;
+  findByEmail: async (email, include): Promise<Staff | null> => {
+    const staff = mockStaffs.find(s => s.email === email);
+    if (!staff) return null;
+    return applyInclude(staff, include);
   },
-  create: async (staff: Omit<Staff, "id" | "createdAt" | "updatedAt">): Promise<Staff> => {
+  create: async (staff: Omit<Staff, "id" | "createdAt" | "updatedAt" | "user">): Promise<Staff> => {
     const newStaff: Staff = {
       ...staff,
       id: `staff-${mockStaffs.length + 1}`,
@@ -38,24 +57,18 @@ const staffRepository: IStaffRepository = {
     mockStaffs.push(newStaff);
     return newStaff;
   },
-  update: async (id: string, data: Partial<Staff>): Promise<Staff | null> => {
+  update: async (id, data, include): Promise<Staff | null> => {
     const index = mockStaffs.findIndex(s => s.id === id);
     if (index === -1) return null;
     const current = mockStaffs[index]!;
     const updatedStaff: Staff = {
-      id: current.id,
-      userId: data.userId !== undefined ? data.userId : current.userId,
-      staffId: data.staffId !== undefined ? data.staffId : current.staffId,
-      fullName: data.fullName !== undefined ? data.fullName : current.fullName,
-      position: data.position !== undefined ? data.position : current.position,
-      phone: data.phone !== undefined ? data.phone : current.phone,
-      email: data.email !== undefined ? data.email : current.email,
-      createdAt: current.createdAt,
+      ...current,
+      ...data,
       updatedAt: new Date(),
-    };
+    } as Staff;
     
     mockStaffs[index] = updatedStaff;
-    return updatedStaff;
+    return applyInclude(updatedStaff, include);
   },
   delete: async (id: string): Promise<boolean> => {
     const index = mockStaffs.findIndex(s => s.id === id);

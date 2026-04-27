@@ -3,7 +3,7 @@ import { type IGetCustomerByIdUseCase, type GetCustomerByIdUCInput, type Custome
 
 const getCustomerByIdUseCase: IGetCustomerByIdUseCase = {
   execute: async (input: GetCustomerByIdUCInput): Promise<CustomerUCOutput> => {
-    const customer = await customerRepository.findById(input.id);
+    const customer = await customerRepository.findById(input.id, { user: true });
     if (!customer) {
       throw { status: 404, message: "Khách hàng không tồn tại" };
     }
