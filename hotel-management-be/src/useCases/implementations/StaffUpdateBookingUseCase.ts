@@ -57,6 +57,12 @@ const staffUpdateBookingUseCase: IStaffUpdateBookingUseCase = {
 
     // Kiểm tra trùng lịch và tính khả dụng của phòng
     if (startDate || endDate || details || roomClass) {
+      // Đảm bảo mỗi chi tiết đều có mã định danh (Backend sinh)
+      newDetails = newDetails.map((d, index) => ({
+        ...d,
+        code: d.code || `CTDP-${Date.now()}-${index}`
+      }));
+
       for (const detail of newDetails) {
         const room = await roomRepository.findById(detail.roomId);
         if (!room || room.roomTypeId !== newRoomClass || room.status === "Maintenance") {
@@ -64,7 +70,7 @@ const staffUpdateBookingUseCase: IStaffUpdateBookingUseCase = {
         }
         const overlap = await bookingRepository.findOverlappingByRoom(detail.roomId, newStart, newEnd, id);
         if (overlap) {
-          throw { status: 400, message: `Phòng ${room.roomNumber} đã bị trùng lịch trong khoảng thời gian mới` };
+          throw { status: 400, message: `Phòng ${room.code} đã bị trùng lịch trong khoảng thời gian mới` };
         }
       }
     }

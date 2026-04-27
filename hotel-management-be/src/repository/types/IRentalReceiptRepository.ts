@@ -9,7 +9,7 @@ export type RentalReceiptInclude = {
 export interface IRentalReceiptRepository {
   create(data: Omit<RentalSlip, "id" | "createdAt" | "updatedAt" | "booking" | "room" | "checkInStaff">): Promise<RentalSlip>;
   findById(id: string, include?: RentalReceiptInclude): Promise<RentalSlip | null>;
-  findBySlipCode(slipCode: string, include?: RentalReceiptInclude): Promise<RentalSlip | null>;
+  findByCode(code: string, include?: RentalReceiptInclude): Promise<RentalSlip | null>;
   findAll(include?: RentalReceiptInclude): Promise<RentalSlip[]>;
   update(id: string, data: Partial<Omit<RentalSlip, "id" | "createdAt" | "updatedAt" | "booking" | "room" | "checkInStaff">>, include?: RentalReceiptInclude): Promise<RentalSlip | null>;
   delete(id: string): Promise<boolean>;

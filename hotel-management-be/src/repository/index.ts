@@ -7,6 +7,7 @@ import roomRepositoryImpl from "./implementations/RoomRepository.js";
 import customerRepositoryImpl from "./implementations/CustomerRepository.js";
 import staffRepositoryImpl from "./implementations/StaffRepository.js";
 import rentalReceiptRepositoryImpl from "./implementations/RentalReceiptRepository.js";
+import serviceUsageRepositoryImpl from "./implementations/ServiceUsageRepository.js";
 
 export const userRepository = userRepositoryImpl;
 export const resetPasswordOTPRepository = resetPasswordOTPRepositoryImpl;
@@ -17,3 +18,4 @@ export const roomRepository = roomRepositoryImpl;
 export const customerRepository = customerRepositoryImpl;
 export const staffRepository = staffRepositoryImpl;
 export const rentalReceiptRepository = rentalReceiptRepositoryImpl;
+export const serviceUsageRepository = serviceUsageRepositoryImpl;

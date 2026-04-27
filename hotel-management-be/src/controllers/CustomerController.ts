@@ -17,7 +17,7 @@ import { type CustomerUCOutput } from "../useCases/types/ICustomerUseCases.js";
 
 const mapToDTO = (customer: CustomerUCOutput): CustomerDataDTO => ({
   _id: customer.id,
-  MaKH: customer.customerId,
+  MaKH: customer.code,
   HoTen: customer.fullName,
   CMND: customer.identityCard,
   SDT: customer.phone,

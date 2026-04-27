@@ -4,7 +4,7 @@ export type Customer = {
   id: string;
   userId?: string | undefined; // TaiKhoan (ID)
   user?: User | undefined;     // TaiKhoan (Object)
-  customerId: string;          // MaKH (ví dụ: KH001)
+  code: string;                // MaKH (ví dụ: KH001)
   fullName: string;            // HoTen
   identityCard: string;        // CMND
   phone: string;               // SDT

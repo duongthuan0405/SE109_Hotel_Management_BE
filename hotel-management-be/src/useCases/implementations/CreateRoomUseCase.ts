@@ -3,7 +3,7 @@ import type { ICreateRoomUseCase, CreateRoomUCInput, RoomUCOutput } from "../typ
 
 const createRoomUseCase: ICreateRoomUseCase = {
   execute: async (data: CreateRoomUCInput): Promise<RoomUCOutput> => {
-    const existingRoom = await roomRepository.findByRoomNumber(data.roomNumber);
+    const existingRoom = await roomRepository.findByCode(data.code);
     if (existingRoom) {
       throw { status: 400, message: "Mã phòng đã tồn tại" };
     }

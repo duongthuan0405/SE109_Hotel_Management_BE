@@ -6,7 +6,7 @@ const mockStaffs: Staff[] = [
   {
     id: "staff-1",
     userId: "user-1", // admin account
-    staffId: "NV001",
+    code: "NV001",
     fullName: "Hệ thống Admin",
     position: "Admin",
     phone: "0999999999",
@@ -39,6 +39,11 @@ const staffRepository: IStaffRepository = {
   },
   findByUserId: async (userId, include): Promise<Staff | null> => {
     const staff = mockStaffs.find(s => s.userId === userId);
+    if (!staff) return null;
+    return applyInclude(staff, include);
+  },
+  findByCode: async (code, include): Promise<Staff | null> => {
+    const staff = mockStaffs.find(s => s.code === code);
     if (!staff) return null;
     return applyInclude(staff, include);
   },

@@ -8,7 +8,7 @@ export type IGetAllRoomsUseCase = IUseCase<void, RoomUCOutput[]>;
 export type IGetRoomByIdUseCase = IUseCase<string, RoomUCOutput | null>;
 
 export type CreateRoomUCInput = {
-  roomNumber: string;
+  code: string;
   roomTypeId: string;
   price: number;
   status: RoomStatus;
@@ -17,7 +17,7 @@ export type ICreateRoomUseCase = IUseCase<CreateRoomUCInput, RoomUCOutput>;
 
 export type UpdateRoomUCInput = {
   id: string;
-  roomNumber?: string;
+  code?: string;
   roomTypeId?: string;
   price?: number;
   status?: RoomStatus;

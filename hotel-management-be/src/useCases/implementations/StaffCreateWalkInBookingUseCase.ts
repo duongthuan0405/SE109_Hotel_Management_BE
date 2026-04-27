@@ -88,6 +88,12 @@ const staffCreateWalkInBookingUseCase: IStaffCreateWalkInBookingUseCase = {
         roomId: assignedRoomId
       }];
     } else {
+      // Đảm bảo mỗi chi tiết đều có mã định danh (Backend sinh)
+      finalDetails = finalDetails.map((d, index) => ({
+        ...d,
+        code: d.code || `CTDP-${Date.now()}-${index}`
+      }));
+
       for (const detail of finalDetails) {
         const room = await roomRepository.findById(detail.roomId);
         if (!room || room.roomTypeId !== roomClass || room.status === "Maintenance") {

@@ -16,7 +16,7 @@ const createStaffUseCase: ICreateStaffUseCase = {
 
     const newStaff = await staffRepository.create({
       userId,
-      staffId: MaNV,
+      code: MaNV,
       fullName,
       position,
       phone,

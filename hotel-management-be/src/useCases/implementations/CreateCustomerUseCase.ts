@@ -20,7 +20,7 @@ const createCustomerUseCase: ICreateCustomerUseCase = {
     const MaKH = await customerRepository.generateNextId();
 
     const newCustomer = await customerRepository.create({
-      customerId: MaKH,
+      code: MaKH,
       fullName,
       identityCard,
       phone,

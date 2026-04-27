@@ -7,22 +7,13 @@ import { rentalReceiptRepository, roomRepository } from "../../repository/index.
 
 export const createRentalReceipt: ICreateRentalReceiptUseCase = {
   execute: async (input: CreateRentalReceiptUCInput): Promise<RentalSlip> => {
-    // 1. Check logic auto-generate MaPTP
-    let slipCode = input.slipCode;
-    if (!slipCode || slipCode.startsWith("PTP17")) {
-      const count = await rentalReceiptRepository.countAll();
-      slipCode = `PTP${String(count + 1).padStart(3, "0")}`;
-    }
+    // 1. Luôn tự động sinh mã PTP từ Backend
+    const count = await rentalReceiptRepository.countAll();
+    const code = `PTP${String(count + 1).padStart(3, "0")}`;
 
-    // 2. Kiểm tra mã phiếu đã tồn tại chưa
-    const existing = await rentalReceiptRepository.findBySlipCode(slipCode);
-    if (existing) {
-      throw { status: 409, message: "Mã phiếu thuê phòng đã tồn tại" };
-    }
-
-    // 3. Tạo phiếu mới
+    // 2. Tạo phiếu mới
     const slip = await rentalReceiptRepository.create({
-      slipCode,
+      code,
       bookingId: input.bookingId,
       roomId: input.roomId,
       checkInDate: new Date(),

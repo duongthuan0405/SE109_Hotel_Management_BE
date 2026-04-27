@@ -22,7 +22,7 @@ const mapToDTO = (staff: StaffUCOutput): StaffDataDTO => ({
     TenDangNhap: staff.user.username,
     VaiTro: staff.user.role,
   } : staff.userId,
-  MaNV: staff.staffId,
+  MaNV: staff.code,
   HoTen: staff.fullName,
   ChucVu: staff.position,
   SDT: staff.phone,

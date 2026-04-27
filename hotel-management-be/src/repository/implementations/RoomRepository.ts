@@ -6,7 +6,7 @@ import roomTypeRepository from "./RoomTypeRepository.js";
 let rooms: Room[] = [
   {
     id: "room-1",
-    roomNumber: "101",
+    code: "101",
     roomTypeId: "1",
     price: 500000,
     status: "Available",
@@ -15,7 +15,7 @@ let rooms: Room[] = [
   },
   {
     id: "room-2",
-    roomNumber: "102",
+    code: "102",
     roomTypeId: "1",
     price: 500000,
     status: "Available",
@@ -24,7 +24,7 @@ let rooms: Room[] = [
   },
   {
     id: "room-3",
-    roomNumber: "103",
+    code: "103",
     roomTypeId: "2",
     price: 1200000,
     status: "Available",
@@ -56,8 +56,8 @@ const roomRepository: IRoomRepository = {
     return applyInclude(room, include);
   },
 
-  findByRoomNumber: async (roomNumber, include): Promise<Room | null> => {
-    const room = rooms.find((r) => r.roomNumber === roomNumber);
+  findByCode: async (code, include): Promise<Room | null> => {
+    const room = rooms.find((r) => r.code === code);
     if (!room) return null;
     return applyInclude(room, include);
   },

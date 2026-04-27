@@ -6,7 +6,7 @@ const mockCustomers: Customer[] = [
   {
     id: "cust-1",
     userId: "user-2", // customer1 account
-    customerId: "KH001",
+    code: "KH001",
     fullName: "Nguyễn Khách Hàng",
     identityCard: "123456789",
     phone: "0901234567",
@@ -40,6 +40,11 @@ const customerRepository: ICustomerRepository = {
   },
   findByUserId: async (userId, include): Promise<Customer | null> => {
     const customer = mockCustomers.find(c => c.userId === userId);
+    if (!customer) return null;
+    return applyInclude(customer, include);
+  },
+  findByCode: async (code, include): Promise<Customer | null> => {
+    const customer = mockCustomers.find(c => c.code === code);
     if (!customer) return null;
     return applyInclude(customer, include);
   },

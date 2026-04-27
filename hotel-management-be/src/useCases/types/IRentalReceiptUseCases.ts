@@ -3,7 +3,6 @@ import { type RentalSlip, type RentalSlipStatus } from "../../models/RentalSlip.
 
 // Create
 export type CreateRentalReceiptUCInput = {
-  slipCode?: string | undefined;
   bookingId: string;
   roomId: string;
   expectedCheckOutDate: Date;
