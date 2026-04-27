@@ -12,22 +12,22 @@ export type GetCustomerByUserIdUCInput = { userId: string };
 export type IGetCustomerByUserIdUseCase = IUseCase<GetCustomerByUserIdUCInput, CustomerUCOutput>;
 
 export type CreateCustomerUCInput = {
-  HoTen: string;
-  CMND: string;
-  SDT: string;
-  Email: string;
-  DiaChi?: string | undefined;
-  TaiKhoanId?: string | undefined;
+  fullName: string;
+  identityCard: string;
+  phone: string;
+  email: string;
+  address?: string | undefined;
+  userId?: string | undefined;
 };
 export type ICreateCustomerUseCase = IUseCase<CreateCustomerUCInput, CustomerUCOutput>;
 
 export type UpdateCustomerUCInput = {
   id: string;
-  HoTen?: string | undefined;
-  CMND?: string | undefined;
-  SDT?: string | undefined;
-  Email?: string | undefined;
-  DiaChi?: string | undefined;
+  fullName?: string | undefined;
+  identityCard?: string | undefined;
+  phone?: string | undefined;
+  email?: string | undefined;
+  address?: string | undefined;
 };
 export type IUpdateCustomerUseCase = IUseCase<UpdateCustomerUCInput, CustomerUCOutput>;
 

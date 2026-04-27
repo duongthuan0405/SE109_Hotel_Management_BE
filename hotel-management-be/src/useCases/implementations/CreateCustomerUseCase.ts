@@ -3,15 +3,15 @@ import { type ICreateCustomerUseCase, type CreateCustomerUCInput, type CustomerU
 
 const createCustomerUseCase: ICreateCustomerUseCase = {
   execute: async (input: CreateCustomerUCInput): Promise<CustomerUCOutput> => {
-    const { HoTen, CMND, SDT, Email, DiaChi, TaiKhoanId } = input;
+    const { fullName, identityCard, phone, email, address, userId } = input;
 
     // Kiểm tra CMND/Email tồn tại
-    const existingCMND = await customerRepository.findByIdentityCard(CMND);
+    const existingCMND = await customerRepository.findByIdentityCard(identityCard);
     if (existingCMND) {
       throw { status: 409, message: "Số CMND đã tồn tại trong hệ thống" };
     }
 
-    const existingEmail = await customerRepository.findByEmail(Email);
+    const existingEmail = await customerRepository.findByEmail(email);
     if (existingEmail) {
       throw { status: 409, message: "Email đã tồn tại trong hệ thống" };
     }
@@ -21,12 +21,12 @@ const createCustomerUseCase: ICreateCustomerUseCase = {
 
     const newCustomer = await customerRepository.create({
       customerId: MaKH,
-      fullName: HoTen,
-      identityCard: CMND,
-      phone: SDT,
-      email: Email,
-      address: DiaChi,
-      userId: TaiKhoanId,
+      fullName,
+      identityCard,
+      phone,
+      email,
+      address,
+      userId,
     });
 
     return newCustomer;

@@ -30,11 +30,11 @@ const createAccountUseCase: ICreateAccountUseCase = {
     // Nếu không phải khách hàng, tự động tạo hồ sơ nhân viên (Staff)
     if (role !== "Customer") {
       await createStaffUseCase.execute({
-        TaiKhoanId: newUser.id,
-        HoTen: username, // Tạm thời dùng username làm HoTen
-        ChucVu: role,
-        SDT: "0000000000",
-        Email: `${username}@hotel.com`, // Email mặc định theo domain hotel
+        userId: newUser.id,
+        fullName: username,
+        position: role,
+        phone: "",
+        email: ""
       });
     }
 

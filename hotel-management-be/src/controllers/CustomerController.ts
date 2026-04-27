@@ -90,12 +90,12 @@ const customerController = {
     try {
       const body = req.body as CreateCustomerRequestDTO;
       const result = await createCustomerUseCase.execute({
-        HoTen: body.HoTen,
-        CMND: body.CMND,
-        SDT: body.SDT,
-        Email: body.Email,
-        DiaChi: body.DiaChi,
-        TaiKhoanId: body.TaiKhoanId,
+        fullName: body.HoTen,
+        identityCard: body.CMND,
+        phone: body.SDT,
+        email: body.Email,
+        address: body.DiaChi,
+        userId: body.TaiKhoanId,
       });
       const response: CustomerResponseWrapper<CustomerDataDTO> = {
         success: true,
@@ -119,7 +119,11 @@ const customerController = {
       const body = req.body as UpdateCustomerRequestDTO;
       const result = await updateCustomerUseCase.execute({
         id,
-        ...body
+        fullName: body.HoTen,
+        identityCard: body.CMND,
+        phone: body.SDT,
+        email: body.Email,
+        address: body.DiaChi,
       });
       const response: CustomerResponseWrapper<CustomerDataDTO> = {
         success: true,
@@ -145,7 +149,11 @@ const customerController = {
       const body = req.body as UpdateCustomerRequestDTO;
       const result = await updateCustomerUseCase.execute({
         id: profile.id,
-        ...body
+        fullName: body.HoTen,
+        identityCard: body.CMND,
+        phone: body.SDT,
+        email: body.Email,
+        address: body.DiaChi,
       });
       
       const response: CustomerResponseWrapper<CustomerDataDTO> = {

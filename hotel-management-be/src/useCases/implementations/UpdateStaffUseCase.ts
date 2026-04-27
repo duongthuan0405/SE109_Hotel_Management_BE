@@ -11,10 +11,10 @@ const updateStaffUseCase: IUpdateStaffUseCase = {
     }
 
     const updatedStaff = await staffRepository.update(id, {
-      fullName: data.HoTen as string,
-      position: data.ChucVu as string,
-      phone: data.SDT as string,
-      email: data.Email as string,
+      fullName: data.fullName as string,
+      position: data.position as string,
+      phone: data.phone as string,
+      email: data.email as string,
     });
 
     if (!updatedStaff) {

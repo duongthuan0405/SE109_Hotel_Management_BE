@@ -11,11 +11,11 @@ const updateCustomerUseCase: IUpdateCustomerUseCase = {
     }
 
     const updatedCustomer = await customerRepository.update(id, {
-      fullName: data.HoTen as string,
-      identityCard: data.CMND as string,
-      phone: data.SDT as string,
-      email: data.Email as string,
-      address: data.DiaChi as string,
+      fullName: data.fullName as string,
+      identityCard: data.identityCard as string,
+      phone: data.phone as string,
+      email: data.email as string,
+      address: data.address as string,
     });
 
     if (!updatedCustomer) {

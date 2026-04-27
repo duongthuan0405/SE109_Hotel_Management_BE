@@ -1,13 +1,11 @@
 import type { Room, RoomStatus } from "../../models/Room.js";
+import type { IUseCase } from "./IUseCase.js";
+
 export type RoomUCOutput = Room;
 
-export interface IGetAllRoomsUseCase {
-  execute(): Promise<RoomUCOutput[]>;
-}
+export type IGetAllRoomsUseCase = IUseCase<void, RoomUCOutput[]>;
 
-export interface IGetRoomByIdUseCase {
-  execute(id: string): Promise<RoomUCOutput | null>;
-}
+export type IGetRoomByIdUseCase = IUseCase<string, RoomUCOutput | null>;
 
 export type CreateRoomUCInput = {
   roomNumber: string;
@@ -15,10 +13,7 @@ export type CreateRoomUCInput = {
   price: number;
   status: RoomStatus;
 };
-
-export interface ICreateRoomUseCase {
-  execute(data: CreateRoomUCInput): Promise<RoomUCOutput>;
-}
+export type ICreateRoomUseCase = IUseCase<CreateRoomUCInput, RoomUCOutput>;
 
 export type UpdateRoomUCInput = {
   id: string;
@@ -27,15 +22,12 @@ export type UpdateRoomUCInput = {
   price?: number;
   status?: RoomStatus;
 };
+export type IUpdateRoomUseCase = IUseCase<UpdateRoomUCInput, RoomUCOutput | null>;
 
-export interface IUpdateRoomUseCase {
-  execute(data: UpdateRoomUCInput): Promise<RoomUCOutput | null>;
-}
+export type IDeleteRoomUseCase = IUseCase<string, boolean>;
 
-export interface IDeleteRoomUseCase {
-  execute(id: string): Promise<boolean>;
-}
-
-export interface IUpdateRoomStatusUseCase {
-  execute(id: string, status: RoomStatus): Promise<RoomUCOutput | null>;
-}
+export type UpdateRoomStatusUCInput = {
+  id: string;
+  status: RoomStatus;
+};
+export type IUpdateRoomStatusUseCase = IUseCase<UpdateRoomStatusUCInput, RoomUCOutput | null>;
