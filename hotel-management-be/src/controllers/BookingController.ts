@@ -88,8 +88,20 @@ const bookingController = {
   },
   customerGetByCustomerId: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const customerId = req.params.customerId as string;
-      const result = await customerGetMyBookingsUseCase.execute({ customerId });
+      const user = (req as any).user;
+      let targetCustomerId = req.params.customerId as string;
+
+      if (user.role === 'Customer') {
+        const customer = await getCustomerByUserIdUseCase.execute({ userId: user.id });
+        if (!customer) throw { status: 404, message: "Không tìm thấy thông tin khách hàng" };
+        
+        // Ownership check
+        if (targetCustomerId !== customer.id) {
+          throw { status: 403, message: "Bạn không có quyền xem lịch sử đặt phòng này" };
+        }
+      }
+
+      const result = await customerGetMyBookingsUseCase.execute({ customerId: targetCustomerId });
       res.status(200).json({ success: true, message: "Lấy danh sách đặt phòng thành công", data: result.map(mapToDTO) });
     } catch (error) { next(error); }
   },
