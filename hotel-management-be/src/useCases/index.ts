@@ -131,3 +131,18 @@ export const getRentalReceiptByIdUseCase = getRentalReceiptByIdUseCaseImpl;
 export const updateRentalReceiptUseCase = updateRentalReceiptUseCaseImpl;
 export const checkOutUseCase = checkOutUseCaseImpl;
 export const deleteRentalReceiptUseCase = deleteRentalReceiptUseCaseImpl;
+
+import { createServiceUsage as createServiceUsageUseCaseImpl } from "./implementations/CreateServiceUsageUseCase.js";
+import { getAllServiceUsages as getAllServiceUsagesUseCaseImpl } from "./implementations/GetAllServiceUsagesUseCase.js";
+import { getServiceUsageById as getServiceUsageByIdUseCaseImpl } from "./implementations/GetServiceUsageByIdUseCase.js";
+import { getServiceUsagesByCustomerId as getServiceUsagesByCustomerIdUseCaseImpl } from "./implementations/GetServiceUsagesByCustomerIdUseCase.js";
+import { updateServiceUsage as updateServiceUsageUseCaseImpl } from "./implementations/UpdateServiceUsageUseCase.js";
+import { deleteServiceUsage as deleteServiceUsageUseCaseImpl } from "./implementations/DeleteServiceUsageUseCase.js";
+
+export const createServiceUsageUseCase = createServiceUsageUseCaseImpl;
+export const getAllServiceUsagesUseCase = getAllServiceUsagesUseCaseImpl;
+export const getServiceUsageByIdUseCase = getServiceUsageByIdUseCaseImpl;
+export const getServiceUsagesByCustomerIdUseCase = getServiceUsagesByCustomerIdUseCaseImpl;
+export const updateServiceUsageUseCase = updateServiceUsageUseCaseImpl;
+export const deleteServiceUsageUseCase = deleteServiceUsageUseCaseImpl;
+
