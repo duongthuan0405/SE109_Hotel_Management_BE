@@ -1,6 +1,7 @@
-import { type IRoomRepository } from "../types/IRoomRepository.js";
+import { type IRoomRepository, type RoomInclude } from "../types/IRoomRepository.js";
 import { type Room, type RoomStatus } from "../../models/Room.js";
 import crypto from "crypto";
+import roomTypeRepository from "./RoomTypeRepository.js";
 
 let rooms: Room[] = [
   {
@@ -32,30 +33,44 @@ let rooms: Room[] = [
   },
 ];
 
+const applyInclude = async (room: Room, include?: RoomInclude): Promise<Room> => {
+  if (!include) return { ...room };
+
+  const result = { ...room };
+
+  if (include.roomType) {
+    result.roomType = (await roomTypeRepository.findById(room.roomTypeId)) || undefined;
+  }
+
+  return result;
+};
+
 const roomRepository: IRoomRepository = {
-  findAll: async (): Promise<Room[]> => {
-    return [...rooms];
+  findAll: async (include): Promise<Room[]> => {
+    return Promise.all(rooms.map((r) => applyInclude(r, include)));
   },
 
-  findById: async (id: string): Promise<Room | null> => {
-    return rooms.find((r) => r.id === id) || null;
+  findById: async (id, include): Promise<Room | null> => {
+    const room = rooms.find((r) => r.id === id);
+    if (!room) return null;
+    return applyInclude(room, include);
   },
 
-  findByRoomNumber: async (roomNumber: string): Promise<Room | null> => {
-    return rooms.find((r) => r.roomNumber === roomNumber) || null;
+  findByRoomNumber: async (roomNumber, include): Promise<Room | null> => {
+    const room = rooms.find((r) => r.roomNumber === roomNumber);
+    if (!room) return null;
+    return applyInclude(room, include);
   },
 
-  findByRoomType: async (roomTypeId: string): Promise<Room[]> => {
-    return rooms.filter((r) => r.roomTypeId === roomTypeId);
+  findByRoomType: async (roomTypeId, include): Promise<Room[]> => {
+    const filtered = rooms.filter((r) => r.roomTypeId === roomTypeId);
+    return Promise.all(filtered.map((r) => applyInclude(r, include)));
   },
 
-  create: async (roomData: Omit<Room, "id" | "createdAt" | "updatedAt">): Promise<Room> => {
+  create: async (roomData: Omit<Room, "id" | "createdAt" | "updatedAt" | "roomType">): Promise<Room> => {
     const newRoom: Room = {
       id: crypto.randomUUID(),
-      roomNumber: roomData.roomNumber,
-      roomTypeId: roomData.roomTypeId,
-      price: roomData.price,
-      status: roomData.status,
+      ...roomData,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -63,35 +78,28 @@ const roomRepository: IRoomRepository = {
     return { ...newRoom };
   },
 
-  update: async (id: string, roomData: Partial<Omit<Room, "id" | "createdAt" | "updatedAt">>): Promise<Room | null> => {
+  update: async (id, roomData, include): Promise<Room | null> => {
     const index = rooms.findIndex((r) => r.id === id);
     if (index === -1) return null;
 
-    const room = rooms[index];
-    if (!room) return null;
-
+    const room = rooms[index]!;
     const updatedRoom: Room = {
-      id: room.id,
-      roomNumber: roomData.roomNumber ?? room.roomNumber,
-      roomTypeId: roomData.roomTypeId ?? room.roomTypeId,
-      price: roomData.price ?? room.price,
-      status: roomData.status ?? room.status,
-      createdAt: room.createdAt,
+      ...room,
+      ...roomData,
       updatedAt: new Date(),
-    };
+    } as Room;
 
     rooms[index] = updatedRoom;
-    return { ...updatedRoom };
+    return applyInclude(updatedRoom, include);
   },
 
-  updateStatus: async (id: string, status: RoomStatus): Promise<Room | null> => {
+  updateStatus: async (id, status, include): Promise<Room | null> => {
     const index = rooms.findIndex((r) => r.id === id);
     if (index === -1) return null;
-    const room = rooms[index];
-    if (!room) return null;
+    const room = rooms[index]!;
     room.status = status;
     room.updatedAt = new Date();
-    return { ...room };
+    return applyInclude(room, include);
   },
 
   delete: async (id: string): Promise<boolean> => {

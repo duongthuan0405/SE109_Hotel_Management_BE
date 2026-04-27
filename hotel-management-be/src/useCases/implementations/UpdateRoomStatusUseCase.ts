@@ -9,7 +9,7 @@ const updateRoomStatusUseCase: IUpdateRoomStatusUseCase = {
       throw { status: 404, message: "Không tìm thấy phòng" };
     }
 
-    return await roomRepository.update(id, { status });
+    return await roomRepository.update(id, { status }, { roomType: true });
   },
 };
 

@@ -1,5 +1,6 @@
-import { type ICustomerRepository } from "../types/ICustomerRepository.js";
+import { type ICustomerRepository, type CustomerInclude } from "../types/ICustomerRepository.js";
 import { type Customer } from "../../models/Customer.js";
+import userRepository from "./UserRepository.js";
 
 const mockCustomers: Customer[] = [
   {
@@ -16,23 +17,43 @@ const mockCustomers: Customer[] = [
   }
 ];
 
+const applyInclude = async (customer: Customer, include?: CustomerInclude): Promise<Customer> => {
+  if (!include) return { ...customer };
+
+  const result = { ...customer };
+
+  if (include.user) {
+    result.user = (await userRepository.findById(customer.userId || "")) || undefined;
+  }
+
+  return result;
+};
+
 const customerRepository: ICustomerRepository = {
-  findAll: async (): Promise<Customer[]> => {
-    return mockCustomers;
+  findAll: async (include): Promise<Customer[]> => {
+    return Promise.all(mockCustomers.map(c => applyInclude(c, include)));
   },
-  findById: async (id: string): Promise<Customer | null> => {
-    return mockCustomers.find(c => c.id === id) || null;
+  findById: async (id, include): Promise<Customer | null> => {
+    const customer = mockCustomers.find(c => c.id === id);
+    if (!customer) return null;
+    return applyInclude(customer, include);
   },
-  findByUserId: async (userId: string): Promise<Customer | null> => {
-    return mockCustomers.find(c => c.userId === userId) || null;
+  findByUserId: async (userId, include): Promise<Customer | null> => {
+    const customer = mockCustomers.find(c => c.userId === userId);
+    if (!customer) return null;
+    return applyInclude(customer, include);
   },
-  findByEmail: async (email: string): Promise<Customer | null> => {
-    return mockCustomers.find(c => c.email === email) || null;
+  findByEmail: async (email, include): Promise<Customer | null> => {
+    const customer = mockCustomers.find(c => c.email === email);
+    if (!customer) return null;
+    return applyInclude(customer, include);
   },
-  findByIdentityCard: async (identityCard: string): Promise<Customer | null> => {
-    return mockCustomers.find(c => c.identityCard === identityCard) || null;
+  findByIdentityCard: async (identityCard, include): Promise<Customer | null> => {
+    const customer = mockCustomers.find(c => c.identityCard === identityCard);
+    if (!customer) return null;
+    return applyInclude(customer, include);
   },
-  create: async (customer: Omit<Customer, "id" | "createdAt" | "updatedAt">): Promise<Customer> => {
+  create: async (customer: Omit<Customer, "id" | "createdAt" | "updatedAt" | "user">): Promise<Customer> => {
     const newCustomer: Customer = {
       ...customer,
       id: `cust-${mockCustomers.length + 1}`,
@@ -42,26 +63,19 @@ const customerRepository: ICustomerRepository = {
     mockCustomers.push(newCustomer);
     return newCustomer;
   },
-  update: async (id: string, data: Partial<Customer>): Promise<Customer | null> => {
+  update: async (id, data, include): Promise<Customer | null> => {
     const index = mockCustomers.findIndex((c) => c.id === id);
     if (index === -1) return null;
 
     const current = mockCustomers[index]!;
     const updatedCustomer: Customer = {
-      id: current.id,
-      userId: data.userId !== undefined ? data.userId : current.userId,
-      customerId: data.customerId !== undefined ? data.customerId : current.customerId,
-      fullName: data.fullName !== undefined ? data.fullName : current.fullName,
-      identityCard: data.identityCard !== undefined ? data.identityCard : current.identityCard,
-      phone: data.phone !== undefined ? data.phone : current.phone,
-      email: data.email !== undefined ? data.email : current.email,
-      address: data.address !== undefined ? data.address : current.address,
-      createdAt: current.createdAt,
+      ...current,
+      ...data,
       updatedAt: new Date(),
-    };
+    } as Customer;
     
     mockCustomers[index] = updatedCustomer;
-    return updatedCustomer;
+    return applyInclude(updatedCustomer, include);
   },
   delete: async (id: string): Promise<boolean> => {
     const index = mockCustomers.findIndex(c => c.id === id);

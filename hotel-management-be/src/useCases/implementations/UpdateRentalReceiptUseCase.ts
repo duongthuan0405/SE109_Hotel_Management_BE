@@ -16,7 +16,7 @@ export const updateRentalReceipt: IUpdateRentalReceiptUseCase = {
     const updated = await rentalReceiptRepository.update(input.id, updateData);
 
     if (!updated) {
-      throw new Error("Phiếu thuê phòng không tồn tại");
+      throw { status: 404, message: "Phiếu thuê phòng không tồn tại" };
     }
 
     return updated;

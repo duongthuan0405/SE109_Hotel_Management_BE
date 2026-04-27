@@ -3,7 +3,10 @@ import type { ICustomerGetMyBookingsUseCase, BookingUCOutput } from "../types/IB
 
 const customerGetMyBookingsUseCase: ICustomerGetMyBookingsUseCase = {
   execute: async (input: { customerId: string }): Promise<BookingUCOutput[]> => {
-    return await bookingRepository.findByCustomerId(input.customerId);
+    return await bookingRepository.findByCustomerId(input.customerId, {
+      customer: true,
+      rooms: true,
+    });
   },
 };
 

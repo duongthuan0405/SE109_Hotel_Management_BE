@@ -114,6 +114,6 @@ describe("Booking Overlap Logic Tests", () => {
       });
 
     expect(res.status).toBe(201);
-    expect(res.body.ChiTietDatPhong[0].Phong).toBe("room-2");
+    expect(res.body.ChiTietDatPhong[0].Phong._id).toBe("room-2");
   });
 });

@@ -23,7 +23,11 @@ const mapToDTO = (customer: CustomerUCOutput): CustomerDataDTO => ({
   SDT: customer.phone,
   Email: customer.email,
   DiaChi: customer.address,
-  TaiKhoanId: customer.userId,
+  TaiKhoan: customer.user ? {
+    _id: customer.user.id,
+    TenDangNhap: customer.user.username,
+    VaiTro: customer.user.role,
+  } : customer.userId,
 });
 
 const customerController = {

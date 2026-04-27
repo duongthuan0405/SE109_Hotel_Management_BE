@@ -17,7 +17,7 @@ export const createRentalReceipt: ICreateRentalReceiptUseCase = {
     // 2. Kiểm tra mã phiếu đã tồn tại chưa
     const existing = await rentalReceiptRepository.findBySlipCode(slipCode);
     if (existing) {
-      throw new Error("Mã phiếu thuê phòng đã tồn tại");
+      throw { status: 409, message: "Mã phiếu thuê phòng đã tồn tại" };
     }
 
     // 3. Tạo phiếu mới
@@ -36,6 +36,13 @@ export const createRentalReceipt: ICreateRentalReceiptUseCase = {
     // 4. Cập nhật trạng thái phòng sang Occupied
     await roomRepository.updateStatus(input.roomId, "Occupied");
 
-    return slip;
+    // 5. Trả về slip đã được populate để khớp với kết quả dự án cũ
+    const populatedSlip = await rentalReceiptRepository.findById(slip.id, {
+      booking: true,
+      room: true,
+      checkInStaff: true,
+    });
+
+    return populatedSlip!;
   },
 };

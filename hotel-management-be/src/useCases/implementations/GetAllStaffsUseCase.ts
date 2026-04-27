@@ -3,7 +3,7 @@ import { type IGetAllStaffsUseCase, type StaffUCOutput } from "../types/IStaffUs
 
 const getAllStaffsUseCase: IGetAllStaffsUseCase = {
   execute: async (): Promise<StaffUCOutput[]> => {
-    return await staffRepository.findAll();
+    return await staffRepository.findAll({ user: true });
   },
 };
 

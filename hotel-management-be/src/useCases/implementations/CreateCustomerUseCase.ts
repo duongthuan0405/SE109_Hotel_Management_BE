@@ -29,7 +29,9 @@ const createCustomerUseCase: ICreateCustomerUseCase = {
       userId,
     });
 
-    return newCustomer;
+    const populatedCustomer = await customerRepository.findById(newCustomer.id, { user: true });
+
+    return populatedCustomer!;
   },
 };
 

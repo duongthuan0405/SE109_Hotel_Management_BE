@@ -1,13 +1,18 @@
+import { type Customer } from "./Customer.js";
+import { type Room } from "./Room.js";
+
 export type BookingDetail = {
   id?: string | undefined;
   code: string; // MaCTDP
-  roomId: string; // Phong
+  roomId: string; // Phong (ID)
+  room?: Room | undefined; // Phong (Object)
 };
 
 export type Booking = {
   id: string; // _id
   code: string; // MaDatPhong
-  customerId?: string | undefined; // KhachHang
+  customerId?: string | undefined; // KhachHang (ID)
+  customer?: Customer | undefined; // KhachHang (Object)
   roomClass: string; // HangPhong
   startDate: Date; // NgayDen
   endDate: Date; // NgayDi

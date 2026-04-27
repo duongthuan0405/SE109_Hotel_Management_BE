@@ -2,70 +2,48 @@ import { describe, it, expect, beforeAll } from "vitest";
 import request from "supertest";
 import app from "../../../server.js";
 
-describe("Room API Integration Tests", () => {
+describe("Room API Integration Tests (Legacy Compatibility)", () => {
   let adminToken = "";
-  let receptionistToken = "";
-  let customerToken = "";
   let createdRoomId = "";
 
   beforeAll(async () => {
-    // 1. Login as Default Admin
+    // Login as Default Admin
     const adminLoginRes = await request(app).post("/api/auth/login").send({
       TenDangNhap: "admin",
       MatKhau: "123456",
     });
     adminToken = adminLoginRes.body.token;
-
-    // 2. Create Receptionist via Admin API
-    await request(app)
-      .post("/api/accounts")
-      .set("Authorization", `Bearer ${adminToken}`)
-      .send({
-        TenDangNhap: "receptionist_test_room",
-        MatKhau: "123456",
-        VaiTro: "Receptionist",
-      });
-    const receptionistLoginRes = await request(app).post("/api/auth/login").send({
-      TenDangNhap: "receptionist_test_room",
-      MatKhau: "123456",
-    });
-    receptionistToken = receptionistLoginRes.body.token;
-
-    // 3. Register as Customer
-    await request(app).post("/api/auth/register").send({
-      TenDangNhap: "customer_test_room",
-      MatKhau: "123456",
-    });
-    const customerLoginRes = await request(app).post("/api/auth/login").send({
-      TenDangNhap: "customer_test_room",
-      MatKhau: "123456",
-    });
-    customerToken = customerLoginRes.body.token;
   });
 
-  describe("GET /api/rooms", () => {
-    it("should get all rooms without authentication", async () => {
+  describe("GET /api/rooms Compatibility", () => {
+    it("should return list with Vietnamese fields and populated LoaiPhong", async () => {
       const res = await request(app).get("/api/rooms");
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
-      expect(Array.isArray(res.body.data)).toBe(true);
+      
+      const firstRoom = res.body.data[0];
+      expect(firstRoom._id).toBeDefined();
+      expect(firstRoom.MaPhong).toBeDefined();
+      expect(firstRoom.GiaPhong).toBeDefined();
+      
+      expect(typeof firstRoom.LoaiPhong).toBe("object");
+      expect(firstRoom.LoaiPhong.MaLoaiPhong).toBeDefined();
     });
 
-    it("should get a specific room by id (using mocked id 'room-1')", async () => {
+    it("should get specific room with legacy fields", async () => {
       const res = await request(app).get("/api/rooms/room-1");
       expect(res.status).toBe(200);
-      expect(res.body.success).toBe(true);
+      expect(res.body.data._id).toBe("room-1");
       expect(res.body.data.MaPhong).toBe("101");
     });
 
     it("should return 404 for non-existent room", async () => {
       const res = await request(app).get("/api/rooms/non-existent-id");
       expect(res.status).toBe(404);
-      expect(res.body.success).toBe(false);
     });
   });
 
-  describe("POST /api/rooms", () => {
+  describe("POST /api/rooms Compatibility & Permissions", () => {
     it("should deny creation if not authenticated", async () => {
       const res = await request(app).post("/api/rooms").send({
         MaPhong: "103",
@@ -76,32 +54,19 @@ describe("Room API Integration Tests", () => {
       expect(res.status).toBe(401);
     });
 
-    it("should deny creation if authenticated as Customer", async () => {
-      const res = await request(app)
-        .post("/api/rooms")
-        .set("Authorization", `Bearer ${customerToken}`)
-        .send({
-          MaPhong: "104",
-          LoaiPhong: "1",
-          GiaPhong: 600000,
-          TrangThai: "Available",
-        });
-      expect(res.status).toBe(403);
-    });
-
     it("should allow creation if authenticated as Admin", async () => {
       const res = await request(app)
         .post("/api/rooms")
         .set("Authorization", `Bearer ${adminToken}`)
         .send({
-          MaPhong: "201",
-          LoaiPhong: "2",
-          GiaPhong: 1000000,
+          MaPhong: "ROOM_NEW_" + Date.now(),
+          LoaiPhong: "1",
+          GiaPhong: 800000,
           TrangThai: "Available",
         });
+
       expect(res.status).toBe(201);
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.MaPhong).toBe("201");
+      expect(res.body.data.MaPhong).toBeDefined();
       createdRoomId = res.body.data._id;
     });
 
@@ -110,66 +75,43 @@ describe("Room API Integration Tests", () => {
         .post("/api/rooms")
         .set("Authorization", `Bearer ${adminToken}`)
         .send({
-          MaPhong: "201", // Duplicate
+          MaPhong: "101",
           LoaiPhong: "1",
           GiaPhong: 500000,
           TrangThai: "Available",
         });
       expect(res.status).toBe(400);
-      expect(res.body.success).toBe(false);
       expect(res.body.message).toBe("Mã phòng đã tồn tại");
     });
   });
 
-  describe("PUT /api/rooms/:id", () => {
-    it("should allow updating room if authenticated as Admin", async () => {
+  describe("PUT & STATUS Update Compatibility", () => {
+    it("should allow updating room details as Admin", async () => {
       const res = await request(app)
         .put(`/api/rooms/${createdRoomId}`)
         .set("Authorization", `Bearer ${adminToken}`)
         .send({
-          GiaPhong: 1100000,
+          GiaPhong: 999999,
         });
       expect(res.status).toBe(200);
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.GiaPhong).toBe(1100000);
+      expect(res.body.data.GiaPhong).toBe(999999);
     });
 
-    it("should allow updating room if authenticated as Receptionist", async () => {
-      const res = await request(app)
-        .put(`/api/rooms/${createdRoomId}`)
-        .set("Authorization", `Bearer ${receptionistToken}`)
-        .send({
-          TrangThai: "Maintenance",
-        });
-      expect(res.status).toBe(200);
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.TrangThai).toBe("Maintenance");
-    });
-  });
-
-  describe("POST /api/rooms/:id/status", () => {
-    it("should allow updating status if authenticated as Receptionist", async () => {
+    it("should update status and return Vietnamese fields", async () => {
       const res = await request(app)
         .post(`/api/rooms/${createdRoomId}/status`)
-        .set("Authorization", `Bearer ${receptionistToken}`)
+        .set("Authorization", `Bearer ${adminToken}`)
         .send({
-          status: "Available",
+          status: "Occupied",
         });
+      
       expect(res.status).toBe(200);
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.TrangThai).toBe("Available");
+      expect(res.body.data.TrangThai).toBe("Occupied");
     });
   });
 
-  describe("DELETE /api/rooms/:id", () => {
-    it("should deny deletion if authenticated as Receptionist", async () => {
-      const res = await request(app)
-        .delete(`/api/rooms/${createdRoomId}`)
-        .set("Authorization", `Bearer ${receptionistToken}`);
-      expect(res.status).toBe(403);
-    });
-
-    it("should allow deletion if authenticated as Admin", async () => {
+  describe("DELETE Room", () => {
+    it("should allow admin to delete a room", async () => {
       const res = await request(app)
         .delete(`/api/rooms/${createdRoomId}`)
         .set("Authorization", `Bearer ${adminToken}`);

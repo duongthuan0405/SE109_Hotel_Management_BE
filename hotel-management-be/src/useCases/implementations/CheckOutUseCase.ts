@@ -10,10 +10,14 @@ export const checkOut: ICheckOutUseCase = {
     // 1. Cập nhật trạng thái phiếu sang CheckedOut
     const updated = await rentalReceiptRepository.update(input.id, {
       status: "CheckedOut",
+    }, {
+      booking: true,
+      room: true,
+      checkInStaff: true,
     });
 
     if (!updated) {
-      throw new Error("Phiếu thuê phòng không tồn tại");
+      throw { status: 404, message: "Phiếu thuê phòng không tồn tại" };
     }
 
     // 2. Cập nhật trạng thái phòng sang Available

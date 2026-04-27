@@ -1,11 +1,13 @@
 import { type Booking } from "../../models/Booking.js";
-import { type IBookingRepository } from "../types/IBookingRepository.js";
+import { type IBookingRepository, type BookingInclude } from "../types/IBookingRepository.js";
+import customerRepository from "./CustomerRepository.js";
+import roomRepository from "./RoomRepository.js";
 
 const mockBookings: Booking[] = [
   {
     id: "booking-1",
     code: "DP001",
-    customerId: "customer-1",
+    customerId: "cust-1",
     roomClass: "STD",
     startDate: new Date("2026-05-01"),
     endDate: new Date("2026-05-03"),
@@ -21,18 +23,41 @@ const mockBookings: Booking[] = [
   }
 ];
 
+const applyInclude = async (booking: Booking, include?: BookingInclude): Promise<Booking> => {
+  if (!include) return { ...booking };
+
+  const result = { ...booking };
+
+  if (include.customer && booking.customerId) {
+    result.customer = (await customerRepository.findById(booking.customerId)) || undefined;
+  }
+
+  if (include.rooms && booking.details) {
+    result.details = await Promise.all(
+      booking.details.map(async (d) => {
+        const room = await roomRepository.findById(d.roomId);
+        return { ...d, room: room || undefined };
+      })
+    );
+  }
+
+  return result;
+};
+
 const bookingRepositoryImpl: IBookingRepository = {
-  findAll: async (): Promise<Booking[]> => {
-    return [...mockBookings];
+  findAll: async (include): Promise<Booking[]> => {
+    return Promise.all(mockBookings.map((b) => applyInclude(b, include)));
   },
-  findById: async (id: string): Promise<Booking | null> => {
+  findById: async (id, include): Promise<Booking | null> => {
     const booking = mockBookings.find((b) => b.id === id);
-    return booking || null;
+    if (!booking) return null;
+    return applyInclude(booking, include);
   },
-  findByCustomerId: async (customerId: string): Promise<Booking[]> => {
-    return mockBookings.filter((b) => b.customerId === customerId);
+  findByCustomerId: async (customerId, include): Promise<Booking[]> => {
+    const filtered = mockBookings.filter((b) => b.customerId === customerId);
+    return Promise.all(filtered.map((b) => applyInclude(b, include)));
   },
-  create: async (bookingData: Omit<Booking, "id" | "code" | "createdAt" | "updatedAt">): Promise<Booking> => {
+  create: async (bookingData): Promise<Booking> => {
     const code = await bookingRepositoryImpl.generateNextCode();
     const newBooking: Booking = {
       ...bookingData,
@@ -44,13 +69,13 @@ const bookingRepositoryImpl: IBookingRepository = {
     mockBookings.push(newBooking);
     return newBooking;
   },
-  save: async (booking: Booking): Promise<Booking> => {
+  save: async (booking, include): Promise<Booking> => {
     const index = mockBookings.findIndex((b) => b.id === booking.id);
     if (index !== -1) {
       mockBookings[index] = { ...booking, updatedAt: new Date() };
-      return mockBookings[index]!;
+      return applyInclude(mockBookings[index]!, include);
     }
-    return booking;
+    return applyInclude(booking, include);
   },
   deleteById: async (id: string): Promise<void> => {
     const index = mockBookings.findIndex((b) => b.id === id);

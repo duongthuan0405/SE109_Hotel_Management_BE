@@ -10,7 +10,7 @@ export type RoomResponseWrapper<T = undefined> = {
 export type RoomDataDTO = {
   _id: string;
   MaPhong: string;
-  LoaiPhong: string; // ID of RoomType
+  LoaiPhong: any; // Populated RoomType or ID
   GiaPhong: number;
   TrangThai: RoomStatus;
 };

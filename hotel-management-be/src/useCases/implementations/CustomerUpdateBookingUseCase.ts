@@ -58,7 +58,7 @@ const customerUpdateBookingUseCase: ICustomerUpdateBookingUseCase = {
       updatedAt: new Date(),
     } as any);
 
-    return updatedBooking;
+    return (await bookingRepository.findById(updatedBooking.id, { customer: true, rooms: true }))!;
   },
 };
 

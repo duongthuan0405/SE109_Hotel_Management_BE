@@ -3,7 +3,10 @@ import type { IStaffGetAllBookingsUseCase, BookingUCOutput } from "../types/IBoo
 
 const staffGetAllBookingsUseCase: IStaffGetAllBookingsUseCase = {
   execute: async (): Promise<BookingUCOutput[]> => {
-    return await bookingRepository.findAll();
+    return await bookingRepository.findAll({
+      customer: true,
+      rooms: true,
+    });
   },
 };
 

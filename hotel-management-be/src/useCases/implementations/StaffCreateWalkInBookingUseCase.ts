@@ -131,7 +131,7 @@ const staffCreateWalkInBookingUseCase: IStaffCreateWalkInBookingUseCase = {
       }
     }
 
-    return booking;
+    return (await bookingRepository.findById(booking.id, { customer: true, rooms: true }))!;
   },
 };
 

@@ -7,9 +7,13 @@ import { rentalReceiptRepository } from "../../repository/index.js";
 
 export const getRentalReceiptById: IGetRentalReceiptByIdUseCase = {
   execute: async (input: GetRentalReceiptByIdUCInput): Promise<RentalSlip> => {
-    const slip = await rentalReceiptRepository.findById(input.id);
+    const slip = await rentalReceiptRepository.findById(input.id, {
+      booking: true,
+      room: true,
+      checkInStaff: true,
+    });
     if (!slip) {
-      throw new Error("Phiếu thuê phòng không tồn tại");
+      throw { status: 404, message: "Phiếu thuê phòng không tồn tại" };
     }
     return slip;
   },

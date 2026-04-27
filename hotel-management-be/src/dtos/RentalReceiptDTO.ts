@@ -19,14 +19,29 @@ export type UpdateRentalReceiptRequestDTO = {
 };
 
 // Response DTOs
+export type RentalReceiptDataDTO = {
+  _id: string;
+  MaPTP: string;
+  DatPhong: any; // Populated Booking or ID
+  Phong: any; // Populated Room or ID
+  NgayNhanPhong: Date;
+  NgayTraDuKien: Date;
+  SoKhachThucTe: number;
+  DonGiaSauDieuChinh: number;
+  NhanVienCheckIn: any; // Populated Staff or ID
+  TrangThai: string;
+  createdAt: Date | undefined;
+  updatedAt: Date | undefined;
+};
+
 export type RentalReceiptResponseDTO = {
   success: boolean;
   message: string;
-  data: RentalSlip;
+  data: RentalReceiptDataDTO;
 };
 
 export type RentalReceiptListResponseDTO = {
   success: boolean;
   message: string;
-  data: RentalSlip[];
+  data: RentalReceiptDataDTO[];
 };

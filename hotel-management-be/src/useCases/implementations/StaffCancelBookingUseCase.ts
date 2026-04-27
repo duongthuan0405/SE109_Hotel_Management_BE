@@ -21,7 +21,7 @@ const staffCancelBookingUseCase: IStaffCancelBookingUseCase = {
       }
     }
 
-    return updatedBooking;
+    return (await bookingRepository.findById(updatedBooking.id, { customer: true, rooms: true }))!;
   },
 };
 

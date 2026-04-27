@@ -1,6 +1,9 @@
+import { type User } from "./User.js";
+
 export type Customer = {
   id: string;
-  userId?: string | undefined; // ID tài khoản liên kết (nếu có)
+  userId?: string | undefined; // TaiKhoan (ID)
+  user?: User | undefined;     // TaiKhoan (Object)
   customerId: string;          // MaKH (ví dụ: KH001)
   fullName: string;            // HoTen
   identityCard: string;        // CMND

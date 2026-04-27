@@ -3,7 +3,7 @@ import type { IGetRoomByIdUseCase, RoomUCOutput } from "../types/IRoomUseCases.j
 
 const getRoomByIdUseCase: IGetRoomByIdUseCase = {
   execute: async (id: string): Promise<RoomUCOutput | null> => {
-    return await roomRepository.findById(id);
+    return await roomRepository.findById(id, { roomType: true });
   },
 };
 

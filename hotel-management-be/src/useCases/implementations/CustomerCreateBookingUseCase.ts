@@ -100,7 +100,7 @@ const customerCreateBookingUseCase: ICustomerCreateBookingUseCase = {
       status: "Pending",
     });
 
-    return booking;
+    return (await bookingRepository.findById(booking.id, { customer: true, rooms: true }))!;
   },
 };
 

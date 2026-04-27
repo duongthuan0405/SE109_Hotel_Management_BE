@@ -17,7 +17,11 @@ import { type StaffUCOutput } from "../useCases/types/IStaffUseCases.js";
 
 const mapToDTO = (staff: StaffUCOutput): StaffDataDTO => ({
   _id: staff.id,
-  TaiKhoanId: staff.userId,
+  TaiKhoan: staff.user ? {
+    _id: staff.user.id,
+    TenDangNhap: staff.user.username,
+    VaiTro: staff.user.role,
+  } : staff.userId,
   MaNV: staff.staffId,
   HoTen: staff.fullName,
   ChucVu: staff.position,
