@@ -53,6 +53,11 @@ const bookingRepositoryImpl: IBookingRepository = {
     if (!booking) return null;
     return applyInclude(booking, include);
   },
+  findByCode: async (code, include): Promise<Booking | null> => {
+    const booking = mockBookings.find((b) => b.code === code);
+    if (!booking) return null;
+    return applyInclude(booking, include);
+  },
   findByCustomerId: async (customerId, include): Promise<Booking[]> => {
     const filtered = mockBookings.filter((b) => b.customerId === customerId);
     return Promise.all(filtered.map((b) => applyInclude(b, include)));
@@ -63,6 +68,10 @@ const bookingRepositoryImpl: IBookingRepository = {
       ...bookingData,
       id: `booking-${Math.random().toString(36).substring(7)}`,
       code: code,
+      details: bookingData.details.map((d: any, index: number) => ({
+        ...d,
+        code: d.code || `CTDP-${Date.now()}-${index}`
+      })),
       createdAt: new Date(),
       updatedAt: new Date(),
     };

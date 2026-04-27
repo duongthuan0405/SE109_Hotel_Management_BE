@@ -11,7 +11,7 @@ export type CreateBookingUCInput = {
   endDate: Date;
   guestCount: number;
   deposit?: number | undefined;
-  details?: { code: string; roomId: string }[] | undefined;
+  details?: { code?: string; roomId: string }[] | undefined;
 };
 
 // Input dành riêng cho Walk-in (khách đến trực tiếp, có thể chưa có tài khoản/hồ sơ)
@@ -30,7 +30,7 @@ export type UpdateBookingUCInput = {
   guestCount?: number | undefined;
   deposit?: number | undefined;
   status?: string | undefined;
-  details?: { code: string; roomId: string }[] | undefined;
+  details?: { code?: string; roomId: string }[] | undefined;
 };
 
 export type CancelBookingUCInput = {

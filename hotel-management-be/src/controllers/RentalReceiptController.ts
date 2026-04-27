@@ -16,7 +16,7 @@ import { type RentalSlip } from "../models/RentalSlip.js";
 
 const mapToDTO = (slip: RentalSlip): RentalReceiptDataDTO => ({
   _id: slip.id,
-  MaPTP: slip.slipCode,
+  MaPTP: slip.code,
   DatPhong: slip.booking ? {
     _id: slip.booking.id,
     MaDatPhong: slip.booking.code,
@@ -29,7 +29,7 @@ const mapToDTO = (slip: RentalSlip): RentalReceiptDataDTO => ({
   } : slip.bookingId,
   Phong: slip.room ? {
     _id: slip.room.id,
-    MaPhong: slip.room.roomNumber,
+    MaPhong: slip.room.code,
     GiaPhong: slip.room.price,
     TrangThai: slip.room.status,
   } : slip.roomId,
@@ -39,7 +39,7 @@ const mapToDTO = (slip: RentalSlip): RentalReceiptDataDTO => ({
   DonGiaSauDieuChinh: slip.adjustedPrice,
   NhanVienCheckIn: slip.checkInStaff ? { 
     _id: slip.checkInStaff.id, 
-    MaNV: slip.checkInStaff.staffId,
+    MaNV: slip.checkInStaff.code,
     HoTen: slip.checkInStaff.fullName 
   } : slip.checkInStaffId,
   TrangThai: slip.status,
@@ -78,7 +78,6 @@ const rentalReceiptController = {
     try {
       const body = req.body as CreateRentalReceiptRequestDTO;
       const result = await createRentalReceiptUseCase.execute({
-        slipCode: body.MaPTP,
         bookingId: body.DatPhong,
         roomId: body.Phong,
         expectedCheckOutDate: new Date(body.NgayTraDuKien),

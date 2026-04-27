@@ -3,7 +3,6 @@ import { type ServiceUsage, type ServiceUsageStatus } from "../../models/Service
 
 // Create
 export type CreateServiceUsageUCInput = {
-  code?: string | undefined;
   rentalSlipId: string;
   serviceId: string;
   quantity: number;
@@ -23,6 +22,19 @@ export type IGetServiceUsageByIdUseCase = IUseCase<GetServiceUsageByIdUCInput, S
 // Get By Customer ID
 export type GetServiceUsagesByCustomerIdUCInput = { customerId: string };
 export type IGetServiceUsagesByCustomerIdUseCase = IUseCase<GetServiceUsagesByCustomerIdUCInput, ServiceUsage[]>;
+
+// Get My Service Usages (Customer)
+export type CustomerGetMyServiceUsagesUCInput = { userId: string };
+export type ICustomerGetMyServiceUsagesUseCase = IUseCase<CustomerGetMyServiceUsagesUCInput, ServiceUsage[]>;
+
+// Order Service (Customer)
+export type CustomerOrderServiceUCInput = {
+  userId: string;
+  rentalSlipId: string;
+  serviceId: string;
+  quantity: number;
+};
+export type ICustomerOrderServiceUseCase = IUseCase<CustomerOrderServiceUCInput, ServiceUsage>;
 
 // Update
 export type UpdateServiceUsageUCInput = {

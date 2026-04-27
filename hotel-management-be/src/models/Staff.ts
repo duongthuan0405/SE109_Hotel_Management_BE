@@ -4,7 +4,7 @@ export type Staff = {
   id: string;
   userId: string;       // TaiKhoan (ID)
   user?: User | undefined; // TaiKhoan (Object)
-  staffId: string;      // MaNV
+  code: string;      // MaNV
   fullName: string;     // HoTen
   position: string;     // ChucVu
   phone: string;        // SDT

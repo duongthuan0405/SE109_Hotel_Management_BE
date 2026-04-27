@@ -4,8 +4,8 @@ export type RoomStatus = 'Available' | 'Occupied' | 'Maintenance' | 'Reserved' |
 
 export type Room = {
   id: string;
-  roomNumber: string; // MaPhong
-  roomTypeId: string; // ID của LoaiPhong
+  code: string; // MaPhong (Business Code)
+  roomTypeId: string; // LoaiPhong (ID)
   roomType?: RoomType | undefined; // LoaiPhong (Object)
   price: number; // GiaPhong
   status: RoomStatus;

@@ -43,8 +43,8 @@ const rentalReceiptRepository: IRentalReceiptRepository = {
     return applyInclude(slip, include);
   },
 
-  findBySlipCode: async (slipCode, include): Promise<RentalSlip | null> => {
-    const slip = rentalSlips.find((s) => s.slipCode === slipCode);
+  findByCode: async (code, include): Promise<RentalSlip | null> => {
+    const slip = rentalSlips.find((s) => s.code === code);
     if (!slip) return null;
     return applyInclude(slip, include);
   },

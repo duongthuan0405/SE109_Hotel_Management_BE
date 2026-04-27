@@ -6,7 +6,7 @@ export type RentalSlipStatus = 'CheckedIn' | 'CheckedOut' | 'Cancelled';
 
 export type RentalSlip = {
   id: string;
-  slipCode: string; // MaPTP
+  code: string; // MaPTP (Business Code)
   bookingId: string; // DatPhong (ID)
   booking?: Booking | undefined; // DatPhong (Object)
   roomId: string; // Phong (ID)

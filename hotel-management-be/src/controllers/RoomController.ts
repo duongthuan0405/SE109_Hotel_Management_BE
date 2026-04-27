@@ -18,7 +18,7 @@ import type { RoomStatus } from "../models/Room.js";
 
 const mapToDTO = (room: RoomUCOutput): RoomDataDTO => ({
   _id: room.id,
-  MaPhong: room.roomNumber,
+  MaPhong: room.code,
   LoaiPhong: room.roomType ? {
     _id: room.roomType.id,
     MaLoaiPhong: room.roomType.code,
@@ -76,7 +76,7 @@ const roomController = {
     try {
       const body = req.body as CreateRoomRequestDTO;
       const result = await createRoomUseCase.execute({
-        roomNumber: body.MaPhong,
+        code: body.MaPhong,
         roomTypeId: body.LoaiPhong,
         price: body.GiaPhong,
         status: body.TrangThai,
@@ -102,7 +102,7 @@ const roomController = {
       const body = req.body as UpdateRoomRequestDTO;
       const result = await updateRoomUseCase.execute({
         id: req.params.id as string,
-        roomNumber: body.MaPhong as string,
+        code: body.MaPhong as string,
         roomTypeId: body.LoaiPhong as string,
         price: body.GiaPhong as number,
         status: body.TrangThai as RoomStatus,

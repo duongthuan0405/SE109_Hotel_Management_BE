@@ -31,13 +31,13 @@ describe("Service Usage API Integration Tests (Legacy Compatibility)", () => {
   });
 
   describe("POST /api/service-usages", () => {
-    it("should create service usage with Vietnamese fields and return populated object", async () => {
+    it("should create service usage and ignore the code sent by FE", async () => {
       const res = await request(app)
         .post("/api/service-usages")
         .set("Authorization", `Bearer ${adminToken}`)
         .send({
-          MaSDV: "SDDV001",
-          PhieuThuePhong: "room-1", // sẽ dùng ID rental slip thực tế khi có DB
+          MaSDV: "IGNORED_CODE",
+          PhieuThuePhong: "room-1",
           DichVu: "service-1",
           SoLuong: 2,
           DonGia: 50000,
@@ -49,29 +49,14 @@ describe("Service Usage API Integration Tests (Legacy Compatibility)", () => {
 
       const data = res.body.data;
       expect(data._id).toBeDefined();
-      expect(data.MaSDDV).toBe("SDDV001");
+      expect(data.MaSDDV).toMatch(/^SDDV\d{3,}$/); // Check if it follows SDDVxxx pattern
+      expect(data.MaSDDV).not.toBe("IGNORED_CODE");
       expect(data.SoLuong).toBe(2);
       expect(data.DonGia).toBe(50000);
       expect(data.ThanhTien).toBe(100000);
       expect(data.TrangThai).toBe("Completed");
 
       createdUsageId = data._id;
-    });
-
-    it("should reject duplicate code", async () => {
-      const res = await request(app)
-        .post("/api/service-usages")
-        .set("Authorization", `Bearer ${adminToken}`)
-        .send({
-          MaSDV: "SDDV001",
-          PhieuThuePhong: "room-1",
-          DichVu: "service-1",
-          SoLuong: 1,
-          DonGia: 30000,
-          ThanhTien: 30000,
-        });
-
-      expect(res.status).toBe(409);
     });
 
     it("should reject missing required fields", async () => {
@@ -115,7 +100,7 @@ describe("Service Usage API Integration Tests (Legacy Compatibility)", () => {
 
       expect(res.status).toBe(200);
       expect(res.body.data._id).toBe(createdUsageId);
-      expect(res.body.data.MaSDDV).toBe("SDDV001");
+      expect(res.body.data.MaSDDV).toMatch(/^SDDV\d{3,}$/);
     });
 
     it("should return 404 for non-existent id", async () => {

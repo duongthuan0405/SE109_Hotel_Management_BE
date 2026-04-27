@@ -7,6 +7,8 @@ const serviceUsageRoutes = Router();
 
 // Lấy danh sách và chi tiết (Staff roles)
 serviceUsageRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Manager", "Receptionist"]), serviceUsageController.getAllServiceUsages);
+serviceUsageRoutes.get("/me", authMiddleware, serviceUsageController.getMyServiceUsages);
+serviceUsageRoutes.post("/customer/order", authMiddleware, serviceUsageController.customerOrderService);
 serviceUsageRoutes.get("/customer/:customerId", authMiddleware, roleMiddleware(["Admin", "Manager", "Receptionist"]), serviceUsageController.getServiceUsagesByCustomerId);
 serviceUsageRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Manager", "Receptionist"]), serviceUsageController.getServiceUsageById);
 

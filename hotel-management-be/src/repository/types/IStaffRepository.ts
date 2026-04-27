@@ -8,6 +8,7 @@ export interface IStaffRepository {
   findAll(include?: StaffInclude): Promise<Staff[]>;
   findById(id: string, include?: StaffInclude): Promise<Staff | null>;
   findByUserId(userId: string, include?: StaffInclude): Promise<Staff | null>;
+  findByCode(code: string, include?: StaffInclude): Promise<Staff | null>;
   findByEmail(email: string, include?: StaffInclude): Promise<Staff | null>;
   create(staff: Omit<Staff, "id" | "createdAt" | "updatedAt" | "user">): Promise<Staff>;
   update(id: string, staff: Partial<Omit<Staff, "user">>, include?: StaffInclude): Promise<Staff | null>;

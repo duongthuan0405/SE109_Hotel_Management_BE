@@ -9,6 +9,8 @@ import {
   getAllServiceUsagesUseCase,
   getServiceUsageByIdUseCase,
   getServiceUsagesByCustomerIdUseCase,
+  customerGetMyServiceUsagesUseCase,
+  customerOrderServiceUseCase,
   updateServiceUsageUseCase,
   deleteServiceUsageUseCase,
 } from "../useCases/index.js";
@@ -19,7 +21,7 @@ const mapToDTO = (usage: ServiceUsage): ServiceUsageDataDTO => ({
   MaSDDV: usage.code,
   PhieuThuePhong: usage.rentalSlip ? {
     _id: usage.rentalSlip.id,
-    MaPTP: usage.rentalSlip.slipCode,
+    MaPTP: usage.rentalSlip.code,
     DatPhong: usage.rentalSlip.bookingId,
     Phong: usage.rentalSlip.roomId,
     NgayNhanPhong: usage.rentalSlip.checkInDate,
@@ -83,6 +85,42 @@ const serviceUsageController = {
     }
   },
 
+  getMyServiceUsages: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = (req as any).user.id;
+      const result = await customerGetMyServiceUsagesUseCase.execute({ userId });
+      res.status(200).json({
+        success: true,
+        message: "Lấy lịch sử dịch vụ của bạn thành công",
+        data: result.map(mapToDTO),
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  customerOrderService: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const body = req.body;
+      const userId = (req as any).user.id;
+
+      const result = await customerOrderServiceUseCase.execute({
+        userId,
+        rentalSlipId: body.PhieuThuePhong,
+        serviceId: body.DichVu,
+        quantity: body.SoLuong,
+      });
+
+      res.status(201).json({
+        success: true,
+        message: "Đặt dịch vụ thành công!",
+        data: mapToDTO(result),
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
   createServiceUsage: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const body = req.body as CreateServiceUsageRequestDTO;
@@ -96,7 +134,6 @@ const serviceUsageController = {
       }
 
       const result = await createServiceUsageUseCase.execute({
-        code: body.MaSDV,
         rentalSlipId: body.PhieuThuePhong,
         serviceId: body.DichVu,
         quantity: body.SoLuong,

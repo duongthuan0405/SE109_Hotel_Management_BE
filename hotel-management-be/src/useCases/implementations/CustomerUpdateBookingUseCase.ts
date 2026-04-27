@@ -19,7 +19,10 @@ const customerUpdateBookingUseCase: ICustomerUpdateBookingUseCase = {
     const newEnd = endDate ? new Date(endDate) : existingBooking.endDate;
     const newRoomClass = roomClass || existingBooking.roomClass;
     const newGuestCount = guestCount || existingBooking.guestCount;
-    const newDetails = details || existingBooking.details;
+    let newDetails = (details || existingBooking.details).map((d, index) => ({
+      ...d,
+      code: d.code || `CTDP-${Date.now()}-${index}`
+    }));
 
     const roomType = await roomTypeRepository.findById(newRoomClass);
     if (!roomType) {
@@ -37,7 +40,7 @@ const customerUpdateBookingUseCase: ICustomerUpdateBookingUseCase = {
         }
         const overlap = await bookingRepository.findOverlappingByRoom(detail.roomId, newStart, newEnd, id);
         if (overlap) {
-          throw { status: 400, message: `Phòng ${room.roomNumber} đã bị trùng lịch` };
+          throw { status: 400, message: `Phòng ${room.code} đã bị trùng lịch` };
         }
       }
     }

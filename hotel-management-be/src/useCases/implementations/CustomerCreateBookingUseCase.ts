@@ -60,21 +60,23 @@ const customerCreateBookingUseCase: ICustomerCreateBookingUseCase = {
         roomId: assignedRoomId
       }];
     } else {
+      // Đảm bảo mỗi chi tiết đều có mã định danh (Backend sinh)
+      finalDetails = finalDetails.map((d, index) => ({
+        ...d,
+        code: d.code || `CTDP-${Date.now()}-${index}`
+      }));
+
       for (const detail of finalDetails) {
         const room = await roomRepository.findById(detail.roomId);
-        if (!room) {
-          throw { status: 404, message: `Phòng ${detail.roomId} không tồn tại` };
+        if (!room || room.roomTypeId !== roomClass || room.status === "Maintenance") {
+          throw { status: 400, message: `Phòng ${room?.code || detail.roomId} không khả dụng` };
         }
-        if (room.roomTypeId !== roomClass) {
-          throw { status: 400, message: `Phòng ${room.roomNumber} không thuộc hạng phòng ${roomType.name}` };
-        }
-        if (room.status === "Maintenance") {
-          throw { status: 400, message: `Phòng ${room.roomNumber} đang bảo trì, không thể đặt` };
-        }
-
-        const overlap = await bookingRepository.findOverlappingByRoom(detail.roomId, start, end);
-        if (overlap) {
-          throw { status: 400, message: `Phòng ${room.roomNumber} đã bị trùng lịch trong khoảng thời gian này` };
+        
+        if (room.status !== "Available") {
+          const overlap = await bookingRepository.findOverlappingByRoom(detail.roomId, start, end);
+          if (overlap) {
+            throw { status: 400, message: `Phòng ${room.code} đã bị trùng lịch trong khoảng thời gian này` };
+          }
         }
       }
     }

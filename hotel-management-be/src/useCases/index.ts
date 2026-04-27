@@ -136,6 +136,8 @@ import { createServiceUsage as createServiceUsageUseCaseImpl } from "./implement
 import { getAllServiceUsages as getAllServiceUsagesUseCaseImpl } from "./implementations/GetAllServiceUsagesUseCase.js";
 import { getServiceUsageById as getServiceUsageByIdUseCaseImpl } from "./implementations/GetServiceUsageByIdUseCase.js";
 import { getServiceUsagesByCustomerId as getServiceUsagesByCustomerIdUseCaseImpl } from "./implementations/GetServiceUsagesByCustomerIdUseCase.js";
+import { customerGetMyServiceUsages as customerGetMyServiceUsagesUseCaseImpl } from "./implementations/CustomerGetMyServiceUsagesUseCase.js";
+import { customerOrderService as customerOrderServiceUseCaseImpl } from "./implementations/CustomerOrderServiceUseCase.js";
 import { updateServiceUsage as updateServiceUsageUseCaseImpl } from "./implementations/UpdateServiceUsageUseCase.js";
 import { deleteServiceUsage as deleteServiceUsageUseCaseImpl } from "./implementations/DeleteServiceUsageUseCase.js";
 
@@ -143,6 +145,8 @@ export const createServiceUsageUseCase = createServiceUsageUseCaseImpl;
 export const getAllServiceUsagesUseCase = getAllServiceUsagesUseCaseImpl;
 export const getServiceUsageByIdUseCase = getServiceUsageByIdUseCaseImpl;
 export const getServiceUsagesByCustomerIdUseCase = getServiceUsagesByCustomerIdUseCaseImpl;
+export const customerGetMyServiceUsagesUseCase = customerGetMyServiceUsagesUseCaseImpl;
+export const customerOrderServiceUseCase = customerOrderServiceUseCaseImpl;
 export const updateServiceUsageUseCase = updateServiceUsageUseCaseImpl;
 export const deleteServiceUsageUseCase = deleteServiceUsageUseCaseImpl;
 
