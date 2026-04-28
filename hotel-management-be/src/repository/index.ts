@@ -8,6 +8,9 @@ import customerRepositoryImpl from "./implementations/CustomerRepository.js";
 import staffRepositoryImpl from "./implementations/StaffRepository.js";
 import rentalReceiptRepositoryImpl from "./implementations/RentalReceiptRepository.js";
 import serviceUsageRepositoryImpl from "./implementations/ServiceUsageRepository.js";
+import settingsRepositoryImpl from "./implementations/SettingsRepository.js";
+import paymentMethodRepositoryImpl from "./implementations/PaymentMethodRepository.js";
+import invoiceRepositoryImpl from "./implementations/InvoiceRepository.js";
 
 export const userRepository = userRepositoryImpl;
 export const resetPasswordOTPRepository = resetPasswordOTPRepositoryImpl;
@@ -19,3 +22,6 @@ export const customerRepository = customerRepositoryImpl;
 export const staffRepository = staffRepositoryImpl;
 export const rentalReceiptRepository = rentalReceiptRepositoryImpl;
 export const serviceUsageRepository = serviceUsageRepositoryImpl;
+export const settingsRepository = settingsRepositoryImpl;
+export const paymentMethodRepository = paymentMethodRepositoryImpl;
+export const invoiceRepository = invoiceRepositoryImpl;
