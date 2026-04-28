@@ -176,6 +176,12 @@ import { getInvoiceById as getInvoiceByIdUseCaseImpl } from "./implementations/G
 import { updateInvoice as updateInvoiceUseCaseImpl } from "./implementations/UpdateInvoiceUseCase.js";
 import { deleteInvoice as deleteInvoiceUseCaseImpl } from "./implementations/DeleteInvoiceUseCase.js";
 
+import { createBookingHistory as createBookingHistoryUseCaseImpl } from "./implementations/CreateBookingHistoryUseCase.js";
+import { getAllBookingHistory as getAllBookingHistoryUseCaseImpl } from "./implementations/GetAllBookingHistoryUseCase.js";
+import { getBookingHistoryById as getBookingHistoryByIdUseCaseImpl } from "./implementations/GetBookingHistoryByIdUseCase.js";
+import { getHistoryByBookingId as getHistoryByBookingIdUseCaseImpl } from "./implementations/GetHistoryByBookingIdUseCase.js";
+import { deleteBookingHistory as deleteBookingHistoryUseCaseImpl } from "./implementations/DeleteBookingHistoryUseCase.js";
+
 export const createInvoiceUseCase = createInvoiceUseCaseImpl;
 export const createCheckoutInvoiceUseCase = createCheckoutInvoiceUseCaseImpl;
 export const getPreviewInvoiceUseCase = getPreviewInvoiceUseCaseImpl;
@@ -183,3 +189,9 @@ export const getAllInvoicesUseCase = getAllInvoicesUseCaseImpl;
 export const getInvoiceByIdUseCase = getInvoiceByIdUseCaseImpl;
 export const updateInvoiceUseCase = updateInvoiceUseCaseImpl;
 export const deleteInvoiceUseCase = deleteInvoiceUseCaseImpl;
+
+export const createBookingHistoryUseCase = createBookingHistoryUseCaseImpl;
+export const getAllBookingHistoryUseCase = getAllBookingHistoryUseCaseImpl;
+export const getBookingHistoryByIdUseCase = getBookingHistoryByIdUseCaseImpl;
+export const getHistoryByBookingIdUseCase = getHistoryByBookingIdUseCaseImpl;
+export const deleteBookingHistoryUseCase = deleteBookingHistoryUseCaseImpl;

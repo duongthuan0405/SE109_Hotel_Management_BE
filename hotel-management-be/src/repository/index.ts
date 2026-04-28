@@ -11,6 +11,7 @@ import serviceUsageRepositoryImpl from "./implementations/ServiceUsageRepository
 import settingsRepositoryImpl from "./implementations/SettingsRepository.js";
 import paymentMethodRepositoryImpl from "./implementations/PaymentMethodRepository.js";
 import invoiceRepositoryImpl from "./implementations/InvoiceRepository.js";
+import bookingHistoryRepositoryImpl from "./implementations/BookingHistoryRepository.js";
 
 export const userRepository = userRepositoryImpl;
 export const resetPasswordOTPRepository = resetPasswordOTPRepositoryImpl;
@@ -25,3 +26,4 @@ export const serviceUsageRepository = serviceUsageRepositoryImpl;
 export const settingsRepository = settingsRepositoryImpl;
 export const paymentMethodRepository = paymentMethodRepositoryImpl;
 export const invoiceRepository = invoiceRepositoryImpl;
+export const bookingHistoryRepository = bookingHistoryRepositoryImpl;
