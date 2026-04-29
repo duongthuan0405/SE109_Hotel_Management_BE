@@ -6,7 +6,7 @@ export type ServiceUsageInclude = {
 };
 
 export interface IServiceUsageRepository {
-  create(data: Omit<ServiceUsage, "id" | "createdAt" | "updatedAt" | "rentalSlip" | "service">): Promise<ServiceUsage>;
+  create(data: Omit<ServiceUsage, "id" | "createdAt" | "updatedAt" | "rentalSlip" | "service" | "code"> & { code?: string | undefined }): Promise<ServiceUsage>;
   findById(id: string, include?: ServiceUsageInclude): Promise<ServiceUsage | null>;
   findByCode(code: string): Promise<ServiceUsage | null>;
   findAll(include?: ServiceUsageInclude): Promise<ServiceUsage[]>;
@@ -15,4 +15,5 @@ export interface IServiceUsageRepository {
   update(id: string, data: Partial<Omit<ServiceUsage, "id" | "createdAt" | "updatedAt" | "rentalSlip" | "service">>, include?: ServiceUsageInclude): Promise<ServiceUsage | null>;
   delete(id: string): Promise<boolean>;
   countAll(): Promise<number>;
+  generateNextCode(): Promise<string>;
 }

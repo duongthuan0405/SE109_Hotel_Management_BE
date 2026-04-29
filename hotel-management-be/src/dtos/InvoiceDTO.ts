@@ -1,15 +1,16 @@
-export type InvoiceDetailDTO = {
-  MaCTHD: string;
+export type CreateInvoiceDetailDTO = {
   TenHang: string;
   SoLuong: number;
   DonGia: number;
   ThanhTien: number;
 };
 
+export type InvoiceDetailDTO = CreateInvoiceDetailDTO & {
+  MaCTHD: string;
+};
+
 export type CreateInvoiceRequestDTO = {
-  MaHD?: string;
   PhieuThuePhong: string;
-  NhanVienThuNgan?: string;
   KhachHang?: string;
   PhuongThucThanhToan: string;
   TongTienPhong?: number;
@@ -17,12 +18,11 @@ export type CreateInvoiceRequestDTO = {
   PhuThu?: number;
   TienBoiThuong?: number;
   TienDaCoc?: number;
-  ChiTietHoaDon?: InvoiceDetailDTO[];
+  ChiTietHoaDon?: CreateInvoiceDetailDTO[];
 };
 
 export type CreateCheckoutInvoiceRequestDTO = {
   PhieuThuePhong: string;
-  NhanVienThuNgan?: string;
   KhachHang?: string;
   PhuongThucThanhToan: string;
   TongTienPhong?: number;

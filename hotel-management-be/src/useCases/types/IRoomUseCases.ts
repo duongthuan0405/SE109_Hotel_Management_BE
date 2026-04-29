@@ -8,7 +8,6 @@ export type IGetAllRoomsUseCase = IUseCase<void, RoomUCOutput[]>;
 export type IGetRoomByIdUseCase = IUseCase<string, RoomUCOutput | null>;
 
 export type CreateRoomUCInput = {
-  code: string;
   roomTypeId: string;
   price: number;
   status: RoomStatus;

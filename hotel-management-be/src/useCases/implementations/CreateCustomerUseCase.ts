@@ -16,11 +16,7 @@ const createCustomerUseCase: ICreateCustomerUseCase = {
       throw { status: 409, message: "Email đã tồn tại trong hệ thống" };
     }
 
-    // Tạo MaKH mới
-    const MaKH = await customerRepository.generateNextId();
-
     const newCustomer = await customerRepository.create({
-      code: MaKH,
       fullName,
       identityCard,
       phone,

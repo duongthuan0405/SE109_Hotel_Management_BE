@@ -1,17 +1,16 @@
 import { type ICreateInvoiceUseCase, type CreateInvoiceUCInput } from "../types/IInvoiceUseCases.js";
 import { type Invoice } from "../../models/Invoice.js";
-import { invoiceRepository, rentalReceiptRepository, bookingRepository } from "../../repository/index.js";
+import { invoiceRepository, rentalReceiptRepository, staffRepository } from "../../repository/index.js";
 
 export const createInvoice: ICreateInvoiceUseCase = {
   execute: async (input: CreateInvoiceUCInput): Promise<Invoice> => {
-    // Generate Invoice Code if not provided
-    let code = input.code;
-    if (!code) {
-      const count = await invoiceRepository.countAll();
-      code = `HD${(count + 1).toString().padStart(3, "0")}`;
+    // 1. Tìm Staff từ UserID
+    const staff = await staffRepository.findByUserId(input.cashierUserId);
+    if (!staff) {
+      throw { status: 403, message: "Nhân viên thực hiện không tồn tại" };
     }
 
-    // Attempt auto-fill customer and deposit from rental slip's booking
+    // 3. Tự động điền thông tin (giữ nguyên)
     let customerId = input.customerId;
     let deposit = input.deposit ?? 0;
     
@@ -36,9 +35,8 @@ export const createInvoice: ICreateInvoiceUseCase = {
     const grandTotal = Math.max(0, roomTotal + serviceTotal + surcharge + damageCharge - deposit);
 
     const invoice = await invoiceRepository.create({
-      code,
       rentalSlipId: input.rentalSlipId,
-      cashierStaffId: input.cashierStaffId,
+      cashierStaffId: staff.id, // Dùng ID Staff đã tìm thấy
       customerId,
       paymentMethodId: input.paymentMethodId,
       invoiceDate: new Date(),
@@ -52,6 +50,16 @@ export const createInvoice: ICreateInvoiceUseCase = {
       details: input.details || [],
     });
 
-    return invoice;
+    // Populate để Controller mapping đúng object
+    const populated = await invoiceRepository.findById(invoice.id, {
+      cashierStaff: true,
+      customer: true,
+      paymentMethod: true,
+      rentalSlip: true,
+    });
+
+    return populated!;
   },
 };
+
+export default createInvoice;

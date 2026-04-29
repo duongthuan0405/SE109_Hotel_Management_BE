@@ -1,9 +1,11 @@
 import { bookingRepository, roomRepository, roomTypeRepository } from "../../repository/index.js";
+import { createBookingHistory as createBookingHistoryUseCase } from "./CreateBookingHistoryUseCase.js";
 import type { IStaffCreateBookingUseCase, CreateBookingUCInput, BookingUCOutput } from "../types/IBookingUseCases.js";
 
 const staffCreateBookingUseCase: IStaffCreateBookingUseCase = {
   execute: async (input: CreateBookingUCInput): Promise<BookingUCOutput> => {
-    const { customerId, roomClass, startDate, endDate, guestCount, deposit, details } = input;
+    // ... (giữ nguyên logic kiểm tra và tạo đơn)
+    const { customerId, roomClass, startDate, endDate, guestCount, deposit, details, executorUserId } = input;
 
     if (!customerId || !roomClass || !startDate || !endDate || !guestCount) {
       throw { status: 400, message: "Vui lòng cung cấp đủ thông tin đặt phòng" };
@@ -93,7 +95,7 @@ const staffCreateBookingUseCase: IStaffCreateBookingUseCase = {
       throw { status: 400, message: "Tiền cọc không thể lớn hơn tổng tiền phòng" };
     }
 
-    // 4. Tạo đơn đặt phòng
+    // 5. Tạo đơn đặt phòng
     const booking = await bookingRepository.create({
       customerId,
       roomClass,
@@ -102,8 +104,17 @@ const staffCreateBookingUseCase: IStaffCreateBookingUseCase = {
       guestCount,
       deposit: deposit || 0,
       totalAmount,
-      details: finalDetails,
+      details: finalDetails.map(d => ({ roomId: d.roomId })), // Để Repo tự sinh mã CTDP
       status: "Confirmed",
+    });
+
+    // 6. Ghi lịch sử tự động
+    await createBookingHistoryUseCase.execute({
+      code: `LSDP-STAFF-NEW-${Date.now()}`,
+      bookingId: booking.id,
+      oldStatus: "None" as any,
+      newStatus: "Confirmed",
+      userId: input.executorUserId, // ID Nhân viên thực hiện
     });
 
     return (await bookingRepository.findById(booking.id, { customer: true, rooms: true }))!;

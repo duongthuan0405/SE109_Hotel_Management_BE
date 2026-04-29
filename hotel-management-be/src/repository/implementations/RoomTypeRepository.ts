@@ -23,10 +23,12 @@ const roomTypeRepository: IRoomTypeRepository = {
     return roomType ? { ...roomType } : null;
   },
 
-  create: async (roomTypeData: Omit<RoomType, "id">): Promise<RoomType> => {
+  create: async (roomTypeData: Omit<RoomType, "id" | "code"> & { code?: string | undefined }): Promise<RoomType> => {
+    const code = roomTypeData.code || (await roomTypeRepository.generateNextCode());
     const newRoomType: RoomType = {
       id: crypto.randomUUID(),
       ...roomTypeData,
+      code,
     };
     roomTypes.push(newRoomType);
     return { ...newRoomType };
@@ -44,6 +46,10 @@ const roomTypeRepository: IRoomTypeRepository = {
     const initialLength = roomTypes.length;
     roomTypes = roomTypes.filter((rt) => rt.id !== id);
     return roomTypes.length < initialLength;
+  },
+  generateNextCode: async (): Promise<string> => {
+    const nextId = roomTypes.length + 1;
+    return `RT${String(nextId).padStart(3, "0")}`;
   },
 };
 

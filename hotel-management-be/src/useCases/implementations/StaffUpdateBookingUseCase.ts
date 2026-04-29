@@ -1,4 +1,5 @@
 import { bookingRepository, roomRepository, roomTypeRepository } from "../../repository/index.js";
+import { createBookingHistory as createBookingHistoryUseCase } from "./CreateBookingHistoryUseCase.js";
 import type { IStaffUpdateBookingUseCase, UpdateBookingUCInput, BookingUCOutput } from "../types/IBookingUseCases.js";
 
 const staffUpdateBookingUseCase: IStaffUpdateBookingUseCase = {
@@ -81,6 +82,7 @@ const staffUpdateBookingUseCase: IStaffUpdateBookingUseCase = {
 
 
     // 2. Cập nhật thông tin đơn đặt phòng
+    const oldStatus = existingBooking.status;
     const updatedBooking = await bookingRepository.save({
       ...existingBooking,
       ...input,
@@ -93,7 +95,18 @@ const staffUpdateBookingUseCase: IStaffUpdateBookingUseCase = {
       updatedAt: new Date(),
     } as any);
 
-    // 3. Cập nhật trạng thái phòng (Giải phóng phòng cũ nếu có thay đổi)
+    // 3. Ghi lịch sử nếu trạng thái thay đổi
+    if (status && status !== oldStatus) {
+      await createBookingHistoryUseCase.execute({
+        code: `LSDP-UP-${Date.now()}`,
+        bookingId: updatedBooking.id,
+        oldStatus: oldStatus as any,
+        newStatus: status as any,
+        userId: input.executorUserId, // ID tài khoản thực hiện thao tác
+      });
+    }
+
+    // 4. Cập nhật trạng thái phòng (Giải phóng phòng cũ nếu có thay đổi)
     if (details) {
       for (const oldDetail of existingBooking.details) {
         // Nếu phòng cũ không nằm trong danh sách mới, giải phóng nó

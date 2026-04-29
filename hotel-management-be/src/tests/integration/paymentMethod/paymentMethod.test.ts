@@ -50,21 +50,9 @@ describe("Payment Method API Integration Tests", () => {
 
       expect(res.status).toBe(201);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.MaPTTT).toBe("MOMO");
+      expect(res.body.data.MaPTTT).toMatch(/^PTTT\d+/);
       expect(res.body.data.TenPTTT).toBe("Ví Momo");
       createdId = res.body.data._id;
-    });
-
-    it("should reject duplicate code", async () => {
-      const res = await request(app)
-        .post("/api/payment-methods")
-        .set("Authorization", `Bearer ${adminToken}`)
-        .send({
-          MaPTTT: "MOMO",
-          TenPTTT: "Ví Momo 2",
-        });
-
-      expect(res.status).toBe(409);
     });
   });
 

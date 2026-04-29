@@ -6,12 +6,14 @@ export type BookingUCOutput = Booking;
 
 export type CreateBookingUCInput = {
   customerId?: string | undefined; 
+  userId?: string | undefined; // Dùng cho Khách hàng tự đặt
   roomClass: string;
   startDate: Date;
   endDate: Date;
   guestCount: number;
   deposit?: number | undefined;
   details?: { code?: string; roomId: string }[] | undefined;
+  executorUserId?: string | undefined;
 };
 
 // Input dành riêng cho Walk-in (khách đến trực tiếp, có thể chưa có tài khoản/hồ sơ)
@@ -31,10 +33,12 @@ export type UpdateBookingUCInput = {
   deposit?: number | undefined;
   status?: string | undefined;
   details?: { code?: string; roomId: string }[] | undefined;
+  executorUserId?: string | undefined;
 };
 
 export type CancelBookingUCInput = {
   id: string;
+  executorUserId?: string | undefined;
 };
 
 // --- Staff UseCases ---
@@ -47,9 +51,9 @@ export type IStaffCancelBookingUseCase = IUseCase<CancelBookingUCInput, BookingU
 export type IStaffDeleteBookingUseCase = IUseCase<{ id: string }, BookingUCOutput>;
 
 // --- Customer UseCases ---
-export type ICustomerGetMyBookingsUseCase = IUseCase<{ customerId: string }, BookingUCOutput[]>;
-export type ICustomerGetBookingByIdUseCase = IUseCase<{ id: string, customerId: string }, BookingUCOutput>;
+export type ICustomerGetMyBookingsUseCase = IUseCase<{ userId: string }, BookingUCOutput[]>;
+export type ICustomerGetBookingByIdUseCase = IUseCase<{ id: string, userId: string }, BookingUCOutput>;
 export type ICustomerCreateBookingUseCase = IUseCase<CreateBookingUCInput, BookingUCOutput>;
-export type ICustomerUpdateBookingUseCase = IUseCase<UpdateBookingUCInput & { customerId: string }, BookingUCOutput>;
-export type ICustomerCancelBookingUseCase = IUseCase<CancelBookingUCInput & { customerId: string }, BookingUCOutput>;
-export type ICustomerDeleteBookingUseCase = IUseCase<{ id: string, customerId: string }, BookingUCOutput>;
+export type ICustomerUpdateBookingUseCase = IUseCase<UpdateBookingUCInput & { userId: string }, BookingUCOutput>;
+export type ICustomerCancelBookingUseCase = IUseCase<CancelBookingUCInput & { userId: string }, BookingUCOutput>;
+export type ICustomerDeleteBookingUseCase = IUseCase<{ id: string, userId: string }, BookingUCOutput>;

@@ -1,9 +1,12 @@
-import { bookingRepository } from "../../repository/index.js";
+import { bookingRepository, customerRepository } from "../../repository/index.js";
 import type { ICustomerGetMyBookingsUseCase, BookingUCOutput } from "../types/IBookingUseCases.js";
 
 const customerGetMyBookingsUseCase: ICustomerGetMyBookingsUseCase = {
-  execute: async (input: { customerId: string }): Promise<BookingUCOutput[]> => {
-    return await bookingRepository.findByCustomerId(input.customerId, {
+  execute: async (input: { userId: string }): Promise<BookingUCOutput[]> => {
+    const customer = await customerRepository.findByUserId(input.userId);
+    if (!customer) throw { status: 404, message: "Không tìm thấy thông tin khách hàng" };
+
+    return await bookingRepository.findByCustomerId(customer.id, {
       customer: true,
       rooms: true,
     });

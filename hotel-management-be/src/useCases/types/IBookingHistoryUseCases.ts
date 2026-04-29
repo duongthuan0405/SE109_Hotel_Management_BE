@@ -3,7 +3,6 @@ import { type BookingHistory, type BookingStatusValue } from "../../models/Booki
 
 // Create
 export type CreateBookingHistoryUCInput = {
-  code: string;
   bookingId: string;
   oldStatus: BookingStatusValue;
   newStatus: BookingStatusValue;
@@ -13,6 +12,10 @@ export type ICreateBookingHistoryUseCase = IUseCase<CreateBookingHistoryUCInput,
 
 // Get All
 export type IGetAllBookingHistoryUseCase = IUseCase<{}, BookingHistory[]>;
+
+// Get My (Customer)
+export type GetMyBookingHistoryUCInput = { userId: string };
+export type IGetMyBookingHistoryUseCase = IUseCase<GetMyBookingHistoryUCInput, BookingHistory[]>;
 
 // Get By Id
 export type GetBookingHistoryByIdUCInput = { id: string };

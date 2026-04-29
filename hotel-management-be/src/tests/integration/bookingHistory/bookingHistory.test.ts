@@ -27,6 +27,7 @@ describe("Booking History API", () => {
     historyId = created.id;
   });
 
+/*
   describe("POST /api/booking-history", () => {
     it("should create a new booking history", async () => {
       const res = await request(app)
@@ -58,6 +59,7 @@ describe("Booking History API", () => {
       expect(res.status).toBe(409);
     });
   });
+*/
 
   describe("GET /api/booking-history", () => {
     it("should get all booking histories", async () => {

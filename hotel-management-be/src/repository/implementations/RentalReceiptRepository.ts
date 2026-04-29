@@ -26,10 +26,12 @@ const applyInclude = async (slip: RentalSlip, include?: RentalReceiptInclude): P
 };
 
 const rentalReceiptRepository: IRentalReceiptRepository = {
-  create: async (data): Promise<RentalSlip> => {
+  create: async (data: Omit<RentalSlip, "id" | "createdAt" | "updatedAt" | "booking" | "room" | "checkInStaff" | "code"> & { code?: string | undefined }): Promise<RentalSlip> => {
+    const code = data.code || (await rentalReceiptRepository.generateNextCode());
     const newSlip: RentalSlip = {
       id: crypto.randomUUID(),
       ...data,
+      code,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -50,7 +52,12 @@ const rentalReceiptRepository: IRentalReceiptRepository = {
   },
 
   findAll: async (include): Promise<RentalSlip[]> => {
-    return Promise.all(rentalSlips.map((s) => applyInclude(s, include)));
+    return Promise.all(rentalSlips.map((slip) => applyInclude(slip, include)));
+  },
+
+  findByBookingId: async (bookingId: string, include?: RentalReceiptInclude): Promise<RentalSlip[]> => {
+    const filtered = rentalSlips.filter((slip) => slip.bookingId === bookingId);
+    return Promise.all(filtered.map((slip) => applyInclude(slip, include)));
   },
 
   update: async (id, data, include): Promise<RentalSlip | null> => {
@@ -76,6 +83,10 @@ const rentalReceiptRepository: IRentalReceiptRepository = {
 
   countAll: async (): Promise<number> => {
     return rentalSlips.length;
+  },
+  generateNextCode: async (): Promise<string> => {
+    const nextId = rentalSlips.length + 1;
+    return `PTP${String(nextId).padStart(3, "0")}`;
   },
 };
 

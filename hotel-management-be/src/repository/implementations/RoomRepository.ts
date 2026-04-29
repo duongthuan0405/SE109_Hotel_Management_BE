@@ -67,10 +67,12 @@ const roomRepository: IRoomRepository = {
     return Promise.all(filtered.map((r) => applyInclude(r, include)));
   },
 
-  create: async (roomData: Omit<Room, "id" | "createdAt" | "updatedAt" | "roomType">): Promise<Room> => {
+  create: async (roomData: Omit<Room, "id" | "createdAt" | "updatedAt" | "roomType" | "code"> & { code?: string | undefined }): Promise<Room> => {
+    const code = roomData.code || (await roomRepository.generateNextCode());
     const newRoom: Room = {
       id: crypto.randomUUID(),
       ...roomData,
+      code,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -106,6 +108,10 @@ const roomRepository: IRoomRepository = {
     const initialLength = rooms.length;
     rooms = rooms.filter((r) => r.id !== id);
     return rooms.length < initialLength;
+  },
+  generateNextCode: async (): Promise<string> => {
+    const nextId = rooms.length + 1;
+    return `R${String(nextId).padStart(3, "0")}`;
   },
 };
 

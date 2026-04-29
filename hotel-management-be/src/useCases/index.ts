@@ -172,12 +172,14 @@ import { createInvoice as createInvoiceUseCaseImpl } from "./implementations/Cre
 import { createCheckoutInvoice as createCheckoutInvoiceUseCaseImpl } from "./implementations/CreateCheckoutInvoiceUseCase.js";
 import { getPreviewInvoice as getPreviewInvoiceUseCaseImpl } from "./implementations/GetPreviewInvoiceUseCase.js";
 import { getAllInvoices as getAllInvoicesUseCaseImpl } from "./implementations/GetAllInvoicesUseCase.js";
+import { getCustomerInvoices as getCustomerInvoicesUseCaseImpl } from "./implementations/GetCustomerInvoicesUseCase.js";
 import { getInvoiceById as getInvoiceByIdUseCaseImpl } from "./implementations/GetInvoiceByIdUseCase.js";
 import { updateInvoice as updateInvoiceUseCaseImpl } from "./implementations/UpdateInvoiceUseCase.js";
 import { deleteInvoice as deleteInvoiceUseCaseImpl } from "./implementations/DeleteInvoiceUseCase.js";
 
 import { createBookingHistory as createBookingHistoryUseCaseImpl } from "./implementations/CreateBookingHistoryUseCase.js";
 import { getAllBookingHistory as getAllBookingHistoryUseCaseImpl } from "./implementations/GetAllBookingHistoryUseCase.js";
+import { getMyBookingHistory as getMyBookingHistoryUseCaseImpl } from "./implementations/GetMyBookingHistoryUseCase.js";
 import { getBookingHistoryById as getBookingHistoryByIdUseCaseImpl } from "./implementations/GetBookingHistoryByIdUseCase.js";
 import { getHistoryByBookingId as getHistoryByBookingIdUseCaseImpl } from "./implementations/GetHistoryByBookingIdUseCase.js";
 import { deleteBookingHistory as deleteBookingHistoryUseCaseImpl } from "./implementations/DeleteBookingHistoryUseCase.js";
@@ -186,12 +188,14 @@ export const createInvoiceUseCase = createInvoiceUseCaseImpl;
 export const createCheckoutInvoiceUseCase = createCheckoutInvoiceUseCaseImpl;
 export const getPreviewInvoiceUseCase = getPreviewInvoiceUseCaseImpl;
 export const getAllInvoicesUseCase = getAllInvoicesUseCaseImpl;
+export const getCustomerInvoicesUseCase = getCustomerInvoicesUseCaseImpl;
 export const getInvoiceByIdUseCase = getInvoiceByIdUseCaseImpl;
 export const updateInvoiceUseCase = updateInvoiceUseCaseImpl;
 export const deleteInvoiceUseCase = deleteInvoiceUseCaseImpl;
 
 export const createBookingHistoryUseCase = createBookingHistoryUseCaseImpl;
 export const getAllBookingHistoryUseCase = getAllBookingHistoryUseCaseImpl;
+export const getMyBookingHistoryUseCase = getMyBookingHistoryUseCaseImpl;
 export const getBookingHistoryByIdUseCase = getBookingHistoryByIdUseCaseImpl;
 export const getHistoryByBookingIdUseCase = getHistoryByBookingIdUseCaseImpl;
 export const deleteBookingHistoryUseCase = deleteBookingHistoryUseCaseImpl;

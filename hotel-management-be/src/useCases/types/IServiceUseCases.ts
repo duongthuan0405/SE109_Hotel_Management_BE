@@ -11,7 +11,6 @@ export type IGetServiceByIdUseCase = IUseCase<{ id: string }, ServiceUCOutput>;
 
 // 3. CreateService
 export type CreateServiceUCInput = {
-  code: string;
   name: string;
   price: number;
 };

@@ -9,6 +9,7 @@ export type CreateServiceUsageUCInput = {
   unitPrice: number;
   totalAmount: number;
   requestedAt?: Date | undefined;
+  executorUserId?: string | undefined;
 };
 export type ICreateServiceUsageUseCase = IUseCase<CreateServiceUsageUCInput, ServiceUsage>;
 

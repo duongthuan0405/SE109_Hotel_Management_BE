@@ -6,6 +6,7 @@ describe("Booking API Integration Tests", () => {
   let adminToken = "";
   let customerToken = "";
   let testBookingId = "";
+  let testCustomerId = "";
 
   beforeAll(async () => {
     // Login as Admin
@@ -41,6 +42,10 @@ describe("Booking API Integration Tests", () => {
       expect(res.body.success).toBe(true);
       expect(res.body.data.HangPhong).toBe("1");
       expect(res.body.data._id).toBeDefined();
+      
+      // KIỂM TRA QUAN TRỌNG: Khách hàng phải tự động được gán đúng hồ sơ chuẩn UUID
+      expect(res.body.data.KhachHang._id).toBe("a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d");
+      
       testBookingId = res.body.data._id;
     });
 

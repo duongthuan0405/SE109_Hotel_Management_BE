@@ -11,8 +11,8 @@ export interface ICustomerRepository {
   findByCode(code: string, include?: CustomerInclude): Promise<Customer | null>;
   findByEmail(email: string, include?: CustomerInclude): Promise<Customer | null>;
   findByIdentityCard(identityCard: string, include?: CustomerInclude): Promise<Customer | null>;
-  create(customer: Omit<Customer, "id" | "createdAt" | "updatedAt" | "user">): Promise<Customer>;
+  create(customer: Omit<Customer, "id" | "createdAt" | "updatedAt" | "user" | "code"> & { code?: string | undefined }): Promise<Customer>;
   update(id: string, customer: Partial<Omit<Customer, "user">>, include?: CustomerInclude): Promise<Customer | null>;
   delete(id: string): Promise<boolean>;
-  generateNextId(): Promise<string>; // Để tạo MaKH tiếp theo
+  generateNextCode(): Promise<string>;
 }

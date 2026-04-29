@@ -2,7 +2,6 @@ import { type IUseCase } from "./IUseCase.js";
 import { type PaymentMethod } from "../../models/PaymentMethod.js";
 
 export type CreatePaymentMethodUCInput = {
-  code: string;
   name: string;
 };
 export type ICreatePaymentMethodUseCase = IUseCase<CreatePaymentMethodUCInput, PaymentMethod>;

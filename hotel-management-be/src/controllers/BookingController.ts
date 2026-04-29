@@ -14,7 +14,6 @@ import {
   customerUpdateBookingUseCase,
   customerCancelBookingUseCase,
   customerDeleteBookingUseCase,
-  getCustomerByUserIdUseCase,
 } from "../useCases/index.js";
 import type { BookingUCOutput } from "../useCases/types/IBookingUseCases.js";
 
@@ -56,63 +55,33 @@ const bookingController = {
   customerCreate: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const body = req.body as CreateBookingRequestDTO;
-      let customerId = body.KhachHang;
-
-      if ((req as any).user?.role === 'Customer') {
-        const customer = await getCustomerByUserIdUseCase.execute({ userId: (req as any).user.id });
-        if (!customer) throw { status: 404, message: "Không tìm thấy thông tin khách hàng" };
-        customerId = customer.id;
-      }
+      const userId = (req as any).user?.id;
       
       const result = await customerCreateBookingUseCase.execute({
-        customerId,
+        userId, // UC tự tìm Customer
         roomClass: body.HangPhong,
         startDate: new Date(body.NgayDen),
         endDate: new Date(body.NgayDi),
         guestCount: body.SoKhach,
         deposit: body.TienCoc,
-        details: body.ChiTietDatPhong?.map(d => ({ code: d.MaCTDP, roomId: d.Phong }))
+        details: body.ChiTietDatPhong?.map(d => ({ roomId: d.Phong }))
       });
       res.status(201).json({ success: true, message: "Tạo đặt phòng thành công", data: mapToDTO(result) });
     } catch (error) { next(error); }
   },
   customerGetAll: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const user = (req as any).user;
-      const customer = await getCustomerByUserIdUseCase.execute({ userId: user.id });
-      if (!customer) throw { status: 404, message: "Không tìm thấy thông tin khách hàng" };
-      
-      const result = await customerGetMyBookingsUseCase.execute({ customerId: customer.id });
-      res.status(200).json({ success: true, message: "Lấy danh sách đặt phòng thành công", data: result.map(mapToDTO) });
-    } catch (error) { next(error); }
-  },
-  customerGetByCustomerId: async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const user = (req as any).user;
-      let targetCustomerId = req.params.customerId as string;
-
-      if (user.role === 'Customer') {
-        const customer = await getCustomerByUserIdUseCase.execute({ userId: user.id });
-        if (!customer) throw { status: 404, message: "Không tìm thấy thông tin khách hàng" };
-        
-        // Ownership check
-        if (targetCustomerId !== customer.id) {
-          throw { status: 403, message: "Bạn không có quyền xem lịch sử đặt phòng này" };
-        }
-      }
-
-      const result = await customerGetMyBookingsUseCase.execute({ customerId: targetCustomerId });
+      const userId = (req as any).user.id;
+      const result = await customerGetMyBookingsUseCase.execute({ userId });
       res.status(200).json({ success: true, message: "Lấy danh sách đặt phòng thành công", data: result.map(mapToDTO) });
     } catch (error) { next(error); }
   },
   customerGetById: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const customer = await getCustomerByUserIdUseCase.execute({ userId: (req as any).user.id });
-      if (!customer) throw { status: 404, message: "Không tìm thấy thông tin khách hàng" };
-
+      const userId = (req as any).user.id;
       const result = await customerGetBookingByIdUseCase.execute({ 
         id: req.params.id as string,
-        customerId: customer.id
+        userId
       });
       res.status(200).json({ success: true, message: "Lấy thông tin đặt phòng thành công", data: mapToDTO(result) });
     } catch (error) { next(error); }
@@ -120,43 +89,40 @@ const bookingController = {
   customerUpdate: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const body = req.body as UpdateBookingRequestDTO;
-      const customer = await getCustomerByUserIdUseCase.execute({ userId: (req as any).user.id });
-      if (!customer) throw { status: 404, message: "Không tìm thấy thông tin khách hàng" };
+      const userId = (req as any).user.id;
 
       const result = await customerUpdateBookingUseCase.execute({
         id: req.params.id as string,
-        customerId: customer.id,
+        userId,
         roomClass: body.HangPhong,
         startDate: body.NgayDen ? new Date(body.NgayDen) : undefined,
         endDate: body.NgayDi ? new Date(body.NgayDi) : undefined,
         guestCount: body.SoKhach,
         deposit: body.TienCoc,
         status: body.TrangThai,
-        details: body.ChiTietDatPhong?.map(d => ({ code: d.MaCTDP, roomId: d.Phong }))
+        details: body.ChiTietDatPhong?.map(d => ({ roomId: d.Phong })),
+        executorUserId: userId
       });
       res.status(200).json({ success: true, message: "Cập nhật đặt phòng thành công", data: mapToDTO(result) });
     } catch (error) { next(error); }
   },
   customerCancel: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const customer = await getCustomerByUserIdUseCase.execute({ userId: (req as any).user.id });
-      if (!customer) throw { status: 404, message: "Không tìm thấy thông tin khách hàng" };
-
+      const userId = (req as any).user.id;
       const result = await customerCancelBookingUseCase.execute({ 
         id: req.params.id as string,
-        customerId: customer.id
+        userId,
+        executorUserId: userId
       });
       res.status(200).json({ success: true, message: "Hủy đặt phòng thành công", data: mapToDTO(result) });
     } catch (error) { next(error); }
   },
   customerDelete: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const customer = await getCustomerByUserIdUseCase.execute({ userId: (req as any).user.id });
-      if (!customer) throw { status: 404, message: "Không tìm thấy thông tin khách hàng" };
-
+      const userId = (req as any).user.id;
       const result = await customerDeleteBookingUseCase.execute({ 
         id: req.params.id as string,
-        customerId: customer.id
+        userId
       });
       res.status(200).json({ success: true, message: "Xóa đặt phòng thành công", data: mapToDTO(result) });
     } catch (error) { next(error); }
@@ -175,7 +141,8 @@ const bookingController = {
         endDate: new Date(body.NgayDi),
         guestCount: body.SoKhach,
         deposit: body.TienCoc,
-        details: body.ChiTietDatPhong?.map(d => ({ code: d.MaCTDP, roomId: d.Phong }))
+        details: body.ChiTietDatPhong?.map(d => ({ roomId: d.Phong })),
+        executorUserId: (req as any).user.id
       });
       res.status(201).json(mapToDTO(result));
     } catch (error) { next(error); }
@@ -194,7 +161,8 @@ const bookingController = {
         endDate: new Date(body.NgayDi),
         guestCount: body.SoKhach,
         deposit: body.TienCoc,
-        details: body.ChiTietDatPhong?.map((d: any) => ({ roomId: d.Phong }))
+        details: body.ChiTietDatPhong?.map((d: any) => ({ roomId: d.Phong })),
+        executorUserId: (req as any).user.id
       });
       res.status(201).json(mapToDTO(result));
     } catch (error) { next(error); }
@@ -222,14 +190,18 @@ const bookingController = {
         guestCount: body.SoKhach,
         deposit: body.TienCoc,
         status: body.TrangThai,
-        details: body.ChiTietDatPhong?.map(d => ({ code: d.MaCTDP, roomId: d.Phong }))
+        details: body.ChiTietDatPhong?.map(d => ({ roomId: d.Phong })),
+        executorUserId: (req as any).user.id
       });
       res.status(200).json(mapToDTO(result));
     } catch (error) { next(error); }
   },
   staffCancel: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await staffCancelBookingUseCase.execute({ id: req.params.id as string });
+      const result = await staffCancelBookingUseCase.execute({ 
+        id: req.params.id as string,
+        executorUserId: (req as any).user.id
+      });
       res.status(200).json(mapToDTO(result));
     } catch (error) { next(error); }
   },

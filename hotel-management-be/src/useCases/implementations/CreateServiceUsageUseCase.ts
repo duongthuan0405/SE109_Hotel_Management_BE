@@ -3,17 +3,20 @@ import {
   type CreateServiceUsageUCInput,
 } from "../types/IServiceUsageUseCases.js";
 import { type ServiceUsage } from "../../models/ServiceUsage.js";
-import { serviceUsageRepository } from "../../repository/index.js";
+import { serviceUsageRepository, staffRepository } from "../../repository/index.js";
 
 export const createServiceUsage: ICreateServiceUsageUseCase = {
   execute: async (input: CreateServiceUsageUCInput): Promise<ServiceUsage> => {
-    // 1. Luôn tự động sinh mã SDDV từ Backend
-    const count = await serviceUsageRepository.countAll();
-    const code = `SDDV${String(count + 1).padStart(3, "0")}`;
+    // 1. Kiểm tra tính hợp lệ của Nhân viên thực hiện
+    if (input.executorUserId) {
+      const staff = await staffRepository.findByUserId(input.executorUserId);
+      if (!staff) {
+        throw { status: 403, message: "Nhân viên thực hiện không tồn tại trong hệ thống" };
+      }
+    }
 
-    // 2. Tạo mới
+    // 2. Tạo mới (Mã SDDV được Repo tự sinh)
     const usage = await serviceUsageRepository.create({
-      code,
       rentalSlipId: input.rentalSlipId,
       serviceId: input.serviceId,
       quantity: input.quantity,

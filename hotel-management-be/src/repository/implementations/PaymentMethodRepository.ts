@@ -27,10 +27,12 @@ let paymentMethods: PaymentMethod[] = [
 ];
 
 const paymentMethodRepository: IPaymentMethodRepository = {
-  create: async (data): Promise<PaymentMethod> => {
+  create: async (data: Omit<PaymentMethod, "id" | "createdAt" | "updatedAt" | "code"> & { code?: string | undefined }): Promise<PaymentMethod> => {
+    const code = data.code || (await paymentMethodRepository.generateNextCode());
     const newMethod: PaymentMethod = {
       id: crypto.randomUUID(),
       ...data,
+      code,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -73,6 +75,10 @@ const paymentMethodRepository: IPaymentMethodRepository = {
 
   countAll: async (): Promise<number> => {
     return paymentMethods.length;
+  },
+  generateNextCode: async (): Promise<string> => {
+    const nextId = paymentMethods.length + 1;
+    return `PTTT${String(nextId).padStart(3, "0")}`;
   },
 };
 

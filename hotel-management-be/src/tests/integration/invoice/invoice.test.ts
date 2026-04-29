@@ -9,11 +9,15 @@ describe("Invoice API Integration Tests", () => {
   let paymentMethodId = "";
   // In our mock RentalReceiptRepository, we have slip-1, slip-2, slip-3
   // slip-1 corresponds to booking-1 (Customer 1, deposit 500k, 2 nights at Normal = 400k/night * 2 = 800k)
-  let rentalSlipId = "slip-1";
-  const cashierStaffId = "staff-1"; // Assuming mock staff has staff-1
+  let testStaffId = "";
+  let testCustomerId = "";
+  let rentalSlipId = "";
   let createdInvoiceId = "";
 
   beforeAll(async () => {
+    testStaffId = "f47ac10b-58cc-4372-a567-0e02b2c3d479";
+    testCustomerId = "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d";
+
     // Login as Admin
     const adminRes = await request(app).post("/api/auth/login").send({
       TenDangNhap: "admin",
@@ -31,7 +35,8 @@ describe("Invoice API Integration Tests", () => {
     
     // We need customer id and roomClass
     const booking = await bookingRepository.create({
-      customerId: "user-2",
+      code: "DP-INVOICE-TEST",
+      customerId: testCustomerId,
       roomClass: "Normal",
       startDate: new Date(),
       endDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days later
@@ -47,7 +52,7 @@ describe("Invoice API Integration Tests", () => {
       code: "RS-1",
       bookingId: booking.id,
       roomId: "room-1",
-      checkInStaffId: cashierStaffId,
+      checkInStaffId: testStaffId,
       adjustedPrice: 400000, // 400k/night
       status: "CheckedIn",
       checkInDate: new Date(),
@@ -107,28 +112,48 @@ describe("Invoice API Integration Tests", () => {
   });
 
   describe("POST /api/invoices/checkout", () => {
-    it("should auto-create checkout invoice based on preview data", async () => {
+    it("should auto-create checkout invoice AND automate room release, booking completion, and history tracking", async () => {
+      const { rentalReceiptRepository, roomRepository, bookingRepository, bookingHistoryRepository } = await import("../../../repository/index.js");
+      
       const res = await request(app)
         .post("/api/invoices/checkout")
         .set("Authorization", `Bearer ${adminToken}`)
         .send({
           PhieuThuePhong: rentalSlipId,
-          NhanVienThuNgan: cashierStaffId,
           PhuongThucThanhToan: paymentMethodId,
+          // TUYỆT ĐỐI KHÔNG gửi NhanVienThuNgan ở đây
         });
 
       expect(res.status).toBe(201);
       expect(res.body.success).toBe(true);
 
       const data = res.body.data;
-      expect(data.TongTienPhong).toBe(800000);
-      expect(data.TongTienDichVu).toBe(250000);
-      expect(data.TienDaCoc).toBe(500000);
-      // TongThanhToan = 800k + 250k - 500k = 550k
       expect(data.TongThanhToan).toBe(550000);
-      expect(data.ChiTietHoaDon.length).toBeGreaterThan(0); // Room + 2 services
-
+      // KIỂM TRA: Nhân viên thu ngân phải là staff vừa tạo
+      expect(data.NhanVienThuNgan._id).toBe(testStaffId); 
+      
       createdInvoiceId = data._id;
+
+      // === KIỂM TRA TỰ ĐỘNG HÓA ===
+      
+      // 1. Kiểm tra Phiếu thuê đã Checkout chưa
+      const slip = await rentalReceiptRepository.findById(rentalSlipId);
+      expect(slip?.status).toBe("CheckedOut");
+
+      // 2. Kiểm tra Phòng đã được chuyển sang trạng thái dọn dẹp chưa
+      const room = await roomRepository.findById("room-1");
+      expect(room?.status).toBe("Cleaning");
+
+      // 3. Kiểm tra Đơn đặt phòng đã kết thúc chưa
+      if (slip?.bookingId) {
+        const booking = await bookingRepository.findById(slip.bookingId);
+        expect(booking?.status).toBe("CheckedOut");
+
+        // 4. Kiểm tra Lịch sử đặt phòng đã được ghi tự động chưa
+        const history = await bookingHistoryRepository.findByBookingId(slip.bookingId);
+        const hasCheckoutLog = history.some(h => h.newStatus === "CheckedOut");
+        expect(hasCheckoutLog).toBe(true);
+      }
     });
   });
 

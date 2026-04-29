@@ -65,7 +65,6 @@ const roomTypeController = {
     try {
       const body = req.body as CreateRoomTypeRequestDTO;
       const result = await createRoomTypeUseCase.execute({
-        code: body.MaLoaiPhong,
         name: body.TenLoaiPhong,
         price: body.DonGia,
         maxOccupancy: body.SoKhachToiDa,

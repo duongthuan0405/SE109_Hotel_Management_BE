@@ -6,6 +6,7 @@ import {
 import {
   createBookingHistoryUseCase,
   getAllBookingHistoryUseCase,
+  getMyBookingHistoryUseCase,
   getBookingHistoryByIdUseCase,
   getHistoryByBookingIdUseCase,
   deleteBookingHistoryUseCase,
@@ -45,16 +46,16 @@ const bookingHistoryController = {
     try {
       const body = req.body as CreateBookingHistoryRequestDTO;
 
-      if (!body.MaLSDP || !body.DatPhong || !body.TrangThaiCu || !body.TrangThaiMoi) {
+      if (!body.DatPhong || !body.TrangThaiCu || !body.TrangThaiMoi) {
         throw { status: 400, message: "Vui lòng cung cấp đủ thông tin lịch sử đặt phòng" };
       }
 
+      const userId = (req as any).user.id;
       const result = await createBookingHistoryUseCase.execute({
-        code: body.MaLSDP,
         bookingId: body.DatPhong,
         oldStatus: body.TrangThaiCu as any,
         newStatus: body.TrangThaiMoi as any,
-        userId: body.TaiKhoan,
+        userId: userId,
       });
 
       res.status(201).json({
@@ -87,6 +88,20 @@ const bookingHistoryController = {
         success: true,
         message: "Lấy thông tin lịch sử đặt phòng thành công",
         data: mapToDTO(result),
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  getMyHistory: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = (req as any).user.id;
+      const result = await getMyBookingHistoryUseCase.execute({ userId });
+      res.status(200).json({
+        success: true,
+        message: "Lấy lịch sử đặt phòng của bạn thành công",
+        data: result.map(mapToDTO),
       });
     } catch (error) {
       next(error);

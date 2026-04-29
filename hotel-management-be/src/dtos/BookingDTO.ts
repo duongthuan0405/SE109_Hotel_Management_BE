@@ -5,6 +5,10 @@ export type BookingResponseWrapper<T> = {
   error?: string | undefined;
 };
 
+export type CreateBookingDetailDTO = {
+  Phong: string; // ID của phòng
+};
+
 export type BookingDetailDTO = {
   _id?: string | undefined;
   MaCTDP: string;
@@ -33,7 +37,7 @@ export type CreateBookingRequestDTO = {
   NgayDi: string;
   SoKhach: number;
   TienCoc?: number | undefined;
-  ChiTietDatPhong?: BookingDetailDTO[] | undefined;
+  ChiTietDatPhong?: CreateBookingDetailDTO[] | undefined;
 };
 
 export type UpdateBookingRequestDTO = {
@@ -42,6 +46,6 @@ export type UpdateBookingRequestDTO = {
   NgayDi?: string | undefined;
   SoKhach?: number | undefined;
   TienCoc?: number | undefined;
-  ChiTietDatPhong?: BookingDetailDTO[] | undefined;
+  ChiTietDatPhong?: CreateBookingDetailDTO[] | undefined;
   TrangThai?: string | undefined;
 };

@@ -1,5 +1,6 @@
 import { type IServiceRepository } from "../types/IServiceRepository.js";
 import { type Service } from "../../models/Service.js";
+import crypto from "crypto";
 
 const mockServices: Service[] = [
   {
@@ -30,10 +31,12 @@ const serviceRepository: IServiceRepository = {
   findByCode: async (code: string): Promise<Service | null> => {
     return mockServices.find((s) => s.code === code) || null;
   },
-  create: async (service: Omit<Service, "id">): Promise<Service> => {
+  create: async (service: Omit<Service, "id" | "code"> & { code?: string | undefined }): Promise<Service> => {
+    const code = service.code || (await serviceRepository.generateNextCode());
     const newService: Service = {
       ...service,
-      id: `service-${mockServices.length + 1}`,
+      code,
+      id: crypto.randomUUID(),
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -54,6 +57,10 @@ const serviceRepository: IServiceRepository = {
       return true;
     }
     return false;
+  },
+  generateNextCode: async (): Promise<string> => {
+    const nextId = mockServices.length + 1;
+    return `DV${String(nextId).padStart(3, "0")}`;
   },
 };
 

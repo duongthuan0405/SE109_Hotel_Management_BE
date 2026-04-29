@@ -47,15 +47,14 @@ const paymentMethodController = {
   createPaymentMethod: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const body = req.body as CreatePaymentMethodRequestDTO;
-      if (!body.MaPTTT || !body.TenPTTT) {
+      if (!body.TenPTTT) {
         res.status(400).json({
           success: false,
-          message: "Vui lòng cung cấp mã và tên phương thức thanh toán",
+          message: "Vui lòng cung cấp tên phương thức thanh toán",
         });
         return;
       }
       const result = await createPaymentMethodUseCase.execute({
-        code: body.MaPTTT,
         name: body.TenPTTT,
       });
       res.status(201).json({

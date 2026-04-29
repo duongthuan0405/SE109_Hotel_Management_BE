@@ -1,10 +1,8 @@
 // Request DTOs
 export type CreateBookingHistoryRequestDTO = {
-  MaLSDP: string;
   DatPhong: string;
   TrangThaiCu: string;
   TrangThaiMoi: string;
-  TaiKhoan?: string | undefined;
 };
 
 // Response DTOs

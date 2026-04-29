@@ -4,7 +4,8 @@ export type IRoomTypeRepository = {
   findAll(): Promise<RoomType[]>;
   findById(id: string): Promise<RoomType | null>;
   findByCode(code: string): Promise<RoomType | null>;
-  create(roomType: Omit<RoomType, "id">): Promise<RoomType>;
+  create(roomType: Omit<RoomType, "id" | "code"> & { code?: string | undefined }): Promise<RoomType>;
   save(roomType: RoomType): Promise<RoomType>;
   deleteById(id: string): Promise<boolean>;
+  generateNextCode(): Promise<string>;
 };

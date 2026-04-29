@@ -64,7 +64,6 @@ const serviceController = {
     try {
       const body = req.body as CreateServiceRequestDTO;
       const result = await createServiceUseCase.execute({
-        code: body.MaDV,
         name: body.TenDV,
         price: body.DonGia,
       });

@@ -140,6 +140,7 @@ const serviceUsageController = {
         unitPrice: body.DonGia,
         totalAmount: body.ThanhTien,
         requestedAt: body.NgaySDV ? new Date(body.NgaySDV) : undefined,
+        executorUserId: (req as any).user.id,
       });
 
       res.status(201).json({

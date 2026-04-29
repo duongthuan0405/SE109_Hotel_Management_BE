@@ -23,10 +23,12 @@ const applyInclude = async (usage: ServiceUsage, include?: ServiceUsageInclude):
 };
 
 const serviceUsageRepository: IServiceUsageRepository = {
-  create: async (data): Promise<ServiceUsage> => {
+  create: async (data: Omit<ServiceUsage, "id" | "createdAt" | "updatedAt" | "rentalSlip" | "service" | "code"> & { code?: string | undefined }): Promise<ServiceUsage> => {
+    const code = data.code || (await serviceUsageRepository.generateNextCode());
     const newUsage: ServiceUsage = {
       id: crypto.randomUUID(),
       ...data,
+      code,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -95,6 +97,10 @@ const serviceUsageRepository: IServiceUsageRepository = {
 
   countAll: async (): Promise<number> => {
     return serviceUsages.length;
+  },
+  generateNextCode: async (): Promise<string> => {
+    const nextId = serviceUsages.length + 1;
+    return `SDDV${String(nextId).padStart(3, "0")}`;
   },
 };
 

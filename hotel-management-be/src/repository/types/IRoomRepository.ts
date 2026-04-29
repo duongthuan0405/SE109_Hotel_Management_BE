@@ -5,7 +5,7 @@ export type RoomInclude = {
 };
 
 export interface IRoomRepository {
-  create(room: Omit<Room, "id" | "createdAt" | "updatedAt" | "roomType">): Promise<Room>;
+  create(room: Omit<Room, "id" | "createdAt" | "updatedAt" | "roomType" | "code"> & { code?: string | undefined }): Promise<Room>;
   findById(id: string, include?: RoomInclude): Promise<Room | null>;
   findByCode(code: string, include?: RoomInclude): Promise<Room | null>;
   findAll(include?: RoomInclude): Promise<Room[]>;
@@ -13,4 +13,5 @@ export interface IRoomRepository {
   updateStatus(id: string, status: RoomStatus, include?: RoomInclude): Promise<Room | null>;
   delete(id: string): Promise<boolean>;
   findByRoomType(roomTypeId: string, include?: RoomInclude): Promise<Room[]>;
+  generateNextCode(): Promise<string>;
 }

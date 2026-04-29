@@ -77,13 +77,15 @@ const rentalReceiptController = {
   createRentalReceipt: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const body = req.body as CreateRentalReceiptRequestDTO;
+      const userId = (req as any).user?.id;
+
       const result = await createRentalReceiptUseCase.execute({
         bookingId: body.DatPhong,
         roomId: body.Phong,
         expectedCheckOutDate: new Date(body.NgayTraDuKien),
         actualGuestCount: body.SoKhachThucTe,
         adjustedPrice: body.DonGiaSauDieuChinh,
-        checkInStaffId: body.NhanVienCheckIn,
+        checkInStaffUserId: userId,
       });
 
       res.status(201).json({
@@ -119,7 +121,11 @@ const rentalReceiptController = {
 
   checkOut: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await checkOutUseCase.execute({ id: req.params.id as string });
+      const userId = (req as any).user?.id;
+      const result = await checkOutUseCase.execute({ 
+        id: req.params.id as string,
+        executorUserId: userId
+      });
       res.status(200).json({
         success: true,
         message: "Check out thành công",

@@ -1,7 +1,8 @@
 import { type Booking } from "../../models/Booking.js";
-import { type IBookingRepository, type BookingInclude } from "../types/IBookingRepository.js";
+import { type IBookingRepository, type BookingInclude, type CreateBookingData } from "../types/IBookingRepository.js";
 import customerRepository from "./CustomerRepository.js";
 import roomRepository from "./RoomRepository.js";
+import crypto from "crypto";
 
 const mockBookings: Booking[] = [
   {
@@ -62,15 +63,15 @@ const bookingRepositoryImpl: IBookingRepository = {
     const filtered = mockBookings.filter((b) => b.customerId === customerId);
     return Promise.all(filtered.map((b) => applyInclude(b, include)));
   },
-  create: async (bookingData): Promise<Booking> => {
-    const code = await bookingRepositoryImpl.generateNextCode();
+  create: async (bookingData: CreateBookingData): Promise<Booking> => {
+    const code = bookingData.code || (await bookingRepositoryImpl.generateNextCode());
     const newBooking: Booking = {
       ...bookingData,
-      id: `booking-${Math.random().toString(36).substring(7)}`,
-      code: code,
+      id: crypto.randomUUID(),
+      code,
       details: bookingData.details.map((d: any, index: number) => ({
         ...d,
-        code: d.code || `CTDP-${Date.now()}-${index}`
+        code: d.code || bookingRepositoryImpl.generateNextDetailCode(index)
       })),
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -92,19 +93,15 @@ const bookingRepositoryImpl: IBookingRepository = {
       mockBookings.splice(index, 1);
     }
   },
-  count: async (): Promise<number> => {
+  countAll: async (): Promise<number> => {
     return mockBookings.length;
   },
   generateNextCode: async (): Promise<string> => {
-    const lastBooking = [...mockBookings].sort((a, b) => b.code.localeCompare(a.code))[0];
-    let nextId = 1;
-    if (lastBooking && lastBooking.code) {
-      const match = lastBooking.code.match(/DP(\d+)/);
-      if (match) {
-        nextId = parseInt(match[1]!, 10) + 1;
-      }
-    }
+    const nextId = mockBookings.length + 1;
     return `DP${String(nextId).padStart(3, "0")}`;
+  },
+  generateNextDetailCode: (index: number): string => {
+    return `CTDP-${Date.now()}-${index}`;
   },
   findOverlappingByRoom: async (roomId: string, startDate: Date, endDate: Date, excludeBookingId?: string): Promise<Booking | null> => {
     const overlap = mockBookings.find((b) => {
@@ -118,7 +115,14 @@ const bookingRepositoryImpl: IBookingRepository = {
       return startDate < b.endDate && endDate > b.startDate;
     });
     return overlap || null;
-  }
+  },
+  updateStatus: async (id: string, status: any): Promise<void> => {
+    const booking = mockBookings.find(b => b.id === id);
+    if (booking) {
+      booking.status = status;
+      booking.updatedAt = new Date();
+    }
+  },
 };
 
 export default bookingRepositoryImpl;

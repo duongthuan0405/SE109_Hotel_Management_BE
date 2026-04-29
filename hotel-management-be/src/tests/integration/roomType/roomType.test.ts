@@ -79,22 +79,10 @@ describe("RoomType API Integration Tests", () => {
         });
       expect(res.status).toBe(201);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.MaLoaiPhong).toBe("SUI");
+      expect(res.body.data.MaLoaiPhong).toMatch(/^RT\d+/);
       expect(res.body.data.TenLoaiPhong).toBe("Phòng Suite");
       
       createdRoomTypeId = res.body.data._id;
-    });
-
-    it("should deny creation if code already exists", async () => {
-      const res = await request(app)
-        .post("/api/room-types")
-        .set("Authorization", `Bearer ${adminToken}`)
-        .send({
-          MaLoaiPhong: "SUI", // Duplicate code
-          TenLoaiPhong: "Phòng Suite 2",
-        });
-      expect(res.status).toBe(409);
-      expect(res.body.success).toBe(false);
     });
 
     it("should allow updating room type if authenticated as Admin", async () => {
@@ -102,12 +90,10 @@ describe("RoomType API Integration Tests", () => {
         .put(`/api/room-types/${createdRoomTypeId}`)
         .set("Authorization", `Bearer ${adminToken}`)
         .send({
-          MaLoaiPhong: "SUI-PRO",
           TenLoaiPhong: "Phòng Suite Pro",
         });
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.MaLoaiPhong).toBe("SUI-PRO");
       expect(res.body.data.TenLoaiPhong).toBe("Phòng Suite Pro");
     });
 

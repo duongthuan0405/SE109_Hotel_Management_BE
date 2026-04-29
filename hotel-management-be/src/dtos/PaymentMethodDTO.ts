@@ -1,5 +1,4 @@
 export type CreatePaymentMethodRequestDTO = {
-  MaPTTT: string;
   TenPTTT: string;
 };
 
