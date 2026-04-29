@@ -1,17 +1,17 @@
-import { type ICustomerRepository, type CustomerInclude } from "../types/ICustomerRepository.js";
 import { type Customer } from "../../models/Customer.js";
-import userRepository from "./UserRepository.js";
+import { type ICustomerRepository, type CustomerInclude } from "../types/ICustomerRepository.js";
+import userRepository, { SEED_USER_ID_CUSTOMER } from "./UserRepository.js";
+import crypto from "crypto";
 
 const mockCustomers: Customer[] = [
   {
-    id: "cust-1",
-    userId: "user-2", // customer1 account
+    id: "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
     code: "KH001",
-    fullName: "Nguyễn Khách Hàng",
+    fullName: "Customer One",
     identityCard: "123456789",
-    phone: "0901234567",
-    email: "customer1@example.com",
-    address: "123 Đường ABC, HCM",
+    phone: "0123456789",
+    email: "customer1@test.com",
+    userId: SEED_USER_ID_CUSTOMER,
     createdAt: new Date(),
     updatedAt: new Date(),
   }
@@ -19,49 +19,48 @@ const mockCustomers: Customer[] = [
 
 const applyInclude = async (customer: Customer, include?: CustomerInclude): Promise<Customer> => {
   if (!include) return { ...customer };
-
   const result = { ...customer };
-
-  if (include.user) {
-    result.user = (await userRepository.findById(customer.userId || "")) || undefined;
+  if (include.user && customer.userId) {
+    result.user = (await userRepository.findById(customer.userId)) || undefined;
   }
-
   return result;
 };
 
 const customerRepository: ICustomerRepository = {
   findAll: async (include): Promise<Customer[]> => {
-    return Promise.all(mockCustomers.map(c => applyInclude(c, include)));
+    return Promise.all(mockCustomers.map((c) => applyInclude(c, include)));
   },
-  findById: async (id, include): Promise<Customer | null> => {
-    const customer = mockCustomers.find(c => c.id === id);
+  findById: async (id: string, include?: CustomerInclude): Promise<Customer | null> => {
+    const customer = mockCustomers.find((c) => c.id === id);
     if (!customer) return null;
     return applyInclude(customer, include);
   },
-  findByUserId: async (userId, include): Promise<Customer | null> => {
-    const customer = mockCustomers.find(c => c.userId === userId);
+  findByUserId: async (userId: string, include?: CustomerInclude): Promise<Customer | null> => {
+    const customer = mockCustomers.find((c) => c.userId === userId);
     if (!customer) return null;
     return applyInclude(customer, include);
   },
-  findByCode: async (code, include): Promise<Customer | null> => {
-    const customer = mockCustomers.find(c => c.code === code);
+  findByCode: async (code: string, include?: CustomerInclude): Promise<Customer | null> => {
+    const customer = mockCustomers.find((c) => c.code === code);
     if (!customer) return null;
     return applyInclude(customer, include);
   },
-  findByEmail: async (email, include): Promise<Customer | null> => {
-    const customer = mockCustomers.find(c => c.email === email);
+  findByEmail: async (email: string, include?: CustomerInclude): Promise<Customer | null> => {
+    const customer = mockCustomers.find((c) => c.email === email);
     if (!customer) return null;
     return applyInclude(customer, include);
   },
-  findByIdentityCard: async (identityCard, include): Promise<Customer | null> => {
-    const customer = mockCustomers.find(c => c.identityCard === identityCard);
+  findByIdentityCard: async (identityCard: string, include?: CustomerInclude): Promise<Customer | null> => {
+    const customer = mockCustomers.find((c) => c.identityCard === identityCard);
     if (!customer) return null;
     return applyInclude(customer, include);
   },
-  create: async (customer: Omit<Customer, "id" | "createdAt" | "updatedAt" | "user">): Promise<Customer> => {
+  create: async (customer: Omit<Customer, "id" | "createdAt" | "updatedAt" | "user" | "code"> & { code?: string | undefined }): Promise<Customer> => {
+    const code = customer.code || (await customerRepository.generateNextCode());
     const newCustomer: Customer = {
       ...customer,
-      id: `cust-${mockCustomers.length + 1}`,
+      code,
+      id: crypto.randomUUID(),
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -71,27 +70,21 @@ const customerRepository: ICustomerRepository = {
   update: async (id, data, include): Promise<Customer | null> => {
     const index = mockCustomers.findIndex((c) => c.id === id);
     if (index === -1) return null;
-
-    const current = mockCustomers[index]!;
-    const updatedCustomer: Customer = {
-      ...current,
-      ...data,
-      updatedAt: new Date(),
-    } as Customer;
-    
-    mockCustomers[index] = updatedCustomer;
-    return applyInclude(updatedCustomer, include);
+    mockCustomers[index] = { ...mockCustomers[index]!, ...data, updatedAt: new Date() };
+    return applyInclude(mockCustomers[index]!, include);
   },
   delete: async (id: string): Promise<boolean> => {
-    const index = mockCustomers.findIndex(c => c.id === id);
-    if (index === -1) return false;
-    mockCustomers.splice(index, 1);
-    return true;
+    const index = mockCustomers.findIndex((c) => c.id === id);
+    if (index !== -1) {
+      mockCustomers.splice(index, 1);
+      return true;
+    }
+    return false;
   },
-  generateNextId: async (): Promise<string> => {
-    const count = mockCustomers.length + 1;
-    return `KH${count.toString().padStart(3, "0")}`;
-  }
+  generateNextCode: async (): Promise<string> => {
+    const nextNum = mockCustomers.length + 1;
+    return `KH${nextNum.toString().padStart(3, "0")}`;
+  },
 };
 
 export default customerRepository;

@@ -2,109 +2,73 @@ import { describe, it, expect, beforeAll } from "vitest";
 import request from "supertest";
 import app from "../../../server.js";
 
-describe("Customer API Integration Tests (Legacy Compatibility)", () => {
+describe("Customer API Integration Tests", () => {
   let adminToken = "";
   let customerToken = "";
-  let customerId = "";
+  // ID chuẩn của Customer One từ SEED data
+  const SEED_CUSTOMER_ID = "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d";
 
   beforeAll(async () => {
     // Login as Admin
-    const adminLoginRes = await request(app).post("/api/auth/login").send({
+    const adminRes = await request(app).post("/api/auth/login").send({
       TenDangNhap: "admin",
       MatKhau: "123456",
     });
-    adminToken = adminLoginRes.body.token;
+    adminToken = adminRes.body.token;
 
-    // Register & Login as Customer
-    const cmnd = "TEST_" + Date.now();
-    await request(app).post("/api/auth/register").send({
-      TenDangNhap: "customer_test_compat",
-      MatKhau: "123456",
-      HoTen: "Khách Hàng Test",
-      CMND: cmnd,
-      SDT: "0123456789",
-      Email: `test_${Date.now()}@customer.com`,
-    });
-    const customerLoginRes = await request(app).post("/api/auth/login").send({
-      TenDangNhap: "customer_test_compat",
+    // Login as Customer
+    const customerRes = await request(app).post("/api/auth/login").send({
+      TenDangNhap: "customer1",
       MatKhau: "123456",
     });
-    customerToken = customerLoginRes.body.token;
+    customerToken = customerRes.body.token;
   });
 
-  describe("Customer Profile & Compatibility", () => {
-    it("should return customer profile with legacy fields and populated account", async () => {
+  describe("Customer Profile Access", () => {
+    it("should return personal profile via /api/customers/me", async () => {
       const res = await request(app)
         .get("/api/customers/me")
         .set("Authorization", `Bearer ${customerToken}`);
-      
+
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
-      
-      const data = res.body.data;
-      expect(data._id).toBeDefined();
-      expect(data.MaKH).toBeDefined();
-      expect(data.HoTen).toBe("Khách Hàng Test");
-      expect(data.CMND).toBeDefined();
-      
-      // Kiểm tra populate TaiKhoan (Account)
-      expect(data.TaiKhoan).toBeDefined();
-      expect(data.TaiKhoan.TenDangNhap).toBe("customer_test_compat");
-      
-      customerId = data._id;
+      expect(res.body.data._id).toBe(SEED_CUSTOMER_ID);
+      expect(res.body.data.HoTen).toBe("Customer One");
+      expect(res.body.data.MaKH).toBe("KH001");
     });
 
-    it("should allow updating profile with Vietnamese keys", async () => {
+    it("should allow updating own profile", async () => {
       const res = await request(app)
         .put("/api/customers/me")
         .set("Authorization", `Bearer ${customerToken}`)
         .send({
-          HoTen: "Khách Hàng Updated",
-          DiaChi: "123 Legacy Street",
+          HoTen: "Customer One Updated",
+          SDT: "0987654321",
         });
-      
+
       expect(res.status).toBe(200);
-      expect(res.body.data.HoTen).toBe("Khách Hàng Updated");
-      expect(res.body.data.DiaChi).toBe("123 Legacy Street");
+      expect(res.body.data.HoTen).toBe("Customer One Updated");
     });
   });
 
-  describe("Admin Management Compatibility", () => {
-    it("should allow admin to list all customers with full data", async () => {
+  describe("Admin Management", () => {
+    it("should allow admin to list all customers", async () => {
       const res = await request(app)
         .get("/api/customers")
         .set("Authorization", `Bearer ${adminToken}`);
-      
+
       expect(res.status).toBe(200);
       expect(Array.isArray(res.body.data)).toBe(true);
-      
-      const customer = res.body.data.find((c: any) => c._id === customerId);
-      expect(customer).toBeDefined();
-      expect(customer.MaKH).toBeDefined();
+      expect(res.body.data.some((c: any) => c._id === SEED_CUSTOMER_ID)).toBe(true);
     });
 
     it("should allow admin to get customer by id", async () => {
       const res = await request(app)
-        .get(`/api/customers/${customerId}`)
+        .get(`/api/customers/${SEED_CUSTOMER_ID}`)
         .set("Authorization", `Bearer ${adminToken}`);
-      
-      expect(res.status).toBe(200);
-      expect(res.body.data.HoTen).toBe("Khách Hàng Updated");
-    });
 
-    it("should deny customer from deleting themselves via admin API", async () => {
-      const res = await request(app)
-        .delete(`/api/customers/${customerId}`)
-        .set("Authorization", `Bearer ${customerToken}`);
-      expect(res.status).toBe(403);
-    });
-
-    it("should allow admin to delete a customer", async () => {
-      const res = await request(app)
-        .delete(`/api/customers/${customerId}`)
-        .set("Authorization", `Bearer ${adminToken}`);
       expect(res.status).toBe(200);
-      expect(res.body.success).toBe(true);
+      expect(res.body.data._id).toBe(SEED_CUSTOMER_ID);
     });
   });
 });

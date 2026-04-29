@@ -11,12 +11,8 @@ const createStaffUseCase: ICreateStaffUseCase = {
       throw { status: 409, message: "Email nhân viên đã tồn tại" };
     }
 
-    // Sinh MaNV mới
-    const MaNV = await staffRepository.generateNextId();
-
     const newStaff = await staffRepository.create({
       userId,
-      code: MaNV,
       fullName,
       position,
       phone,

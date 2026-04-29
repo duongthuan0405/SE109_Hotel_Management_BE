@@ -1,15 +1,18 @@
-import { bookingRepository, roomRepository } from "../../repository/index.js";
+import { bookingRepository, roomRepository, customerRepository } from "../../repository/index.js";
 import type { ICustomerDeleteBookingUseCase, BookingUCOutput } from "../types/IBookingUseCases.js";
 
 const customerDeleteBookingUseCase: ICustomerDeleteBookingUseCase = {
-  execute: async (input: { id: string, customerId: string }): Promise<BookingUCOutput> => {
+  execute: async (input: { id: string, userId: string }): Promise<BookingUCOutput> => {
+    const customer = await customerRepository.findByUserId(input.userId);
+    if (!customer) throw { status: 404, message: "Không tìm thấy thông tin khách hàng" };
+
     const booking = await bookingRepository.findById(input.id);
     if (!booking) {
       throw { status: 404, message: "Đặt phòng không tồn tại" };
     }
 
     // Ownership check
-    if (booking.customerId !== input.customerId) {
+    if (booking.customerId !== customer.id) {
       throw { status: 403, message: "Bạn không có quyền xóa đặt phòng này" };
     }
 

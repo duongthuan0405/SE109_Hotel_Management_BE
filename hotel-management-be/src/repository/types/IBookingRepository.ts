@@ -5,8 +5,9 @@ export type BookingInclude = {
   rooms?: boolean; // Populate rooms in details
 };
 
-export type CreateBookingData = Omit<Booking, "id" | "code" | "createdAt" | "updatedAt" | "customer" | "details"> & {
-  details: (Omit<BookingDetail, "code" | "room"> & { code?: string })[];
+export type CreateBookingData = Omit<Booking, "id" | "createdAt" | "updatedAt" | "customer" | "details" | "code"> & {
+  code?: string | undefined;
+  details: (Omit<BookingDetail, "code" | "room"> & { code?: string | undefined })[];
 };
 
 export type IBookingRepository = {
@@ -17,9 +18,11 @@ export type IBookingRepository = {
   create: (booking: CreateBookingData) => Promise<Booking>;
   save: (booking: Booking, include?: BookingInclude) => Promise<Booking>;
   deleteById: (id: string) => Promise<void>;
-  count: () => Promise<number>;
+  countAll: () => Promise<number>;
   
   // Các phương thức bổ trợ logic nghiệp vụ
   generateNextCode: () => Promise<string>;
+  generateNextDetailCode: (index: number) => string;
   findOverlappingByRoom: (roomId: string, startDate: Date, endDate: Date, excludeBookingId?: string) => Promise<Booking | null>;
+  updateStatus: (id: string, status: "Pending" | "Confirmed" | "CheckedIn" | "CheckedOut" | "Cancelled" | "NoShow") => Promise<void>;
 };

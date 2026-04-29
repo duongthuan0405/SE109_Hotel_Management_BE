@@ -1,4 +1,5 @@
 import { bookingRepository, roomRepository, roomTypeRepository } from "../../repository/index.js";
+import { createBookingHistory as createBookingHistoryUseCase } from "./CreateBookingHistoryUseCase.js";
 import type { IStaffUpdateBookingUseCase, UpdateBookingUCInput, BookingUCOutput } from "../types/IBookingUseCases.js";
 
 const staffUpdateBookingUseCase: IStaffUpdateBookingUseCase = {
@@ -47,7 +48,6 @@ const staffUpdateBookingUseCase: IStaffUpdateBookingUseCase = {
 
       if (assignedRoomId) {
         newDetails = [{
-          code: `CTDP-AUTO-${Date.now()}`,
           roomId: assignedRoomId
         }];
       } else {
@@ -60,7 +60,6 @@ const staffUpdateBookingUseCase: IStaffUpdateBookingUseCase = {
       // Đảm bảo mỗi chi tiết đều có mã định danh (Backend sinh)
       newDetails = newDetails.map((d, index) => ({
         ...d,
-        code: d.code || `CTDP-${Date.now()}-${index}`
       }));
 
       for (const detail of newDetails) {
@@ -81,6 +80,7 @@ const staffUpdateBookingUseCase: IStaffUpdateBookingUseCase = {
 
 
     // 2. Cập nhật thông tin đơn đặt phòng
+    const oldStatus = existingBooking.status;
     const updatedBooking = await bookingRepository.save({
       ...existingBooking,
       ...input,
@@ -93,7 +93,17 @@ const staffUpdateBookingUseCase: IStaffUpdateBookingUseCase = {
       updatedAt: new Date(),
     } as any);
 
-    // 3. Cập nhật trạng thái phòng (Giải phóng phòng cũ nếu có thay đổi)
+    // 3. Ghi lịch sử nếu trạng thái thay đổi
+    if (status && status !== oldStatus) {
+      await createBookingHistoryUseCase.execute({
+        bookingId: updatedBooking.id,
+        oldStatus: oldStatus as any,
+        newStatus: status as any,
+        userId: input.executorUserId, // ID tài khoản thực hiện thao tác
+      });
+    }
+
+    // 4. Cập nhật trạng thái phòng (Giải phóng phòng cũ nếu có thay đổi)
     if (details) {
       for (const oldDetail of existingBooking.details) {
         // Nếu phòng cũ không nằm trong danh sách mới, giải phóng nó

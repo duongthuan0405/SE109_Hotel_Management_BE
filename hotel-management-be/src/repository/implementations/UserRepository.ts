@@ -1,18 +1,23 @@
 import { type IUserRepository } from "../types/IUserRepository.js";
 import { type User } from "../../models/User.js";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 
 const mockPasswordHash = bcrypt.hashSync("123456", 10);
 
+// Định nghĩa các ID cố định để các Repository khác có thể tham chiếu (Seed Data)
+export const SEED_USER_ID_ADMIN = "550e8400-e29b-41d4-a716-446655440000";
+export const SEED_USER_ID_CUSTOMER = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
+
 const mockUsers: User[] = [
   {
-    id: "user-1",
+    id: SEED_USER_ID_ADMIN,
     username: "admin",
     passwordHash: mockPasswordHash,
     role: "Admin",
   },
   {
-    id: "user-2",
+    id: SEED_USER_ID_CUSTOMER,
     username: "customer1",
     passwordHash: mockPasswordHash,
     role: "Customer",
@@ -34,7 +39,7 @@ const userRepository: IUserRepository = {
   create: async (user: Omit<User, "id">): Promise<User> => {
     const newUser: User = {
       ...user,
-      id: `user-${mockUsers.length + 1}`,
+      id: crypto.randomUUID(),
     };
     mockUsers.push(newUser);
     return newUser;

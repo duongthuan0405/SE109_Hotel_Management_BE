@@ -1,5 +1,4 @@
 export type CreateServiceRequestDTO = {
-  MaDV: string;
   TenDV: string;
   DonGia: number;
 };

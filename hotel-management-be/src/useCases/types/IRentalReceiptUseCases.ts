@@ -8,7 +8,8 @@ export type CreateRentalReceiptUCInput = {
   expectedCheckOutDate: Date;
   actualGuestCount: number;
   adjustedPrice: number;
-  checkInStaffId: string;
+  checkInStaffUserId: string;
+  executorUserId?: string;
 };
 export type ICreateRentalReceiptUseCase = IUseCase<CreateRentalReceiptUCInput, RentalSlip>;
 
@@ -30,7 +31,7 @@ export type UpdateRentalReceiptUCInput = {
 export type IUpdateRentalReceiptUseCase = IUseCase<UpdateRentalReceiptUCInput, RentalSlip>;
 
 // Check-out
-export type CheckOutUCInput = { id: string };
+export type CheckOutUCInput = { id: string; executorUserId?: string };
 export type ICheckOutUseCase = IUseCase<CheckOutUCInput, RentalSlip>;
 
 // Delete

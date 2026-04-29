@@ -9,13 +9,6 @@ const updateRoomUseCase: IUpdateRoomUseCase = {
       throw { status: 404, message: "Không tìm thấy phòng" };
     }
 
-    if (updateData.code && updateData.code !== room.code) {
-      const existingRoom = await roomRepository.findByCode(updateData.code);
-      if (existingRoom) {
-        throw { status: 400, message: "Mã phòng đã tồn tại" };
-      }
-    }
-
     return await roomRepository.update(id, updateData);
   },
 };

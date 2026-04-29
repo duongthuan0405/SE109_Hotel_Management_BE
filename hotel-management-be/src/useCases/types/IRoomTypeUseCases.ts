@@ -9,7 +9,6 @@ export type GetRoomTypeByIdUCInput = { id: string };
 export type IGetRoomTypeByIdUseCase = IUseCase<GetRoomTypeByIdUCInput, RoomTypeUCOutput>;
 
 export type CreateRoomTypeUCInput = {
-  code: string;
   name: string;
   price: number;
   maxOccupancy: number;
@@ -18,7 +17,6 @@ export type ICreateRoomTypeUseCase = IUseCase<CreateRoomTypeUCInput, RoomTypeUCO
 
 export type UpdateRoomTypeUCInput = {
   id: string;
-  code?: string | undefined;
   name?: string | undefined;
   price?: number | undefined;
   maxOccupancy?: number | undefined;

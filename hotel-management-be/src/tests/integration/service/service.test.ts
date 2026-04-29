@@ -56,7 +56,7 @@ describe("Service API Integration Tests", () => {
 
     expect(res.status).toBe(201);
     expect(res.body.success).toBe(true);
-    expect(res.body.data.MaDV).toBe("DV999");
+    expect(res.body.data.MaDV).toMatch(/^DV\d+/);
     testServiceId = res.body.data._id;
   });
 
@@ -67,7 +67,7 @@ describe("Service API Integration Tests", () => {
 
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
-    expect(res.body.data.MaDV).toBe("DV999");
+    expect(res.body.data.MaDV).toMatch(/^DV\d+/);
   });
 
   it("should update service via PUT /api/services/:id", async () => {

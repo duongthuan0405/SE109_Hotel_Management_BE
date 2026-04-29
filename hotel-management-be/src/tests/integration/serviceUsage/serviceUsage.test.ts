@@ -26,7 +26,7 @@ describe("Service Usage API Integration Tests (Legacy Compatibility)", () => {
         NgayTraDuKien: new Date(Date.now() + 86400000).toISOString(),
         SoKhachThucTe: 2,
         DonGiaSauDieuChinh: 500000,
-        NhanVienCheckIn: "staff-1",
+        // ĐÃ XÓA NhanVienCheckIn ở đây
       });
   });
 

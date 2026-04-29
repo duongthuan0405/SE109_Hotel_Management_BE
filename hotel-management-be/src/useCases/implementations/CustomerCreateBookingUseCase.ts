@@ -1,9 +1,16 @@
-import { bookingRepository, roomRepository, roomTypeRepository } from "../../repository/index.js";
+import { bookingRepository, roomRepository, roomTypeRepository, customerRepository } from "../../repository/index.js";
 import type { ICustomerCreateBookingUseCase, CreateBookingUCInput, BookingUCOutput } from "../types/IBookingUseCases.js";
 
 const customerCreateBookingUseCase: ICustomerCreateBookingUseCase = {
   execute: async (input: CreateBookingUCInput): Promise<BookingUCOutput> => {
-    const { customerId, roomClass, startDate, endDate, guestCount, deposit, details } = input;
+    let { customerId, userId, roomClass, startDate, endDate, guestCount, deposit, details } = input;
+
+    // TÌM KIẾM: Nếu có userId mà chưa có customerId (luồng Khách hàng tự đặt)
+    if (userId && !customerId) {
+      const customer = await customerRepository.findByUserId(userId);
+      if (!customer) throw { status: 404, message: "Không tìm thấy thông tin khách hàng" };
+      customerId = customer.id;
+    }
 
     if (!customerId || !roomClass || !startDate || !endDate || !guestCount) {
       throw { status: 400, message: "Vui lòng cung cấp đủ thông tin đặt phòng" };
@@ -56,14 +63,12 @@ const customerCreateBookingUseCase: ICustomerCreateBookingUseCase = {
       }
 
       finalDetails = [{
-        code: `CTDP-${Date.now()}`,
         roomId: assignedRoomId
       }];
     } else {
       // Đảm bảo mỗi chi tiết đều có mã định danh (Backend sinh)
       finalDetails = finalDetails.map((d, index) => ({
         ...d,
-        code: d.code || `CTDP-${Date.now()}-${index}`
       }));
 
       for (const detail of finalDetails) {
@@ -89,7 +94,7 @@ const customerCreateBookingUseCase: ICustomerCreateBookingUseCase = {
       throw { status: 400, message: "Tiền cọc không thể lớn hơn tổng tiền phòng" };
     }
 
-    // 4. Tạo đơn đặt phòng
+    // 5. Tạo đơn đặt phòng
     const booking = await bookingRepository.create({
       customerId,
       roomClass,
@@ -98,7 +103,7 @@ const customerCreateBookingUseCase: ICustomerCreateBookingUseCase = {
       guestCount,
       deposit: deposit || 0,
       totalAmount,
-      details: finalDetails,
+      details: finalDetails.map(d => ({ roomId: d.roomId })), // Để Repo tự sinh mã CTDP
       status: "Pending",
     });
 

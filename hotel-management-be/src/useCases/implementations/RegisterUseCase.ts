@@ -1,7 +1,7 @@
 import { userRepository } from "../../repository/index.js";
 import { type IRegisterUseCase, type RegisterUCInput, type RegisterUCOutput } from "../types/IRegisterUseCase.js";
 import { passwordService } from "../../services/index.js";
-import { createCustomerUseCase } from "../index.js";
+import createCustomerUseCase from "./CreateCustomerUseCase.js";
 import type { User } from "../../models/User.js";
 
 const registerUseCase: IRegisterUseCase = {

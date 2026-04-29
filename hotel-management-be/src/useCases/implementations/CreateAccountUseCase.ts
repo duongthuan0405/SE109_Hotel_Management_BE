@@ -1,7 +1,7 @@
 import { userRepository } from "../../repository/index.js";
 import { passwordService } from "../../services/index.js";
 import { type ICreateAccountUseCase, type CreateAccountUCInput, type AccountUCOutput } from "../types/IAccountUseCases.js";
-import { createStaffUseCase } from "../index.js";
+import createStaffUseCase from "./CreateStaffUseCase.js";
 
 const createAccountUseCase: ICreateAccountUseCase = {
   execute: async (input: CreateAccountUCInput): Promise<AccountUCOutput> => {

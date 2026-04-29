@@ -16,14 +16,12 @@ export type RoomDataDTO = {
 };
 
 export type CreateRoomRequestDTO = {
-  MaPhong: string;
   LoaiPhong: string;
   GiaPhong: number;
   TrangThai: RoomStatus;
 };
 
 export type UpdateRoomRequestDTO = {
-  MaPhong?: string;
   LoaiPhong?: string;
   GiaPhong?: number;
   TrangThai?: RoomStatus;

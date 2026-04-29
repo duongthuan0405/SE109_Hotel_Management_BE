@@ -1,5 +1,6 @@
 import { bookingRepository, roomRepository, customerRepository, roomTypeRepository } from "../../repository/index.js";
-import { createCustomerUseCase } from "../index.js";
+import createCustomerUseCase from "./CreateCustomerUseCase.js";
+import { createBookingHistory as createBookingHistoryUseCase } from "./CreateBookingHistoryUseCase.js";
 import type { IStaffCreateWalkInBookingUseCase, CreateWalkInBookingUCInput, BookingUCOutput } from "../types/IBookingUseCases.js";
 
 const staffCreateWalkInBookingUseCase: IStaffCreateWalkInBookingUseCase = {
@@ -7,7 +8,8 @@ const staffCreateWalkInBookingUseCase: IStaffCreateWalkInBookingUseCase = {
     const { 
       customerId: inputCustomerId, 
       fullName, identityCard, phone, email,
-      roomClass, startDate, endDate, guestCount, deposit, details 
+      roomClass, startDate, endDate, guestCount, deposit, details,
+      executorUserId 
     } = input;
 
     // 0. Kiểm tra hạng phòng và sức chứa
@@ -84,14 +86,12 @@ const staffCreateWalkInBookingUseCase: IStaffCreateWalkInBookingUseCase = {
       }
 
       finalDetails = [{
-        code: `CTDP-WALKIN-${Date.now()}`,
         roomId: assignedRoomId
       }];
     } else {
       // Đảm bảo mỗi chi tiết đều có mã định danh (Backend sinh)
       finalDetails = finalDetails.map((d, index) => ({
         ...d,
-        code: d.code || `CTDP-${Date.now()}-${index}`
       }));
 
       for (const detail of finalDetails) {
@@ -136,6 +136,14 @@ const staffCreateWalkInBookingUseCase: IStaffCreateWalkInBookingUseCase = {
         await roomRepository.updateStatus(detail.roomId, "Occupied");
       }
     }
+
+    // 7. Ghi lịch sử tự động
+    await createBookingHistoryUseCase.execute({
+      bookingId: booking.id,
+      oldStatus: "None" as any,
+      newStatus: status as any,
+      userId: input.executorUserId, // ID Nhân viên thực hiện
+    });
 
     return (await bookingRepository.findById(booking.id, { customer: true, rooms: true }))!;
   },

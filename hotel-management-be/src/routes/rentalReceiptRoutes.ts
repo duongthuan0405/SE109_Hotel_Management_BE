@@ -13,8 +13,8 @@ rentalReceiptRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Manage
 rentalReceiptRoutes.post("/", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), rentalReceiptController.createRentalReceipt);
 rentalReceiptRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), rentalReceiptController.updateRentalReceipt);
 
-// Check-out
-rentalReceiptRoutes.post("/:id/checkout", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), rentalReceiptController.checkOut);
+// Check-out (Bị vô hiệu hóa vì đã gộp vào Invoice Checkout)
+// rentalReceiptRoutes.post("/:id/checkout", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), rentalReceiptController.checkOut);
 
 // Xóa (Chỉ Admin)
 rentalReceiptRoutes.delete("/:id", authMiddleware, roleMiddleware(["Admin"]), rentalReceiptController.deleteRentalReceipt);

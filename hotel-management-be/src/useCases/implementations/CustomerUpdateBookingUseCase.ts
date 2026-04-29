@@ -1,16 +1,19 @@
-import { bookingRepository, roomRepository, roomTypeRepository } from "../../repository/index.js";
+import { bookingRepository, roomRepository, roomTypeRepository, customerRepository } from "../../repository/index.js";
 import type { ICustomerUpdateBookingUseCase, UpdateBookingUCInput, BookingUCOutput } from "../types/IBookingUseCases.js";
 
 const customerUpdateBookingUseCase: ICustomerUpdateBookingUseCase = {
-  execute: async (input: UpdateBookingUCInput & { customerId: string }): Promise<BookingUCOutput> => {
-    const { id, customerId, status, details, startDate, endDate, roomClass, guestCount } = input;
+  execute: async (input: UpdateBookingUCInput & { userId: string }): Promise<BookingUCOutput> => {
+    const { id, userId, status, details, startDate, endDate, roomClass, guestCount } = input;
+
+    const customer = await customerRepository.findByUserId(userId);
+    if (!customer) throw { status: 404, message: "Không tìm thấy thông tin khách hàng" };
 
     const existingBooking = await bookingRepository.findById(id);
     if (!existingBooking) {
       throw { status: 404, message: "Đơn đặt phòng không tồn tại" };
     }
 
-    if (existingBooking.customerId !== customerId) {
+    if (existingBooking.customerId !== customer.id) {
       throw { status: 403, message: "Bạn không có quyền chỉnh sửa đơn đặt phòng này" };
     }
 
@@ -21,7 +24,6 @@ const customerUpdateBookingUseCase: ICustomerUpdateBookingUseCase = {
     const newGuestCount = guestCount || existingBooking.guestCount;
     let newDetails = (details || existingBooking.details).map((d, index) => ({
       ...d,
-      code: d.code || `CTDP-${Date.now()}-${index}`
     }));
 
     const roomType = await roomTypeRepository.findById(newRoomClass);

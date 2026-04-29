@@ -1,7 +1,6 @@
 // Request DTOs (field tiếng Việt, tương thích client cũ)
 
 export type CreateServiceUsageRequestDTO = {
-  MaSDV?: string; // Client gửi MaSDV, map sang code (MaSDDV)
   PhieuThuePhong: string; // ID phiếu thuê phòng
   DichVu: string; // ID dịch vụ
   SoLuong: number;

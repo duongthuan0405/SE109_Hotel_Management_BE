@@ -69,20 +69,6 @@ describe("Room API Integration Tests (Legacy Compatibility)", () => {
       expect(res.body.data.MaPhong).toBeDefined();
       createdRoomId = res.body.data._id;
     });
-
-    it("should deny creation if MaPhong already exists", async () => {
-      const res = await request(app)
-        .post("/api/rooms")
-        .set("Authorization", `Bearer ${adminToken}`)
-        .send({
-          MaPhong: "101",
-          LoaiPhong: "1",
-          GiaPhong: 500000,
-          TrangThai: "Available",
-        });
-      expect(res.status).toBe(400);
-      expect(res.body.message).toBe("Mã phòng đã tồn tại");
-    });
   });
 
   describe("PUT & STATUS Update Compatibility", () => {
