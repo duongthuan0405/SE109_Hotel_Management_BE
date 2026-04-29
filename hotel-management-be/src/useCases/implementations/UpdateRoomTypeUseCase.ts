@@ -8,14 +8,6 @@ const updateRoomTypeUseCase: IUpdateRoomTypeUseCase = {
       throw { status: 404, message: "Loại phòng không tồn tại" };
     }
 
-    if (input.code !== undefined && input.code !== roomType.code) {
-      const existing = await roomTypeRepository.findByCode(input.code);
-      if (existing) {
-        throw { status: 409, message: "Mã loại phòng đã tồn tại" };
-      }
-      roomType.code = input.code;
-    }
-
     if (input.name !== undefined) {
       roomType.name = input.name;
     }

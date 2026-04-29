@@ -86,14 +86,12 @@ const staffCreateWalkInBookingUseCase: IStaffCreateWalkInBookingUseCase = {
       }
 
       finalDetails = [{
-        code: `CTDP-WALKIN-${Date.now()}`,
         roomId: assignedRoomId
       }];
     } else {
       // Đảm bảo mỗi chi tiết đều có mã định danh (Backend sinh)
       finalDetails = finalDetails.map((d, index) => ({
         ...d,
-        code: d.code || `CTDP-${Date.now()}-${index}`
       }));
 
       for (const detail of finalDetails) {
@@ -120,12 +118,7 @@ const staffCreateWalkInBookingUseCase: IStaffCreateWalkInBookingUseCase = {
     const isToday = start.getTime() === now.getTime();
     const status = isToday ? "CheckedIn" : "Confirmed";
 
-    // 5. Tạo mã đặt phòng tự động (Business Logic)
-    const count = await bookingRepository.countAll ? await bookingRepository.countAll() : 0;
-    const code = `DP${String((count || 0) + 1).padStart(3, "0")}`;
-
     const booking = await bookingRepository.create({
-      code,
       customerId: finalCustomerId!,
       roomClass,
       startDate: start,
@@ -146,7 +139,6 @@ const staffCreateWalkInBookingUseCase: IStaffCreateWalkInBookingUseCase = {
 
     // 7. Ghi lịch sử tự động
     await createBookingHistoryUseCase.execute({
-      code: `LSDP-WALKIN-NEW-${Date.now()}`,
       bookingId: booking.id,
       oldStatus: "None" as any,
       newStatus: status as any,

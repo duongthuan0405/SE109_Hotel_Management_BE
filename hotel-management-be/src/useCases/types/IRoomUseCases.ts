@@ -16,7 +16,6 @@ export type ICreateRoomUseCase = IUseCase<CreateRoomUCInput, RoomUCOutput>;
 
 export type UpdateRoomUCInput = {
   id: string;
-  code?: string;
   roomTypeId?: string;
   price?: number;
   status?: RoomStatus;

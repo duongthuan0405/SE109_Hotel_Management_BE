@@ -101,7 +101,6 @@ const roomController = {
       const body = req.body as UpdateRoomRequestDTO;
       const result = await updateRoomUseCase.execute({
         id: req.params.id as string,
-        code: body.MaPhong as string,
         roomTypeId: body.LoaiPhong as string,
         price: body.GiaPhong as number,
         status: body.TrangThai as RoomStatus,

@@ -26,7 +26,6 @@ const customerCancelBookingUseCase: ICustomerCancelBookingUseCase = {
 
     // 2. Ghi lịch sử tự động
     await createBookingHistoryUseCase.execute({
-      code: `LSDP-CAN-CUST-${Date.now()}`,
       bookingId: updatedBooking.id,
       oldStatus: oldStatus as any,
       newStatus: "Cancelled",

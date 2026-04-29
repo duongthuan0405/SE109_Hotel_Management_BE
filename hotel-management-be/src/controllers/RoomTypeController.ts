@@ -90,7 +90,6 @@ const roomTypeController = {
       const body = req.body as UpdateRoomTypeRequestDTO;
       const result = await updateRoomTypeUseCase.execute({
         id: req.params.id as string,
-        code: body.MaLoaiPhong as string,
         name: body.TenLoaiPhong as string,
         price: body.DonGia,
         maxOccupancy: body.SoKhachToiDa,

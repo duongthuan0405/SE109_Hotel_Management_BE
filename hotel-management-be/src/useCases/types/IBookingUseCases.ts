@@ -12,7 +12,7 @@ export type CreateBookingUCInput = {
   endDate: Date;
   guestCount: number;
   deposit?: number | undefined;
-  details?: { code?: string; roomId: string }[] | undefined;
+  details?: { roomId: string }[] | undefined;
   executorUserId?: string | undefined;
 };
 
@@ -32,7 +32,7 @@ export type UpdateBookingUCInput = {
   guestCount?: number | undefined;
   deposit?: number | undefined;
   status?: string | undefined;
-  details?: { code?: string; roomId: string }[] | undefined;
+  details?: { roomId: string }[] | undefined;
   executorUserId?: string | undefined;
 };
 

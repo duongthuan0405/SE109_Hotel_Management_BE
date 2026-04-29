@@ -22,7 +22,6 @@ export type CreateRoomRequestDTO = {
 };
 
 export type UpdateRoomRequestDTO = {
-  MaPhong?: string;
   LoaiPhong?: string;
   GiaPhong?: number;
   TrangThai?: RoomStatus;

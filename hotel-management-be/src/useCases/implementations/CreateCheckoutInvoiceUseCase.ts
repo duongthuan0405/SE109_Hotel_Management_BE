@@ -1,4 +1,4 @@
-import { type ICreateCheckoutInvoiceUseCase, type CreateCheckoutInvoiceUCInput } from "../types/IInvoiceUseCases.js";
+import { type ICreateCheckoutInvoiceUseCase, type CreateCheckoutInvoiceUCInput, type CreateInvoiceDetailUCInput } from "../types/IInvoiceUseCases.js";
 import { type Invoice, type InvoiceDetail } from "../../models/Invoice.js";
 import { invoiceRepository, serviceUsageRepository, rentalReceiptRepository, bookingRepository, staffRepository } from "../../repository/index.js";
 import { getPreviewInvoice } from "./GetPreviewInvoiceUseCase.js";
@@ -25,12 +25,11 @@ export const createCheckoutInvoice: ICreateCheckoutInvoiceUseCase = {
     const serviceUsages = await serviceUsageRepository.findByRentalSlipIds([input.rentalSlipId], { service: true });
     const completedUsages = serviceUsages.filter(u => u.status === "Completed");
 
-    const details: InvoiceDetail[] = [];
+    const details: CreateInvoiceDetailUCInput[] = [];
     
     // Thêm dòng tiền phòng
     if (roomTotal > 0) {
       details.push({
-        code: `CT-ROOM-${Date.now()}`,
         itemName: "Tiền phòng",
         quantity: 1,
         unitPrice: roomTotal,
@@ -42,7 +41,6 @@ export const createCheckoutInvoice: ICreateCheckoutInvoiceUseCase = {
     // Thêm các dòng dịch vụ
     completedUsages.forEach((usage, index) => {
       details.push({
-        code: `CT-SVC-${Date.now()}-${index}`,
         itemName: usage.service?.name || `Dịch vụ ${usage.code}`,
         quantity: usage.quantity,
         unitPrice: usage.service?.price || (usage.totalAmount / usage.quantity),

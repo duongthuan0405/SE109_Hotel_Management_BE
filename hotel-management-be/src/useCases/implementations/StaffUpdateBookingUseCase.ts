@@ -48,7 +48,6 @@ const staffUpdateBookingUseCase: IStaffUpdateBookingUseCase = {
 
       if (assignedRoomId) {
         newDetails = [{
-          code: `CTDP-AUTO-${Date.now()}`,
           roomId: assignedRoomId
         }];
       } else {
@@ -61,7 +60,6 @@ const staffUpdateBookingUseCase: IStaffUpdateBookingUseCase = {
       // Đảm bảo mỗi chi tiết đều có mã định danh (Backend sinh)
       newDetails = newDetails.map((d, index) => ({
         ...d,
-        code: d.code || `CTDP-${Date.now()}-${index}`
       }));
 
       for (const detail of newDetails) {
@@ -98,7 +96,6 @@ const staffUpdateBookingUseCase: IStaffUpdateBookingUseCase = {
     // 3. Ghi lịch sử nếu trạng thái thay đổi
     if (status && status !== oldStatus) {
       await createBookingHistoryUseCase.execute({
-        code: `LSDP-UP-${Date.now()}`,
         bookingId: updatedBooking.id,
         oldStatus: oldStatus as any,
         newStatus: status as any,

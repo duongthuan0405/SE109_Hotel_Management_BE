@@ -22,7 +22,6 @@ export type CreateRoomTypeRequestDTO = {
 };
 
 export type UpdateRoomTypeRequestDTO = {
-  MaLoaiPhong?: string | undefined;
   TenLoaiPhong?: string | undefined;
   DonGia?: number | undefined;
   SoKhachToiDa?: number | undefined;

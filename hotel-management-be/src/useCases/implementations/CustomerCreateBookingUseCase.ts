@@ -63,14 +63,12 @@ const customerCreateBookingUseCase: ICustomerCreateBookingUseCase = {
       }
 
       finalDetails = [{
-        code: `CTDP-${Date.now()}`,
         roomId: assignedRoomId
       }];
     } else {
       // Đảm bảo mỗi chi tiết đều có mã định danh (Backend sinh)
       finalDetails = finalDetails.map((d, index) => ({
         ...d,
-        code: d.code || `CTDP-${Date.now()}-${index}`
       }));
 
       for (const detail of finalDetails) {

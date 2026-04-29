@@ -37,7 +37,6 @@ export const checkOut: ICheckOutUseCase = {
 
           // Ghi lịch sử tự động
           await createBookingHistoryUseCase.execute({
-            code: `LSDP-CO-${Date.now()}`,
             bookingId: booking.id,
             oldStatus: oldStatus as any,
             newStatus: "CheckedOut",

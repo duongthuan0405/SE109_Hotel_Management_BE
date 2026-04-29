@@ -58,14 +58,12 @@ const staffCreateBookingUseCase: IStaffCreateBookingUseCase = {
       }
 
       finalDetails = [{
-        code: `CTDP-STAFF-${Date.now()}`,
         roomId: assignedRoomId
       }];
     } else {
       // Đảm bảo mỗi chi tiết đều có mã định danh (Backend sinh)
       finalDetails = finalDetails.map((d, index) => ({
         ...d,
-        code: d.code || `CTDP-${Date.now()}-${index}`
       }));
 
       for (const detail of finalDetails) {
@@ -110,7 +108,6 @@ const staffCreateBookingUseCase: IStaffCreateBookingUseCase = {
 
     // 6. Ghi lịch sử tự động
     await createBookingHistoryUseCase.execute({
-      code: `LSDP-STAFF-NEW-${Date.now()}`,
       bookingId: booking.id,
       oldStatus: "None" as any,
       newStatus: "Confirmed",

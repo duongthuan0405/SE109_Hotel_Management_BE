@@ -82,7 +82,15 @@ const bookingRepositoryImpl: IBookingRepository = {
   save: async (booking, include): Promise<Booking> => {
     const index = mockBookings.findIndex((b) => b.id === booking.id);
     if (index !== -1) {
-      mockBookings[index] = { ...booking, updatedAt: new Date() };
+      const updatedBooking = {
+        ...booking,
+        details: booking.details.map((d: any, idx: number) => ({
+          ...d,
+          code: d.code || bookingRepositoryImpl.generateNextDetailCode(idx),
+        })),
+        updatedAt: new Date(),
+      };
+      mockBookings[index] = updatedBooking;
       return applyInclude(mockBookings[index]!, include);
     }
     return applyInclude(booking, include);

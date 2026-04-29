@@ -24,7 +24,6 @@ const customerUpdateBookingUseCase: ICustomerUpdateBookingUseCase = {
     const newGuestCount = guestCount || existingBooking.guestCount;
     let newDetails = (details || existingBooking.details).map((d, index) => ({
       ...d,
-      code: d.code || `CTDP-${Date.now()}-${index}`
     }));
 
     const roomType = await roomTypeRepository.findById(newRoomClass);
