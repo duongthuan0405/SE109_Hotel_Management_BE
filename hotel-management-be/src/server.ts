@@ -14,6 +14,7 @@ import settingsRoutes from "./routes/settingsRoutes.js";
 import paymentMethodRoutes from "./routes/paymentMethodRoutes.js";
 import invoiceRoutes from "./routes/invoiceRoutes.js";
 import bookingHistoryRoutes from "./routes/bookingHistoryRoutes.js";
+import maintenanceRoutes from "./routes/maintenanceRoutes.js";
 
 const app = express();
 const PORT = env.PORT;
@@ -34,6 +35,7 @@ app.use("/api/settings", settingsRoutes);
 app.use("/api/payment-methods", paymentMethodRoutes);
 app.use("/api/invoices", invoiceRoutes);
 app.use("/api/booking-history", bookingHistoryRoutes);
+app.use("/api/maintenance", maintenanceRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello từ Express + TypeScript!");

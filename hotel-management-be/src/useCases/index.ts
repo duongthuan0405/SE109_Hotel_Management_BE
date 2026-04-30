@@ -195,3 +195,21 @@ export const getAllBookingHistoryUseCase = getAllBookingHistoryUseCaseImpl;
 export const getBookingHistoryByIdUseCase = getBookingHistoryByIdUseCaseImpl;
 export const getHistoryByBookingIdUseCase = getHistoryByBookingIdUseCaseImpl;
 export const deleteBookingHistoryUseCase = deleteBookingHistoryUseCaseImpl;
+
+import getAllMaintenanceUseCaseImpl from "./implementations/Maintenance/GetAllMaintenanceUseCase.js";
+import getMaintenanceByIdUseCaseImpl from "./implementations/Maintenance/GetMaintenanceByIdUseCase.js";
+import getNextMaintenanceCodeUseCaseImpl from "./implementations/Maintenance/GetNextMaintenanceCodeUseCase.js";
+import createMaintenanceUseCaseImpl from "./implementations/Maintenance/CreateMaintenanceUseCase.js";
+import updateMaintenanceUseCaseImpl from "./implementations/Maintenance/UpdateMaintenanceUseCase.js";
+import deleteMaintenanceUseCaseImpl from "./implementations/Maintenance/DeleteMaintenanceUseCase.js";
+import guestGetMaintenanceRequestsUseCaseImpl from "./implementations/Maintenance/GuestGetMaintenanceRequestsUseCase.js";
+import guestCreateMaintenanceRequestUseCaseImpl from "./implementations/Maintenance/GuestCreateMaintenanceRequestUseCase.js";
+
+export const getAllMaintenanceUseCase = getAllMaintenanceUseCaseImpl;
+export const getMaintenanceByIdUseCase = getMaintenanceByIdUseCaseImpl;
+export const getNextMaintenanceCodeUseCase = getNextMaintenanceCodeUseCaseImpl;
+export const createMaintenanceUseCase = createMaintenanceUseCaseImpl;
+export const updateMaintenanceUseCase = updateMaintenanceUseCaseImpl;
+export const deleteMaintenanceUseCase = deleteMaintenanceUseCaseImpl;
+export const guestGetMaintenanceRequestsUseCase = guestGetMaintenanceRequestsUseCaseImpl;
+export const guestCreateMaintenanceRequestUseCase = guestCreateMaintenanceRequestUseCaseImpl;

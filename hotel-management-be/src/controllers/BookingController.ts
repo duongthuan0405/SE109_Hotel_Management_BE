@@ -63,7 +63,7 @@ const bookingController = {
         if (!customer) throw { status: 404, message: "Không tìm thấy thông tin khách hàng" };
         customerId = customer.id;
       }
-      
+
       const result = await customerCreateBookingUseCase.execute({
         customerId,
         roomClass: body.HangPhong,
@@ -81,7 +81,7 @@ const bookingController = {
       const user = (req as any).user;
       const customer = await getCustomerByUserIdUseCase.execute({ userId: user.id });
       if (!customer) throw { status: 404, message: "Không tìm thấy thông tin khách hàng" };
-      
+
       const result = await customerGetMyBookingsUseCase.execute({ customerId: customer.id });
       res.status(200).json({ success: true, message: "Lấy danh sách đặt phòng thành công", data: result.map(mapToDTO) });
     } catch (error) { next(error); }
@@ -94,7 +94,7 @@ const bookingController = {
       if (user.role === 'Customer') {
         const customer = await getCustomerByUserIdUseCase.execute({ userId: user.id });
         if (!customer) throw { status: 404, message: "Không tìm thấy thông tin khách hàng" };
-        
+
         // Ownership check
         if (targetCustomerId !== customer.id) {
           throw { status: 403, message: "Bạn không có quyền xem lịch sử đặt phòng này" };
@@ -110,7 +110,7 @@ const bookingController = {
       const customer = await getCustomerByUserIdUseCase.execute({ userId: (req as any).user.id });
       if (!customer) throw { status: 404, message: "Không tìm thấy thông tin khách hàng" };
 
-      const result = await customerGetBookingByIdUseCase.execute({ 
+      const result = await customerGetBookingByIdUseCase.execute({
         id: req.params.id as string,
         customerId: customer.id
       });
@@ -142,7 +142,7 @@ const bookingController = {
       const customer = await getCustomerByUserIdUseCase.execute({ userId: (req as any).user.id });
       if (!customer) throw { status: 404, message: "Không tìm thấy thông tin khách hàng" };
 
-      const result = await customerCancelBookingUseCase.execute({ 
+      const result = await customerCancelBookingUseCase.execute({
         id: req.params.id as string,
         customerId: customer.id
       });
@@ -154,7 +154,7 @@ const bookingController = {
       const customer = await getCustomerByUserIdUseCase.execute({ userId: (req as any).user.id });
       if (!customer) throw { status: 404, message: "Không tìm thấy thông tin khách hàng" };
 
-      const result = await customerDeleteBookingUseCase.execute({ 
+      const result = await customerDeleteBookingUseCase.execute({
         id: req.params.id as string,
         customerId: customer.id
       });
@@ -207,7 +207,7 @@ const bookingController = {
   },
   staffGetById: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await staffGetBookingByIdUseCase.execute({ id: req.params.id as string});
+      const result = await staffGetBookingByIdUseCase.execute({ id: req.params.id as string });
       res.status(200).json(mapToDTO(result));
     } catch (error) { next(error); }
   },
