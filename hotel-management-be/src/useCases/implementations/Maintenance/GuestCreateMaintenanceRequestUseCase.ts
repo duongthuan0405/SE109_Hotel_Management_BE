@@ -1,5 +1,6 @@
 import type { IGuestCreateMaintenanceRequestUseCase, GuestCreateMaintenanceUCInput, MaintenanceUCOutput } from "../../types/IMaintenanceUseCases.js";
 import { maintenanceRepository, customerRepository } from "../../../repository/index.js";
+import { createNotificationUseCase } from "../../index.js";
 
 const guestCreateMaintenanceRequestUseCase: IGuestCreateMaintenanceRequestUseCase = {
   execute: async (input: GuestCreateMaintenanceUCInput): Promise<MaintenanceUCOutput> => {
@@ -23,11 +24,18 @@ const guestCreateMaintenanceRequestUseCase: IGuestCreateMaintenanceRequestUseCas
       status: "Pending",
     });
 
+    // Tạo thông báo cho khách hàng
+    await createNotificationUseCase.execute({
+      userId: input.userId,
+      title: "Yêu cầu bảo trì đã gửi",
+      content: `Yêu cầu bảo trì ${code} đã được gửi. Chúng tôi sẽ xử lý sớm nhất.`,
+      type: "Maintenance",
+    });
+
     // Trả về record đã populated
     return maintenanceRepository.findById(record.id, { room: true, customer: true }) as Promise<MaintenanceUCOutput>;
-
-    // TODO: Tạo notification khi module Notification (#2) hoàn tất
   },
 };
 
 export default guestCreateMaintenanceRequestUseCase;
+

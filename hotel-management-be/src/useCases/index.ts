@@ -213,3 +213,11 @@ export const updateMaintenanceUseCase = updateMaintenanceUseCaseImpl;
 export const deleteMaintenanceUseCase = deleteMaintenanceUseCaseImpl;
 export const guestGetMaintenanceRequestsUseCase = guestGetMaintenanceRequestsUseCaseImpl;
 export const guestCreateMaintenanceRequestUseCase = guestCreateMaintenanceRequestUseCaseImpl;
+
+import getNotificationsUseCaseImpl from "./implementations/Notification/GetNotificationsUseCase.js";
+import markNotificationAsReadUseCaseImpl from "./implementations/Notification/MarkNotificationAsReadUseCase.js";
+import createNotificationUseCaseImpl from "./implementations/Notification/CreateNotificationUseCase.js";
+
+export const getNotificationsUseCase = getNotificationsUseCaseImpl;
+export const markNotificationAsReadUseCase = markNotificationAsReadUseCaseImpl;
+export const createNotificationUseCase = createNotificationUseCaseImpl;
