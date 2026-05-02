@@ -16,6 +16,8 @@ import invoiceRoutes from "./routes/invoiceRoutes.js";
 import bookingHistoryRoutes from "./routes/bookingHistoryRoutes.js";
 import maintenanceRoutes from "./routes/maintenanceRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
+import positionRoutes from "./routes/positionRoutes.js";
+import serviceUsageHistoryRoutes from "./routes/serviceUsageHistoryRoutes.js";
 
 const app = express();
 const PORT = env.PORT;
@@ -38,6 +40,8 @@ app.use("/api/invoices", invoiceRoutes);
 app.use("/api/booking-history", bookingHistoryRoutes);
 app.use("/api/maintenance", maintenanceRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/positions", positionRoutes);
+app.use("/api/service-usage-history", serviceUsageHistoryRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello từ Express + TypeScript!");

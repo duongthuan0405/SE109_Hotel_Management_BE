@@ -221,3 +221,29 @@ import createNotificationUseCaseImpl from "./implementations/Notification/Create
 export const getNotificationsUseCase = getNotificationsUseCaseImpl;
 export const markNotificationAsReadUseCase = markNotificationAsReadUseCaseImpl;
 export const createNotificationUseCase = createNotificationUseCaseImpl;
+
+import getAllPositionsUseCaseImpl from "./implementations/Position/GetAllPositionsUseCase.js";
+import getPositionByIdUseCaseImpl from "./implementations/Position/GetPositionByIdUseCase.js";
+import createPositionUseCaseImpl from "./implementations/Position/CreatePositionUseCase.js";
+import updatePositionUseCaseImpl from "./implementations/Position/UpdatePositionUseCase.js";
+import deletePositionUseCaseImpl from "./implementations/Position/DeletePositionUseCase.js";
+
+export const getAllPositionsUseCase = getAllPositionsUseCaseImpl;
+export const getPositionByIdUseCase = getPositionByIdUseCaseImpl;
+export const createPositionUseCase = createPositionUseCaseImpl;
+export const updatePositionUseCase = updatePositionUseCaseImpl;
+export const deletePositionUseCase = deletePositionUseCaseImpl;
+
+import getAllServiceUsageHistoryUseCaseImpl from "./implementations/ServiceUsageHistory/GetAllServiceUsageHistoryUseCase.js";
+import getServiceUsageHistoryByIdUseCaseImpl from "./implementations/ServiceUsageHistory/GetServiceUsageHistoryByIdUseCase.js";
+import getHistoryByServiceUsageIdUseCaseImpl from "./implementations/ServiceUsageHistory/GetHistoryByServiceUsageIdUseCase.js";
+import createServiceUsageHistoryUseCaseImpl from "./implementations/ServiceUsageHistory/CreateServiceUsageHistoryUseCase.js";
+import updateServiceUsageHistoryUseCaseImpl from "./implementations/ServiceUsageHistory/UpdateServiceUsageHistoryUseCase.js";
+import deleteServiceUsageHistoryUseCaseImpl from "./implementations/ServiceUsageHistory/DeleteServiceUsageHistoryUseCase.js";
+
+export const getAllServiceUsageHistoryUseCase = getAllServiceUsageHistoryUseCaseImpl;
+export const getServiceUsageHistoryByIdUseCase = getServiceUsageHistoryByIdUseCaseImpl;
+export const getHistoryByServiceUsageIdUseCase = getHistoryByServiceUsageIdUseCaseImpl;
+export const createServiceUsageHistoryUseCase = createServiceUsageHistoryUseCaseImpl;
+export const updateServiceUsageHistoryUseCase = updateServiceUsageHistoryUseCaseImpl;
+export const deleteServiceUsageHistoryUseCase = deleteServiceUsageHistoryUseCaseImpl;

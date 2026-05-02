@@ -14,6 +14,8 @@ import invoiceRepositoryImpl from "./implementations/InvoiceRepository.js";
 import bookingHistoryRepositoryImpl from "./implementations/BookingHistoryRepository.js";
 import maintenanceRepositoryImpl from "./implementations/MaintenanceRepository.js";
 import notificationRepositoryImpl from "./implementations/NotificationRepository.js";
+import positionRepositoryImpl from "./implementations/PositionRepository.js";
+import serviceUsageHistoryRepositoryImpl from "./implementations/ServiceUsageHistoryRepository.js";
 
 export const userRepository = userRepositoryImpl;
 export const resetPasswordOTPRepository = resetPasswordOTPRepositoryImpl;
@@ -31,3 +33,5 @@ export const invoiceRepository = invoiceRepositoryImpl;
 export const bookingHistoryRepository = bookingHistoryRepositoryImpl;
 export const maintenanceRepository = maintenanceRepositoryImpl;
 export const notificationRepository = notificationRepositoryImpl;
+export const positionRepository = positionRepositoryImpl;
+export const serviceUsageHistoryRepository = serviceUsageHistoryRepositoryImpl;
