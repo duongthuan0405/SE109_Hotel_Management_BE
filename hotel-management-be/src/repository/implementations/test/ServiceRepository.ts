@@ -1,5 +1,5 @@
-import { type IServiceRepository } from "../types/IServiceRepository.js";
-import { type Service } from "../../models/Service.js";
+import { type IServiceRepository } from "../../types/IServiceRepository.js";
+import { type Service } from "../../../models/Service.js";
 import crypto from "crypto";
 
 const mockServices: Service[] = [
@@ -46,9 +46,15 @@ const serviceRepository: IServiceRepository = {
   save: async (service: Service): Promise<Service> => {
     const index = mockServices.findIndex((s) => s.id === service.id);
     if (index !== -1) {
-      mockServices[index] = { ...service, updatedAt: new Date() };
+      mockServices[index] = { ...service, updatedAt: new Date() } as Service;
     }
     return service;
+  },
+  update: async (id: string, service: Partial<Omit<Service, "id" | "createdAt" | "updatedAt">>): Promise<Service | null> => {
+    const index = mockServices.findIndex((s) => s.id === id);
+    if (index === -1) return null;
+    mockServices[index] = { ...mockServices[index], ...service, updatedAt: new Date() } as Service;
+    return mockServices[index];
   },
   deleteById: async (id: string): Promise<boolean> => {
     const index = mockServices.findIndex((s) => s.id === id);

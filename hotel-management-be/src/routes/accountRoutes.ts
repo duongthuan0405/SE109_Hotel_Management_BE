@@ -5,15 +5,138 @@ import { authMiddleware } from "../middlewares/authMiddleware.js";
 
 const accountRoutes = Router();
 
-// API cá nhân (Self-service - Cần xác thực, ai đăng nhập cũng dùng được)
+/**
+ * @swagger
+ * /api/accounts/me:
+ *   get:
+ *     summary: Get current logged in account details
+ *     tags: [Accounts]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Current account details
+ */
 accountRoutes.get("/me", authMiddleware, accountController.getMe);
+
+/**
+ * @swagger
+ * /api/accounts/me/change-password:
+ *   put:
+ *     summary: Change current user password
+ *     tags: [Accounts]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ChangePasswordRequestDTO'
+ *     responses:
+ *       200:
+ *         description: Password changed successfully
+ */
 accountRoutes.put("/me/change-password", authMiddleware, accountController.changePassword);
 
-// Các API cho Admin (Cần xác thực và kiểm tra quyền Admin)
+/**
+ * @swagger
+ * /api/accounts:
+ *   post:
+ *     summary: Create a new account
+ *     tags: [Accounts]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateAccountRequestDTO'
+ *     responses:
+ *       201:
+ *         description: Account created
+ */
 accountRoutes.post("/", authMiddleware, roleMiddleware(["Admin"]), accountController.createAccount);
+
+/**
+ * @swagger
+ * /api/accounts:
+ *   get:
+ *     summary: Get all accounts
+ *     tags: [Accounts]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of accounts
+ */
 accountRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), accountController.getAllAccounts);
+
+/**
+ * @swagger
+ * /api/accounts/{id}:
+ *   get:
+ *     summary: Get account by ID
+ *     tags: [Accounts]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Account details
+ */
 accountRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), accountController.getAccountById);
+
+/**
+ * @swagger
+ * /api/accounts/{id}:
+ *   put:
+ *     summary: Update account (Role only)
+ *     tags: [Accounts]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateAccountRequestDTO'
+ *     responses:
+ *       200:
+ *         description: Account updated
+ */
 accountRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin"]), accountController.updateAccount);
+
+/**
+ * @swagger
+ * /api/accounts/{id}:
+ *   delete:
+ *     summary: Delete account
+ *     tags: [Accounts]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Account deleted
+ */
 accountRoutes.delete("/:id", authMiddleware, roleMiddleware(["Admin"]), accountController.deleteAccount);
 
 

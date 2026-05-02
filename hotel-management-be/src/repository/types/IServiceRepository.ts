@@ -6,6 +6,7 @@ export type IServiceRepository = {
   findByCode(code: string): Promise<Service | null>;
   create(service: Omit<Service, "id" | "code"> & { code?: string | undefined }): Promise<Service>;
   save(service: Service): Promise<Service>;
+  update(id: string, service: Partial<Omit<Service, "id" | "createdAt" | "updatedAt">>): Promise<Service | null>;
   deleteById(id: string): Promise<boolean>;
   generateNextCode(): Promise<string>;
 };

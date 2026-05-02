@@ -1,5 +1,5 @@
-import { type IRoomTypeRepository } from "../types/IRoomTypeRepository.js";
-import { type RoomType } from "../../models/RoomType.js";
+import { type IRoomTypeRepository } from "../../types/IRoomTypeRepository.js";
+import { type RoomType } from "../../../models/RoomType.js";
 import crypto from "crypto";
 
 // Mock data

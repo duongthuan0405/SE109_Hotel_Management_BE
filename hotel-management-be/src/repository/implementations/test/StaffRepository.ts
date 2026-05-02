@@ -1,5 +1,5 @@
-import { type Staff } from "../../models/Staff.js";
-import { type IStaffRepository, type StaffInclude } from "../types/IStaffRepository.js";
+import { type Staff } from "../../../models/Staff.js";
+import { type IStaffRepository, type StaffInclude } from "../../types/IStaffRepository.js";
 import userRepository, { SEED_USER_ID_ADMIN } from "./UserRepository.js";
 import crypto from "crypto";
 

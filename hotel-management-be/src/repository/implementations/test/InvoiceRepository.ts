@@ -1,5 +1,5 @@
-import { type IInvoiceRepository, type InvoiceInclude } from "../types/IInvoiceRepository.js";
-import { type Invoice, type InvoiceDetail } from "../../models/Invoice.js";
+import { type IInvoiceRepository, type InvoiceInclude } from "../../types/IInvoiceRepository.js";
+import { type Invoice, type InvoiceDetail } from "../../../models/Invoice.js";
 import crypto from "crypto";
 import rentalReceiptRepository from "./RentalReceiptRepository.js";
 import staffRepository from "./StaffRepository.js";

@@ -1,7 +1,7 @@
 import { type RentalSlip } from "./RentalSlip.js";
 import { type Service } from "./Service.js";
 
-export type ServiceUsageStatus = 'Pending' | 'In Progress' | 'Completed' | 'Cancelled';
+export type ServiceUsageStatus = 'Pending' | 'In_Progress' | 'Completed' | 'Cancelled';
 
 export type ServiceUsage = {
   id: string;

@@ -1,5 +1,5 @@
-import { type Booking } from "../../models/Booking.js";
-import { type IBookingRepository, type BookingInclude, type CreateBookingData } from "../types/IBookingRepository.js";
+import { type Booking } from "../../../models/Booking.js";
+import { type IBookingRepository, type BookingInclude, type CreateBookingData } from "../../types/IBookingRepository.js";
 import customerRepository from "./CustomerRepository.js";
 import roomRepository from "./RoomRepository.js";
 import crypto from "crypto";

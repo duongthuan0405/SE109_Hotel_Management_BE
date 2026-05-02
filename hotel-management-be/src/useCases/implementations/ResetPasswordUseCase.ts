@@ -32,7 +32,7 @@ const resetPasswordUseCase: IResetPasswordUseCase = {
     }
 
     const otpRecord = await resetPasswordOTPRepository.findByUserIdAndOtp(userId, otp);
-    if (!otpRecord || otpRecord.expiresAt < Date.now()) {
+    if (!otpRecord || otpRecord.expiredAt < new Date()) {
       throw { status: 400, message: "Mã OTP không chính xác hoặc đã hết hạn" };
     }
 

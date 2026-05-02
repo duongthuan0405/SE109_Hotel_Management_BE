@@ -12,6 +12,8 @@ const envSchema = z.object({
   STRIPE_SECRET_KEY: z.string().min(1, "Invalid Stripe secret key"),
   OTP_LENGTH: z.string().length(1, "Invalid OTP length (must be 1 digit)").regex(/^\d+$/).transform(Number),
   OTP_DURATION_IN_MINUTES: z.string().regex(/^\d+$/).transform(Number),
+  DATABASE_URL: z.string().min(1, "Invalid DB connection string"),
+  NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

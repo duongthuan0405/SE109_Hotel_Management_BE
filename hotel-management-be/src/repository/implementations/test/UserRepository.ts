@@ -1,5 +1,5 @@
-import { type IUserRepository } from "../types/IUserRepository.js";
-import { type User } from "../../models/User.js";
+import { type IUserRepository } from "../../types/IUserRepository.js";
+import { type User } from "../../../models/User.js";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 

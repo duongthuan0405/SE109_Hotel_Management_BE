@@ -14,6 +14,7 @@ export const getCustomerInvoices: IGetCustomerInvoicesUseCase = {
       cashierStaff: true,
       customer: true,
       paymentMethod: true,
+      details: true,
     });
   },
 };

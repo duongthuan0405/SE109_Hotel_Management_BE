@@ -12,10 +12,12 @@ import rentalReceiptRoutes from "./routes/rentalReceiptRoutes.js";
 import serviceUsageRoutes from "./routes/serviceUsageRoutes.js";
 import settingsRoutes from "./routes/settingsRoutes.js";
 import paymentMethodRoutes from "./routes/paymentMethodRoutes.js";
-import invoiceRoutes from "./routes/invoiceRoutes.js";
 import bookingHistoryRoutes from "./routes/bookingHistoryRoutes.js";
+import invoiceRoutes from "./routes/invoiceRoutes.js";
+import setupSwagger from "./config/swagger.js";
 
 const app = express();
+setupSwagger(app);
 const PORT = env.PORT;
 
 app.use(express.json());

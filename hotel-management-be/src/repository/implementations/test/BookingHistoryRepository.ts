@@ -1,5 +1,5 @@
-import { type IBookingHistoryRepository } from "../types/IBookingHistoryRepository.js";
-import { type BookingHistory } from "../../models/BookingHistory.js";
+import { type IBookingHistoryRepository } from "../../types/IBookingHistoryRepository.js";
+import { type BookingHistory } from "../../../models/BookingHistory.js";
 import { randomUUID } from "crypto";
 
 const mockBookingHistory: BookingHistory[] = [];

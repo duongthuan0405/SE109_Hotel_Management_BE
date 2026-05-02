@@ -5,13 +5,100 @@ import roomTypeController from "../controllers/RoomTypeController.js";
 
 const roomTypeRoutes = Router();
 
-// Các API công khai (Khách hàng xem danh sách loại phòng để đặt phòng)
+/**
+ * @swagger
+ * /api/room-types:
+ *   get:
+ *     summary: Get all room types
+ *     tags: [RoomTypes]
+ *     responses:
+ *       200:
+ *         description: List of room types
+ */
 roomTypeRoutes.get("/", roomTypeController.getAllRoomTypes);
+
+/**
+ * @swagger
+ * /api/room-types/{id}:
+ *   get:
+ *     summary: Get room type by ID
+ *     tags: [RoomTypes]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Room type details
+ */
 roomTypeRoutes.get("/:id", roomTypeController.getRoomTypeById);
 
-// Các API quản lý (Chỉ dành cho Admin, cần xác thực)
+/**
+ * @swagger
+ * /api/room-types:
+ *   post:
+ *     summary: Create a new room type
+ *     tags: [RoomTypes]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateRoomTypeRequestDTO'
+ *     responses:
+ *       201:
+ *         description: Room type created
+ */
 roomTypeRoutes.post("/", authMiddleware, roleMiddleware(["Admin"]), roomTypeController.createRoomType);
+
+/**
+ * @swagger
+ * /api/room-types/{id}:
+ *   put:
+ *     summary: Update room type
+ *     tags: [RoomTypes]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateRoomTypeRequestDTO'
+ *     responses:
+ *       200:
+ *         description: Room type updated
+ */
 roomTypeRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin"]), roomTypeController.updateRoomType);
+
+/**
+ * @swagger
+ * /api/room-types/{id}:
+ *   delete:
+ *     summary: Delete room type
+ *     tags: [RoomTypes]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Room type deleted
+ */
 roomTypeRoutes.delete("/:id", authMiddleware, roleMiddleware(["Admin"]), roomTypeController.deleteRoomType);
 
 export default roomTypeRoutes;

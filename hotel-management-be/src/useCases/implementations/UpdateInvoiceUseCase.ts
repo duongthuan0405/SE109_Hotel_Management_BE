@@ -6,6 +6,12 @@ export const updateInvoice: IUpdateInvoiceUseCase = {
   execute: async (input: UpdateInvoiceUCInput): Promise<Invoice> => {
     const updated = await invoiceRepository.update(input.id, {
       ...(input.paymentStatus && { paymentStatus: input.paymentStatus }),
+    }, {
+      rentalSlip: true,
+      cashierStaff: true,
+      customer: true,
+      paymentMethod: true,
+      details: true,
     });
 
     if (!updated) {

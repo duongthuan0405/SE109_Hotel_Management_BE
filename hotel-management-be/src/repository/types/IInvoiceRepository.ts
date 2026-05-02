@@ -5,6 +5,7 @@ export type InvoiceInclude = {
   cashierStaff?: boolean;
   customer?: boolean;
   paymentMethod?: boolean;
+  details?: boolean;
 };
 
 export interface IInvoiceRepository {

@@ -1,6 +1,6 @@
 export type GeneratedOTP = {
   otp: string;
-  expiresAt: number;
+  expiredAt: Date;
 };
 
 export type IOtpService = {
