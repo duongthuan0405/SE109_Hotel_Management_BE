@@ -15,6 +15,8 @@ import settingsRepositoryMock from "./implementations/test/SettingsRepository.js
 import paymentMethodRepositoryMock from "./implementations/test/PaymentMethodRepository.js";
 import invoiceRepositoryMock from "./implementations/test/InvoiceRepository.js";
 import bookingHistoryRepositoryMock from "./implementations/test/BookingHistoryRepository.js";
+import positionRepositoryImpl from "./implementations/PositionRepository.js";
+import serviceUsageHistoryRepositoryImpl from "./implementations/ServiceUsageHistoryRepository.js";
 
 // --- Import Prisma Implementations (cho môi trường dev/prod) ---
 import userRepositoryPrisma from "./implementations/prisma/UserPrismaRepository.js";
@@ -31,6 +33,9 @@ import settingsRepositoryPrisma from "./implementations/prisma/SettingsPrismaRep
 import paymentMethodRepositoryPrisma from "./implementations/prisma/PaymentMethodPrismaRepository.js";
 import invoiceRepositoryPrisma from "./implementations/prisma/InvoicePrismaRepository.js";
 import bookingHistoryRepositoryPrisma from "./implementations/prisma/BookingHistoryPrismaRepository.js";
+import maintenanceRepositoryImpl from "./implementations/MaintenanceRepository.js";
+import notificationRepositoryImpl from "./implementations/NotificationRepository.js";
+
 
 // --- Import UnitOfWork ---
 import unitOfWorkPrisma from "./implementations/prisma/PrismaUnitOfWork.js";
@@ -57,6 +62,10 @@ export const settingsRepository = isTest ? settingsRepositoryMock : settingsRepo
 export const paymentMethodRepository = isTest ? paymentMethodRepositoryMock : paymentMethodRepositoryPrisma;
 export const invoiceRepository = isTest ? invoiceRepositoryMock : invoiceRepositoryPrisma;
 export const bookingHistoryRepository = isTest ? bookingHistoryRepositoryMock : bookingHistoryRepositoryPrisma;
+export const maintenanceRepository = maintenanceRepositoryImpl;
+export const notificationRepository = notificationRepositoryImpl;
+export const positionRepository = positionRepositoryImpl;
+export const serviceUsageHistoryRepository = serviceUsageHistoryRepositoryImpl;
 
 // Helper vì customerRepository cần xử lý đặc biệt một chút nếu có logic liên đới
 function customerMockRepository(isTest: boolean) {

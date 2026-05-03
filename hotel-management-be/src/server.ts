@@ -17,6 +17,10 @@ import paymentMethodRoutes from "./routes/paymentMethodRoutes.js";
 import bookingHistoryRoutes from "./routes/bookingHistoryRoutes.js";
 import invoiceRoutes from "./routes/invoiceRoutes.js";
 import setupSwagger from "./config/swagger.js";
+import maintenanceRoutes from "./routes/maintenanceRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
+import positionRoutes from "./routes/positionRoutes.js";
+import serviceUsageHistoryRoutes from "./routes/serviceUsageHistoryRoutes.js";
 
 const app = express();
 setupSwagger(app);
@@ -38,6 +42,10 @@ app.use("/api/settings", settingsRoutes);
 app.use("/api/payment-methods", paymentMethodRoutes);
 app.use("/api/invoices", invoiceRoutes);
 app.use("/api/booking-history", bookingHistoryRoutes);
+app.use("/api/maintenance", maintenanceRoutes);
+app.use("/api/notifications", notificationRoutes);
+app.use("/api/positions", positionRoutes);
+app.use("/api/service-usage-history", serviceUsageHistoryRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello từ Express + TypeScript!");

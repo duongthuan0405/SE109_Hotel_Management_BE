@@ -18,24 +18,24 @@ const mapToDTO = (history: BookingHistory): BookingHistoryDataDTO => ({
   MaLSDP: history.code,
   DatPhong: history.booking
     ? {
-        _id: history.booking.id,
-        MaDatPhong: history.booking.code,
-        HangPhong: history.booking.roomClass,
-        NgayDen: history.booking.startDate,
-        NgayDi: history.booking.endDate,
-        SoKhach: history.booking.guestCount,
-        TienCoc: history.booking.deposit,
-        TrangThai: history.booking.status,
-      }
+      _id: history.booking.id,
+      MaDatPhong: history.booking.code,
+      HangPhong: history.booking.roomClass,
+      NgayDen: history.booking.startDate,
+      NgayDi: history.booking.endDate,
+      SoKhach: history.booking.guestCount,
+      TienCoc: history.booking.deposit,
+      TrangThai: history.booking.status,
+    }
     : history.bookingId,
   TrangThaiCu: history.oldStatus,
   TrangThaiMoi: history.newStatus,
   ThoiGian: history.changedAt,
   TaiKhoan: history.user
     ? {
-        _id: history.user.id,
-        TenDangNhap: history.user.username,
-      }
+      _id: history.user.id,
+      TenDangNhap: history.user.username,
+    }
     : history.userId,
   createdAt: history.createdAt,
   updatedAt: history.updatedAt,
