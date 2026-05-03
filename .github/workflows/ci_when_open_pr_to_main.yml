@@ -50,6 +50,8 @@ jobs:
           STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
           OTP_LENGTH: ${{ secrets.OTP_LENGTH }}
           OTP_DURATION_IN_MINUTES: ${{ secrets.OTP_DURATION_IN_MINUTES }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
         run: |
           npm ci
           npm run build
