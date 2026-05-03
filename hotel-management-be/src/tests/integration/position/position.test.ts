@@ -12,13 +12,13 @@ describe("Position API Integration Tests (Legacy Compatibility)", () => {
       TenDangNhap: "admin",
       MatKhau: "123456",
     });
-    adminToken = adminLoginRes.body.token;
+    adminToken = adminLoginRes.body.data.token;
 
     const customerLoginRes = await request(app).post("/api/auth/login").send({
       TenDangNhap: "customer1",
       MatKhau: "123456",
     });
-    customerToken = customerLoginRes.body.token;
+    customerToken = customerLoginRes.body.data.token;
   });
 
   describe("GET /api/positions", () => {
@@ -76,33 +76,22 @@ describe("Position API Integration Tests (Legacy Compatibility)", () => {
         .post("/api/positions")
         .set("Authorization", `Bearer ${adminToken}`)
         .send({
-          MaChucVu: "CV_TEST",
           TenChucVu: "Bảo vệ",
         });
 
       expect(res.status).toBe(201);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.MaChucVu).toBe("CV_TEST");
+      expect(res.body.data.MaChucVu).toBeDefined();
       expect(res.body.data.TenChucVu).toBe("Bảo vệ");
       createdPositionId = res.body.data._id;
     });
 
-    it("should return 409 for duplicate code", async () => {
-      const res = await request(app)
-        .post("/api/positions")
-        .set("Authorization", `Bearer ${adminToken}`)
-        .send({
-          MaChucVu: "CV_TEST",
-          TenChucVu: "Duplicate",
-        });
-      expect(res.status).toBe(409);
-    });
 
-    it("should return 400 if missing required fields", async () => {
+    it("should return 400 if TenChucVu missing", async () => {
       const res = await request(app)
         .post("/api/positions")
         .set("Authorization", `Bearer ${adminToken}`)
-        .send({ MaChucVu: "CV_INCOMPLETE" });
+        .send({});
       expect(res.status).toBe(400);
     });
   });

@@ -36,28 +36,28 @@ const serviceUsageRepository: IServiceUsageRepository = {
     return { ...newUsage };
   },
 
-  findById: async (id, include): Promise<ServiceUsage | null> => {
+  findById: async (id: string, include?: ServiceUsageInclude): Promise<ServiceUsage | null> => {
     const usage = serviceUsages.find((u) => u.id === id);
     if (!usage) return null;
     return applyInclude(usage, include);
   },
 
-  findByCode: async (code): Promise<ServiceUsage | null> => {
+  findByCode: async (code: string): Promise<ServiceUsage | null> => {
     const usage = serviceUsages.find((u) => u.code === code);
     if (!usage) return null;
     return { ...usage };
   },
 
-  findAll: async (include): Promise<ServiceUsage[]> => {
+  findAll: async (include?: ServiceUsageInclude): Promise<ServiceUsage[]> => {
     return Promise.all(serviceUsages.map((u) => applyInclude(u, include)));
   },
 
-  findByRentalSlipIds: async (ids, include): Promise<ServiceUsage[]> => {
+  findByRentalSlipIds: async (ids: string[], include?: ServiceUsageInclude): Promise<ServiceUsage[]> => {
     const filtered = serviceUsages.filter((u) => ids.includes(u.rentalSlipId));
     return Promise.all(filtered.map((u) => applyInclude(u, include)));
   },
 
-  findByCustomerId: async (customerId, include): Promise<ServiceUsage[]> => {
+  findByCustomerId: async (customerId: string, include?: ServiceUsageInclude): Promise<ServiceUsage[]> => {
     // Chain lookup: customer → bookings → rentalSlips → serviceUsages
     const bookings = await bookingRepository.findByCustomerId(customerId);
     const bookingIds = bookings.map((b) => b.id);
@@ -74,7 +74,7 @@ const serviceUsageRepository: IServiceUsageRepository = {
     return Promise.all(sorted.map((u) => applyInclude(u, include)));
   },
 
-  update: async (id, data, include): Promise<ServiceUsage | null> => {
+  update: async (id: string, data: Partial<ServiceUsage>, include?: ServiceUsageInclude): Promise<ServiceUsage | null> => {
     const index = serviceUsages.findIndex((u) => u.id === id);
     if (index === -1) return null;
 
@@ -89,7 +89,7 @@ const serviceUsageRepository: IServiceUsageRepository = {
     return applyInclude(updatedUsage, include);
   },
 
-  delete: async (id): Promise<boolean> => {
+  delete: async (id: string): Promise<boolean> => {
     const initialLength = serviceUsages.length;
     serviceUsages = serviceUsages.filter((u) => u.id !== id);
     return serviceUsages.length < initialLength;
@@ -103,5 +103,6 @@ const serviceUsageRepository: IServiceUsageRepository = {
     return `SDDV${String(nextId).padStart(3, "0")}`;
   },
 };
+
 
 export default serviceUsageRepository;

@@ -15,7 +15,6 @@ const guestCreateMaintenanceRequestUseCase: IGuestCreateMaintenanceRequestUseCas
 
     // Tạo yêu cầu bảo trì
     const record = await maintenanceRepository.create({
-      code,
       roomId: input.roomId,
       customerId: customer.id,
       content: input.content,

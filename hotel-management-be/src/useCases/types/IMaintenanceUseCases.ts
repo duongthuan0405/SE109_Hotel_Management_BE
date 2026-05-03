@@ -13,7 +13,6 @@ export type IGetMaintenanceByIdUseCase = IUseCase<string, MaintenanceUCOutput | 
 export type IGetNextMaintenanceCodeUseCase = IUseCase<void, string>;
 
 export type CreateMaintenanceUCInput = {
-  code: string;
   roomId: string;
   technicianId: string;
   content: string;

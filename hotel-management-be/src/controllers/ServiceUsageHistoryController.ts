@@ -106,12 +106,11 @@ const serviceUsageHistoryController = {
     try {
       const body = req.body as CreateServiceUsageHistoryRequestDTO;
 
-      if (!body.MaLSDV || !body.SuDungDichVu || !body.TrangThaiCu || !body.TrangThaiMoi) {
+      if (!body.SuDungDichVu || !body.TrangThaiCu || !body.TrangThaiMoi) {
         throw { status: 400, message: "Vui lòng cung cấp đủ thông tin lịch sử sử dụng dịch vụ" };
       }
 
       const result = await createServiceUsageHistoryUseCase.execute({
-        code: body.MaLSDV,
         serviceUsageId: body.SuDungDichVu,
         oldStatus: body.TrangThaiCu,
         newStatus: body.TrangThaiMoi,

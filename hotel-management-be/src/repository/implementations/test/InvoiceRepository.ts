@@ -50,28 +50,28 @@ const invoiceRepository: IInvoiceRepository = {
     return { ...newInvoice };
   },
 
-  findById: async (id, include): Promise<Invoice | null> => {
+  findById: async (id: string, include?: InvoiceInclude): Promise<Invoice | null> => {
     const invoice = invoices.find((inv) => inv.id === id);
     if (!invoice) return null;
     return applyInclude(invoice, include);
   },
 
-  findByCode: async (code, include): Promise<Invoice | null> => {
+  findByCode: async (code: string, include?: InvoiceInclude): Promise<Invoice | null> => {
     const invoice = invoices.find((inv) => inv.code === code);
     if (!invoice) return null;
     return applyInclude(invoice, include);
   },
 
-  findAll: async (include): Promise<Invoice[]> => {
+  findAll: async (include?: InvoiceInclude): Promise<Invoice[]> => {
     return Promise.all(invoices.map((inv) => applyInclude(inv, include)));
   },
 
-  findByCustomerId: async (customerId, include): Promise<Invoice[]> => {
+  findByCustomerId: async (customerId: string, include?: InvoiceInclude): Promise<Invoice[]> => {
     const filtered = invoices.filter((inv) => inv.customerId === customerId);
     return Promise.all(filtered.map((inv) => applyInclude(inv, include)));
   },
 
-  update: async (id, data, include): Promise<Invoice | null> => {
+  update: async (id: string, data: Partial<Invoice>, include?: InvoiceInclude): Promise<Invoice | null> => {
     const index = invoices.findIndex((inv) => inv.id === id);
     if (index === -1) return null;
 
@@ -85,7 +85,7 @@ const invoiceRepository: IInvoiceRepository = {
     return applyInclude(updated, include);
   },
 
-  delete: async (id): Promise<boolean> => {
+  delete: async (id: string): Promise<boolean> => {
     const initialLength = invoices.length;
     invoices = invoices.filter((inv) => inv.id !== id);
     return invoices.length < initialLength;
@@ -99,5 +99,6 @@ const invoiceRepository: IInvoiceRepository = {
     return `HD${String(nextId).padStart(3, "0")}`;
   },
 };
+
 
 export default invoiceRepository;

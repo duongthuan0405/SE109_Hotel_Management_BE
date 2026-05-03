@@ -15,30 +15,31 @@ import settingsRepositoryMock from "./implementations/test/SettingsRepository.js
 import paymentMethodRepositoryMock from "./implementations/test/PaymentMethodRepository.js";
 import invoiceRepositoryMock from "./implementations/test/InvoiceRepository.js";
 import bookingHistoryRepositoryMock from "./implementations/test/BookingHistoryRepository.js";
-import positionRepositoryImpl from "./implementations/PositionRepository.js";
-import serviceUsageHistoryRepositoryImpl from "./implementations/ServiceUsageHistoryRepository.js";
+import positionRepositoryImpl from "./implementations/test/PositionRepository.js";
+import serviceUsageHistoryRepositoryImpl from "./implementations/test/ServiceUsageHistoryRepository.js";
+import maintenanceRepositoryImpl from "./implementations/test/MaintenanceRepository.js";
+import notificationRepositoryImpl from "./implementations/test/NotificationRepository.js";
 
 // --- Import Prisma Implementations (cho môi trường dev/prod) ---
-import userRepositoryPrisma from "./implementations/prisma/UserPrismaRepository.js";
-import resetPasswordOTPRepositoryPrisma from "./implementations/prisma/ResetPasswordOTPPrismaRepository.js";
-import roomTypeRepositoryPrisma from "./implementations/prisma/RoomTypePrismaRepository.js";
-import bookingRepositoryPrisma from "./implementations/prisma/BookingPrismaRepository.js";
-import serviceRepositoryPrisma from "./implementations/prisma/ServicePrismaRepository.js";
-import roomRepositoryPrisma from "./implementations/prisma/RoomPrismaRepository.js";
-import customerRepositoryPrisma from "./implementations/prisma/CustomerPrismaRepository.js";
-import staffRepositoryPrisma from "./implementations/prisma/StaffPrismaRepository.js";
-import rentalReceiptRepositoryPrisma from "./implementations/prisma/RentalReceiptPrismaRepository.js";
-import serviceUsageRepositoryPrisma from "./implementations/prisma/ServiceUsagePrismaRepository.js";
-import settingsRepositoryPrisma from "./implementations/prisma/SettingsPrismaRepository.js";
-import paymentMethodRepositoryPrisma from "./implementations/prisma/PaymentMethodPrismaRepository.js";
-import invoiceRepositoryPrisma from "./implementations/prisma/InvoicePrismaRepository.js";
-import bookingHistoryRepositoryPrisma from "./implementations/prisma/BookingHistoryPrismaRepository.js";
-import maintenanceRepositoryImpl from "./implementations/MaintenanceRepository.js";
-import notificationRepositoryImpl from "./implementations/NotificationRepository.js";
+import userRepositoryPrisma from "./implementations/psql/UserPrismaRepository.js";
+import resetPasswordOTPRepositoryPrisma from "./implementations/psql/ResetPasswordOTPPrismaRepository.js";
+import roomTypeRepositoryPrisma from "./implementations/psql/RoomTypePrismaRepository.js";
+import bookingRepositoryPrisma from "./implementations/psql/BookingPrismaRepository.js";
+import serviceRepositoryPrisma from "./implementations/psql/ServicePrismaRepository.js";
+import roomRepositoryPrisma from "./implementations/psql/RoomPrismaRepository.js";
+import customerRepositoryPrisma from "./implementations/psql/CustomerPrismaRepository.js";
+import staffRepositoryPrisma from "./implementations/psql/StaffPrismaRepository.js";
+import rentalReceiptRepositoryPrisma from "./implementations/psql/RentalReceiptPrismaRepository.js";
+import serviceUsageRepositoryPrisma from "./implementations/psql/ServiceUsagePrismaRepository.js";
+import settingsRepositoryPrisma from "./implementations/psql/SettingsPrismaRepository.js";
+import paymentMethodRepositoryPrisma from "./implementations/psql/PaymentMethodPrismaRepository.js";
+import invoiceRepositoryPrisma from "./implementations/psql/InvoicePrismaRepository.js";
+import bookingHistoryRepositoryPrisma from "./implementations/psql/BookingHistoryPrismaRepository.js";
+
 
 
 // --- Import UnitOfWork ---
-import unitOfWorkPrisma from "./implementations/prisma/PrismaUnitOfWork.js";
+import unitOfWorkPrisma from "./implementations/psql/PrismaUnitOfWork.js";
 import unitOfWorkMock from "./implementations/test/MockUnitOfWork.js";
 
 // Quyết định sử dụng bộ repository nào dựa trên NODE_ENV

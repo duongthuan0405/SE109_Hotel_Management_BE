@@ -84,6 +84,17 @@ export type RoomResponseWrapper<T = undefined> = {
  *           type: string
  *         LoaiPhong:
  *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *             MaLoaiPhong:
+ *               type: string
+ *             TenLoaiPhong:
+ *               type: string
+ *             DonGia:
+ *               type: number
+ *             SoKhachToiDa:
+ *               type: number
  *         GiaPhong:
  *           type: number
  *         TrangThai:

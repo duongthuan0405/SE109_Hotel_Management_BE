@@ -46,23 +46,23 @@ const applyInclude = async (room: Room, include?: RoomInclude): Promise<Room> =>
 };
 
 const roomRepository: IRoomRepository = {
-  findAll: async (include): Promise<Room[]> => {
+  findAll: async (include?: RoomInclude): Promise<Room[]> => {
     return Promise.all(rooms.map((r) => applyInclude(r, include)));
   },
 
-  findById: async (id, include): Promise<Room | null> => {
+  findById: async (id: string, include?: RoomInclude): Promise<Room | null> => {
     const room = rooms.find((r) => r.id === id);
     if (!room) return null;
     return applyInclude(room, include);
   },
 
-  findByCode: async (code, include): Promise<Room | null> => {
+  findByCode: async (code: string, include?: RoomInclude): Promise<Room | null> => {
     const room = rooms.find((r) => r.code === code);
     if (!room) return null;
     return applyInclude(room, include);
   },
 
-  findByRoomType: async (roomTypeId, include): Promise<Room[]> => {
+  findByRoomType: async (roomTypeId: string, include?: RoomInclude): Promise<Room[]> => {
     const filtered = rooms.filter((r) => r.roomTypeId === roomTypeId);
     return Promise.all(filtered.map((r) => applyInclude(r, include)));
   },
@@ -80,7 +80,7 @@ const roomRepository: IRoomRepository = {
     return { ...newRoom };
   },
 
-  update: async (id, roomData, include): Promise<Room | null> => {
+  update: async (id: string, roomData: Partial<Room>, include?: RoomInclude): Promise<Room | null> => {
     const index = rooms.findIndex((r) => r.id === id);
     if (index === -1) return null;
 
@@ -95,7 +95,7 @@ const roomRepository: IRoomRepository = {
     return applyInclude(updatedRoom, include);
   },
 
-  updateStatus: async (id, status, include): Promise<Room | null> => {
+  updateStatus: async (id: string, status: RoomStatus, include?: RoomInclude): Promise<Room | null> => {
     const index = rooms.findIndex((r) => r.id === id);
     if (index === -1) return null;
     const room = rooms[index]!;
@@ -114,5 +114,6 @@ const roomRepository: IRoomRepository = {
     return `R${String(nextId).padStart(3, "0")}`;
   },
 };
+
 
 export default roomRepository;

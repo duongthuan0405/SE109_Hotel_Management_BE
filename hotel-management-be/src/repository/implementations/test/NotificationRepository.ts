@@ -1,11 +1,12 @@
-import { type INotificationRepository } from "../types/INotificationRepository.js";
-import { type Notification } from "../../models/Notification.js";
+import { type INotificationRepository } from "../../types/INotificationRepository.js";
+import { type Notification } from "../../../models/Notification.js";
 import crypto from "crypto";
+import { SEED_USER_ID_CUSTOMER } from "./UserRepository.js";
 
 let notifications: Notification[] = [
   {
     id: "notif-1",
-    userId: "user-2", // customer1
+    userId: SEED_USER_ID_CUSTOMER, // customer1
     title: "Đặt phòng thành công",
     content: "Đơn đặt phòng DP001 của bạn đã được tạo. Vui lòng chờ xác nhận.",
     type: "Booking",
@@ -15,7 +16,7 @@ let notifications: Notification[] = [
   },
   {
     id: "notif-2",
-    userId: "user-2", // customer1
+    userId: SEED_USER_ID_CUSTOMER, // customer1
     title: "Nhắc nhở nhận phòng",
     content: "Bạn có lịch nhận phòng vào ngày mai. Vui lòng đến đúng giờ.",
     type: "General",
@@ -25,8 +26,8 @@ let notifications: Notification[] = [
   },
 ];
 
-const notificationRepository: INotificationRepository = {
-  findByUserId: async (userId): Promise<Notification[]> => {
+const notificationRepositoryImpl: INotificationRepository = {
+  findByUserId: async (userId: string): Promise<Notification[]> => {
     const filtered = notifications.filter((n) => n.userId === userId);
     // Sort theo ngày tạo giảm dần
     return filtered.sort((a, b) => {
@@ -36,14 +37,18 @@ const notificationRepository: INotificationRepository = {
     });
   },
 
-  findById: async (id): Promise<Notification | null> => {
+  findById: async (id: string): Promise<Notification | null> => {
     return notifications.find((n) => n.id === id) || null;
   },
 
-  create: async (data): Promise<Notification> => {
+  create: async (data: Partial<Notification>): Promise<Notification> => {
     const newNotification: Notification = {
       id: crypto.randomUUID(),
-      ...data,
+      userId: data.userId || "",
+      title: data.title || "",
+      content: data.content || "",
+      type: data.type || "General",
+      isRead: data.isRead || false,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -51,7 +56,7 @@ const notificationRepository: INotificationRepository = {
     return { ...newNotification };
   },
 
-  markAsRead: async (id, userId): Promise<Notification | null> => {
+  markAsRead: async (id: string, userId: string): Promise<Notification | null> => {
     const index = notifications.findIndex((n) => n.id === id && n.userId === userId);
     if (index === -1) return null;
 
@@ -62,4 +67,5 @@ const notificationRepository: INotificationRepository = {
   },
 };
 
-export default notificationRepository;
+export default notificationRepositoryImpl;
+

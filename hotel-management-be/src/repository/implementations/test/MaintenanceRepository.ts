@@ -1,5 +1,5 @@
-import { type IMaintenanceRepository, type MaintenanceInclude } from "../types/IMaintenanceRepository.js";
-import { type Maintenance } from "../../models/Maintenance.js";
+import { type IMaintenanceRepository, type MaintenanceInclude } from "../../types/IMaintenanceRepository.js";
+import { type Maintenance } from "../../../models/Maintenance.js";
 import crypto from "crypto";
 import roomRepository from "./RoomRepository.js";
 import customerRepository from "./CustomerRepository.js";
@@ -54,26 +54,44 @@ const applyInclude = async (record: Maintenance, include?: MaintenanceInclude): 
   return result;
 };
 
-const maintenanceRepository: IMaintenanceRepository = {
-  findAll: async (include): Promise<Maintenance[]> => {
+const maintenanceRepositoryImpl: IMaintenanceRepository = {
+  findAll: async (include?: MaintenanceInclude): Promise<Maintenance[]> => {
     return Promise.all(maintenanceRecords.map((r) => applyInclude(r, include)));
   },
 
-  findById: async (id, include): Promise<Maintenance | null> => {
+  findById: async (id: string, include?: MaintenanceInclude): Promise<Maintenance | null> => {
     const record = maintenanceRecords.find((r) => r.id === id);
     if (!record) return null;
     return applyInclude(record, include);
   },
 
-  findByCustomerId: async (customerId, include): Promise<Maintenance[]> => {
+  findByCustomerId: async (customerId: string, include?: MaintenanceInclude): Promise<Maintenance[]> => {
     const filtered = maintenanceRecords.filter((r) => r.customerId === customerId);
     return Promise.all(filtered.map((r) => applyInclude(r, include)));
   },
 
-  create: async (data): Promise<Maintenance> => {
+  create: async (data: Omit<Maintenance, 'id' | 'code' | 'createdAt' | 'updatedAt' | 'room' | 'customer' | 'technician'>): Promise<Maintenance> => {
+    let maxNum = 0;
+    for (const record of maintenanceRecords) {
+      const match = record.code.match(/PBT(\d+)/);
+      if (match) {
+        const num = parseInt(match[1]!, 10);
+        if (num > maxNum) maxNum = num;
+      }
+    }
+    const finalCode = `PBT${String(maxNum + 1).padStart(3, "0")}`;
+
     const newRecord: Maintenance = {
-      id: crypto.randomUUID(),
       ...data,
+      id: crypto.randomUUID(),
+      code: finalCode,
+      roomId: data.roomId || "",
+      customerId: data.customerId,
+      technicianId: data.technicianId || "",
+      content: data.content || "",
+      startDate: data.startDate || new Date(),
+      endDate: data.endDate || new Date(),
+      status: data.status || "Pending",
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -81,22 +99,19 @@ const maintenanceRepository: IMaintenanceRepository = {
     return { ...newRecord };
   },
 
-  update: async (id, data, include): Promise<Maintenance | null> => {
+  update: async (id: string, data: Partial<Maintenance>, include?: MaintenanceInclude): Promise<Maintenance | null> => {
     const index = maintenanceRecords.findIndex((r) => r.id === id);
     if (index === -1) return null;
 
-    const record = maintenanceRecords[index]!;
-    const updatedRecord: Maintenance = {
-      ...record,
+    maintenanceRecords[index] = {
+      ...maintenanceRecords[index],
       ...data,
       updatedAt: new Date(),
     } as Maintenance;
-
-    maintenanceRecords[index] = updatedRecord;
-    return applyInclude(updatedRecord, include);
+    return applyInclude(maintenanceRecords[index], include);
   },
 
-  delete: async (id): Promise<boolean> => {
+  delete: async (id: string): Promise<boolean> => {
     const initialLength = maintenanceRecords.length;
     maintenanceRecords = maintenanceRecords.filter((r) => r.id !== id);
     return maintenanceRecords.length < initialLength;
@@ -115,4 +130,5 @@ const maintenanceRepository: IMaintenanceRepository = {
   },
 };
 
-export default maintenanceRepository;
+export default maintenanceRepositoryImpl;
+

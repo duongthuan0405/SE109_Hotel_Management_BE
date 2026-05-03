@@ -69,12 +69,11 @@ const positionController = {
     try {
       const body = req.body as CreatePositionRequestDTO;
 
-      if (!body.MaChucVu || !body.TenChucVu) {
-        throw { status: 400, message: "Vui lòng cung cấp mã và tên chức vụ" };
+      if (!body.TenChucVu) {
+        throw { status: 400, message: "Vui lòng cung cấp tên chức vụ" };
       }
 
       const result = await createPositionUseCase.execute({
-        code: body.MaChucVu,
         name: body.TenChucVu,
       });
 

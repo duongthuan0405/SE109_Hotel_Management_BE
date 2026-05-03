@@ -86,6 +86,15 @@ export type CreateBookingDetailDTO = {
  *           type: string
  *         Phong:
  *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *             MaPhong:
+ *               type: string
+ *             GiaPhong:
+ *               type: number
+ *             TrangThai:
+ *               type: string
  */
 export type BookingDetailDTO = {
   _id?: string | undefined;
@@ -106,6 +115,21 @@ export type BookingDetailDTO = {
  *           type: string
  *         KhachHang:
  *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *             MaKH:
+ *               type: string
+ *             HoTen:
+ *               type: string
+ *             CMND:
+ *               type: string
+ *             SDT:
+ *               type: string
+ *             Email:
+ *               type: string
+ *             DiaChi:
+ *               type: string
  *         HangPhong:
  *           type: string
  *         NgayDen:

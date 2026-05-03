@@ -31,14 +31,14 @@ const DEFAULT_SETTINGS: Settings = {
 let settingsStore: Settings = { ...DEFAULT_SETTINGS };
 
 const settingsRepository: ISettingsRepository = {
-  findByKey: async (key): Promise<Settings | null> => {
+  findByKey: async (key: string): Promise<Settings | null> => {
     if (settingsStore.key === key) {
       return { ...settingsStore };
     }
     return null;
   },
 
-  upsert: async (key, data): Promise<Settings> => {
+  upsert: async (key: string, data: Partial<Settings>): Promise<Settings> => {
     settingsStore = {
       ...settingsStore,
       ...(data.hotelInfo && { hotelInfo: { ...settingsStore.hotelInfo, ...data.hotelInfo } }),
@@ -47,9 +47,10 @@ const settingsRepository: ISettingsRepository = {
       ...(data.baseRoomPrices && { baseRoomPrices: { ...settingsStore.baseRoomPrices, ...data.baseRoomPrices } }),
       key,
       updatedAt: new Date(),
-    };
+    } as Settings;
     return { ...settingsStore };
   },
+
 };
 
 export default settingsRepository;

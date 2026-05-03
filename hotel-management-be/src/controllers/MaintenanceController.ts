@@ -118,12 +118,11 @@ const maintenanceController = {
       const body = req.body as CreateMaintenanceRequestDTO;
 
       // Validate input
-      if (!body.MaPBT || !body.Phong || !body.NVKyThuat || !body.NgayThucHien || !body.NgayKetThuc || !body.NoiDung) {
+      if (!body.Phong || !body.NVKyThuat || !body.NgayThucHien || !body.NgayKetThuc || !body.NoiDung) {
         throw { status: 400, message: "Vui lòng cung cấp đủ thông tin phiếu bảo trì" };
       }
 
       const result = await createMaintenanceUseCase.execute({
-        code: body.MaPBT,
         roomId: body.Phong,
         technicianId: body.NVKyThuat,
         content: body.NoiDung,

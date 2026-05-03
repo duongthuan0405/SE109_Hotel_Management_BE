@@ -1,7 +1,7 @@
 import type { ServiceUsage } from "./ServiceUsage.js";
 import type { User } from "./User.js";
 
-export type ServiceUsageHistoryStatus = 'Pending' | 'In Progress' | 'Completed' | 'Cancelled';
+export type ServiceUsageHistoryStatus = 'Pending' | 'In_Progress' | 'Completed' | 'Cancelled';
 
 export type ServiceUsageHistory = {
   id: string;

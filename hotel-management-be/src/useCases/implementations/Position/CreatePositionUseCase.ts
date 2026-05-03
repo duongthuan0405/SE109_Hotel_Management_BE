@@ -3,16 +3,9 @@ import { positionRepository } from "../../../repository/index.js";
 
 const createPositionUseCase: ICreatePositionUseCase = {
   execute: async (input: CreatePositionUCInput): Promise<PositionUCOutput> => {
-    // Kiểm tra MaChucVu unique
-    const existing = await positionRepository.findByCode(input.code);
-    if (existing) {
-      throw { status: 409, message: "Mã chức vụ đã tồn tại" };
-    }
-
     return positionRepository.create({
-      code: input.code,
       name: input.name,
-    });
+    } as any); // Cast as any because the Repo Omit still includes code, but we want it auto-gen
   },
 };
 

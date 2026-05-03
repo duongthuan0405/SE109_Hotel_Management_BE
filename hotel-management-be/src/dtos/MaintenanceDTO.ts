@@ -1,5 +1,41 @@
 import type { MaintenanceStatus } from "../models/Maintenance.js";
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     MaintenanceResponseWrapper:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         error:
+ *           type: string
+ *
+ *     MaintenanceResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           $ref: '#/components/schemas/MaintenanceDataDTO'
+ *
+ *     MaintenanceListResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/MaintenanceDataDTO'
+ */
 export type MaintenanceResponseWrapper<T = undefined> = {
   success: boolean;
   message: string;
@@ -7,6 +43,56 @@ export type MaintenanceResponseWrapper<T = undefined> = {
   error?: string | undefined;
 };
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     MaintenanceDataDTO:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *         MaPBT:
+ *           type: string
+ *         Phong:
+ *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *             MaPhong:
+ *               type: string
+ *             GiaPhong:
+ *               type: number
+ *             TrangThai:
+ *               type: string
+ *         KhachHang:
+ *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *             MaKH:
+ *               type: string
+ *             HoTen:
+ *               type: string
+ *         NVKyThuat:
+ *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *             HoTen:
+ *               type: string
+ *         NoiDung:
+ *           type: string
+ *         NgayThucHien:
+ *           type: string
+ *           format: date-time
+ *         NgayKetThuc:
+ *           type: string
+ *           format: date-time
+ *         TrangThai:
+ *           type: string
+ *           enum: [Pending, In_Progress, Completed, Cancelled]
+ */
 export type MaintenanceDataDTO = {
   _id: string;
   MaPBT: string;
@@ -19,9 +105,31 @@ export type MaintenanceDataDTO = {
   TrangThai: MaintenanceStatus;
 };
 
-// Staff tạo phiếu bảo trì
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     CreateMaintenanceRequestDTO:
+ *       type: object
+ *       required:
+ *         - Phong
+ *         - NVKyThuat
+ *         - NgayThucHien
+ *         - NgayKetThuc
+ *         - NoiDung
+ *       properties:
+ *         Phong:
+ *           type: string
+ *         NVKyThuat:
+ *           type: string
+ *         NgayThucHien:
+ *           type: string
+ *         NgayKetThuc:
+ *           type: string
+ *         NoiDung:
+ *           type: string
+ */
 export type CreateMaintenanceRequestDTO = {
-  MaPBT: string;
   Phong: string;
   NVKyThuat: string;
   NgayThucHien: string;
@@ -29,7 +137,25 @@ export type CreateMaintenanceRequestDTO = {
   NoiDung: string;
 };
 
-// Staff cập nhật phiếu bảo trì
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     UpdateMaintenanceRequestDTO:
+ *       type: object
+ *       properties:
+ *         NoiDung:
+ *           type: string
+ *         NVKyThuat:
+ *           type: string
+ *         NgayThucHien:
+ *           type: string
+ *         NgayKetThuc:
+ *           type: string
+ *         TrangThai:
+ *           type: string
+ *           enum: [Pending, In_Progress, Completed, Cancelled]
+ */
 export type UpdateMaintenanceRequestDTO = {
   NoiDung?: string;
   NVKyThuat?: string;
@@ -38,13 +164,38 @@ export type UpdateMaintenanceRequestDTO = {
   TrangThai?: MaintenanceStatus;
 };
 
-// Guest gửi yêu cầu bảo trì
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     GuestCreateMaintenanceRequestDTO:
+ *       type: object
+ *       required:
+ *         - Phong
+ *         - NoiDung
+ *       properties:
+ *         Phong:
+ *           type: string
+ *         NoiDung:
+ *           type: string
+ */
 export type GuestCreateMaintenanceRequestDTO = {
   Phong: string;
   NoiDung: string;
 };
 
-// Response cho getNextCode
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     NextCodeResponseDTO:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         nextCode:
+ *           type: string
+ */
 export type NextCodeResponseDTO = {
   success: boolean;
   nextCode: string;

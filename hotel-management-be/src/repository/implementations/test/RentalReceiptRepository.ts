@@ -39,19 +39,19 @@ const rentalReceiptRepository: IRentalReceiptRepository = {
     return { ...newSlip };
   },
 
-  findById: async (id, include): Promise<RentalSlip | null> => {
+  findById: async (id: string, include?: RentalReceiptInclude): Promise<RentalSlip | null> => {
     const slip = rentalSlips.find((s) => s.id === id);
     if (!slip) return null;
     return applyInclude(slip, include);
   },
 
-  findByCode: async (code, include): Promise<RentalSlip | null> => {
+  findByCode: async (code: string, include?: RentalReceiptInclude): Promise<RentalSlip | null> => {
     const slip = rentalSlips.find((s) => s.code === code);
     if (!slip) return null;
     return applyInclude(slip, include);
   },
 
-  findAll: async (include): Promise<RentalSlip[]> => {
+  findAll: async (include?: RentalReceiptInclude): Promise<RentalSlip[]> => {
     return Promise.all(rentalSlips.map((slip) => applyInclude(slip, include)));
   },
 
@@ -60,7 +60,7 @@ const rentalReceiptRepository: IRentalReceiptRepository = {
     return Promise.all(filtered.map((slip) => applyInclude(slip, include)));
   },
 
-  update: async (id, data, include): Promise<RentalSlip | null> => {
+  update: async (id: string, data: Partial<RentalSlip>, include?: RentalReceiptInclude): Promise<RentalSlip | null> => {
     const index = rentalSlips.findIndex((s) => s.id === id);
     if (index === -1) return null;
 
@@ -75,7 +75,7 @@ const rentalReceiptRepository: IRentalReceiptRepository = {
     return applyInclude(updatedSlip, include);
   },
 
-  delete: async (id): Promise<boolean> => {
+  delete: async (id: string): Promise<boolean> => {
     const initialLength = rentalSlips.length;
     rentalSlips = rentalSlips.filter((s) => s.id !== id);
     return rentalSlips.length < initialLength;
@@ -89,5 +89,6 @@ const rentalReceiptRepository: IRentalReceiptRepository = {
     return `PTP${String(nextId).padStart(3, "0")}`;
   },
 };
+
 
 export default rentalReceiptRepository;

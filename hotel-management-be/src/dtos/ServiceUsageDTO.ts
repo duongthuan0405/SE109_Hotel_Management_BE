@@ -69,8 +69,34 @@ export type UpdateServiceUsageRequestDTO = {
  *           type: string
  *         PhieuThuePhong:
  *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *             MaPTP:
+ *               type: string
+ *             DatPhong:
+ *               type: string
+ *             Phong:
+ *               type: string
+ *             NgayNhanPhong:
+ *               type: string
+ *               format: date-time
+ *             NgayTraDuKien:
+ *               type: string
+ *               format: date-time
+ *             TrangThai:
+ *               type: string
  *         DichVu:
  *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *             MaDV:
+ *               type: string
+ *             TenDV:
+ *               type: string
+ *             DonGia:
+ *               type: number
  *         SoLuong:
  *           type: number
  *         DonGia:

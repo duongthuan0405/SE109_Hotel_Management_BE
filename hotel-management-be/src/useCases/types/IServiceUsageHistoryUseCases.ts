@@ -10,7 +10,6 @@ export type IGetServiceUsageHistoryByIdUseCase = IUseCase<string, ServiceUsageHi
 export type IGetHistoryByServiceUsageIdUseCase = IUseCase<string, ServiceUsageHistoryUCOutput[]>;
 
 export type CreateServiceUsageHistoryUCInput = {
-  code: string;
   serviceUsageId: string;
   oldStatus: ServiceUsageHistoryStatus;
   newStatus: ServiceUsageHistoryStatus;

@@ -12,13 +12,13 @@ describe("Service Usage History API Integration Tests", () => {
       TenDangNhap: "admin",
       MatKhau: "123456",
     });
-    adminToken = adminLoginRes.body.token;
+    adminToken = adminLoginRes.body.data.token;
 
     const customerLoginRes = await request(app).post("/api/auth/login").send({
       TenDangNhap: "customer1",
       MatKhau: "123456",
     });
-    customerToken = customerLoginRes.body.token;
+    customerToken = customerLoginRes.body.data.token;
   });
 
   describe("GET /api/service-usage-history", () => {
@@ -90,33 +90,21 @@ describe("Service Usage History API Integration Tests", () => {
         .post("/api/service-usage-history")
         .set("Authorization", `Bearer ${adminToken}`)
         .send({
-          MaLSDV: "LSDV_TEST",
           SuDungDichVu: "su-1",
           TrangThaiCu: "Pending",
-          TrangThaiMoi: "In Progress",
+          TrangThaiMoi: "In_Progress",
           TaiKhoan: "user-1",
         });
 
       expect(res.status).toBe(201);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.MaLSDV).toBe("LSDV_TEST");
+      expect(res.body.data.MaLSDV).toMatch(/^LSDV\d+$/);
       expect(res.body.data.TrangThaiCu).toBe("Pending");
-      expect(res.body.data.TrangThaiMoi).toBe("In Progress");
+      expect(res.body.data.TrangThaiMoi).toBe("In_Progress");
       createdRecordId = res.body.data._id;
     });
 
-    it("should return 409 for duplicate code", async () => {
-      const res = await request(app)
-        .post("/api/service-usage-history")
-        .set("Authorization", `Bearer ${adminToken}`)
-        .send({
-          MaLSDV: "LSDV_TEST",
-          SuDungDichVu: "su-1",
-          TrangThaiCu: "Pending",
-          TrangThaiMoi: "In Progress",
-        });
-      expect(res.status).toBe(409);
-    });
+
 
     it("should return 400 if missing required fields", async () => {
       const res = await request(app)
@@ -135,8 +123,8 @@ describe("Service Usage History API Integration Tests", () => {
         .send({ TrangThaiMoi: "Completed" });
 
       expect(res.status).toBe(200);
-      // Old TrangThaiMoi ("In Progress") should now be TrangThaiCu
-      expect(res.body.data.TrangThaiCu).toBe("In Progress");
+      // Old TrangThaiMoi ("In_Progress") should now be TrangThaiCu
+      expect(res.body.data.TrangThaiCu).toBe("In_Progress");
       expect(res.body.data.TrangThaiMoi).toBe("Completed");
     });
 

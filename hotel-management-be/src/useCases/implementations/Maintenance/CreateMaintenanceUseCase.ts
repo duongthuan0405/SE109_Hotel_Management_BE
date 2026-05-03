@@ -28,7 +28,6 @@ const createMaintenanceUseCase: ICreateMaintenanceUseCase = {
 
     // Tạo phiếu bảo trì
     const record = await maintenanceRepository.create({
-      code: input.code,
       roomId: input.roomId,
       technicianId: input.technicianId,
       content: input.content,

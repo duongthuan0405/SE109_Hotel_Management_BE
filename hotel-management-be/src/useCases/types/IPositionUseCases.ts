@@ -8,7 +8,6 @@ export type IGetAllPositionsUseCase = IUseCase<void, PositionUCOutput[]>;
 export type IGetPositionByIdUseCase = IUseCase<string, PositionUCOutput | null>;
 
 export type CreatePositionUCInput = {
-  code: string;
   name: string;
 };
 export type ICreatePositionUseCase = IUseCase<CreatePositionUCInput, PositionUCOutput>;

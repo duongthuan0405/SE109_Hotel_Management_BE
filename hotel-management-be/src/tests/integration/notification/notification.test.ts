@@ -12,14 +12,14 @@ describe("Notification API Integration Tests (Legacy Compatibility)", () => {
       TenDangNhap: "admin",
       MatKhau: "123456",
     });
-    adminToken = adminLoginRes.body.token;
+    adminToken = adminLoginRes.body.data.token;
 
     // Login as Customer
     const customerLoginRes = await request(app).post("/api/auth/login").send({
       TenDangNhap: "customer1",
       MatKhau: "123456",
     });
-    customerToken = customerLoginRes.body.token;
+    customerToken = customerLoginRes.body.data.token;
   });
 
   describe("GET /api/notifications", () => {
