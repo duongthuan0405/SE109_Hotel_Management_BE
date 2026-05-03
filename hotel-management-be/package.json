@@ -5,8 +5,9 @@
   "description": "",
   "main": "server.ts",
   "scripts": {
-    "dev": "nodemon --exec node --import tsx src/server.ts",
-    "build": "tsc",
+    "postinstall": "prisma generate",
+    "dev": "prisma generate && nodemon --exec node --import tsx src/server.ts",
+    "build": "prisma generate && tsc",
     "start": "node dist/server.js",
     "test": "vitest run"
   },
