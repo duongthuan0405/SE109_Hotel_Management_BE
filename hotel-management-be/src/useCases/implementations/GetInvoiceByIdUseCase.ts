@@ -9,6 +9,7 @@ export const getInvoiceById: IGetInvoiceByIdUseCase = {
       cashierStaff: true,
       customer: true,
       paymentMethod: true,
+      details: true,
     });
     if (!invoice) {
       throw { status: 404, message: "Không tìm thấy Hóa đơn" };

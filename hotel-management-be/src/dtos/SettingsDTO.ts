@@ -1,4 +1,47 @@
-// Request DTO (field tiếng Việt, tương thích client cũ)
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     UpdateSettingsRequestDTO:
+ *       type: object
+ *       properties:
+ *         ThongTinKhachSan:
+ *           type: object
+ *           properties:
+ *             Ten:
+ *               type: string
+ *             DiaChi:
+ *               type: string
+ *             SDT:
+ *               type: string
+ *             Email:
+ *               type: string
+ *         ThoiGian:
+ *           type: object
+ *           properties:
+ *             GioNhanPhong:
+ *               type: string
+ *             GioTraPhong:
+ *               type: string
+ *         ThuePhi:
+ *           type: object
+ *           properties:
+ *             ThueVAT:
+ *               type: number
+ *             PhiDichVu:
+ *               type: number
+ *         GiaPhongCoBan:
+ *           type: object
+ *           properties:
+ *             Normal:
+ *               type: number
+ *             Standard:
+ *               type: number
+ *             Premium:
+ *               type: number
+ *             Luxury:
+ *               type: number
+ */
 export type UpdateSettingsRequestDTO = {
   ThongTinKhachSan?: {
     Ten?: string;
@@ -23,6 +66,26 @@ export type UpdateSettingsRequestDTO = {
 };
 
 // Response DTO
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     SettingsDataDTO:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *         Key:
+ *           type: string
+ *         ThongTinKhachSan:
+ *           type: object
+ *         ThoiGian:
+ *           type: object
+ *         ThuePhi:
+ *           type: object
+ *         GiaPhongCoBan:
+ *           type: object
+ */
 export type SettingsDataDTO = {
   _id: string;
   Key: string;

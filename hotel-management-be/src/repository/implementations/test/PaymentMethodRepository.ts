@@ -1,5 +1,5 @@
-import { type IPaymentMethodRepository } from "../types/IPaymentMethodRepository.js";
-import { type PaymentMethod } from "../../models/PaymentMethod.js";
+import { type IPaymentMethodRepository } from "../../types/IPaymentMethodRepository.js";
+import { type PaymentMethod } from "../../../models/PaymentMethod.js";
 import crypto from "crypto";
 
 let paymentMethods: PaymentMethod[] = [

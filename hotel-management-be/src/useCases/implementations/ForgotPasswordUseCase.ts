@@ -31,7 +31,7 @@ const forgotPasswordUseCase: IForgotPasswordUseCase = {
     await resetPasswordOTPRepository.create({
       userId: userId,
       otp: generatedOtp.otp,
-      expiresAt: generatedOtp.expiresAt,
+      expiredAt: generatedOtp.expiredAt,
     });
 
     const emailSubject = "Mã xác thực đặt lại mật khẩu";
@@ -56,7 +56,19 @@ const forgotPasswordUseCase: IForgotPasswordUseCase = {
       html: emailHtml,
     });
 
-    return { message: "Email simulation (check server console for OTP code)", otp: generatedOtp.otp };
+    console.log(`[OTP DEBUG] Mã OTP cho ${email} là: ${generatedOtp.otp}`);
+
+    const output: ForgotPasswordUCOutput = { 
+      message: "Mã xác thực đã được gửi đến email của bạn" 
+    };
+
+    // Chỉ trả về OTP cho Client nếu đang chạy Test để các bài test integration có thể tiếp tục
+    if (process.env.NODE_ENV === "test") {
+      output.otp = generatedOtp.otp;
+      output.message = "Email simulation (check server console for OTP code)";
+    }
+
+    return output;
   },
 };
 

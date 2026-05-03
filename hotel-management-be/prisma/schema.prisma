@@ -1,0 +1,252 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+}
+
+// 1. Hệ thống Tài khoản & Nhân viên
+model User {
+  id               String           @id @default(uuid())
+  username         String           @unique
+  passwordHash     String
+  role             String
+  staff            Staff?
+  customer         Customer?
+  bookingHistories BookingHistory[]
+}
+
+model Staff {
+  id          String       @id @default(uuid())
+  userId      String       @unique
+  user        User         @relation(fields: [userId], references: [id])
+  code        String       @unique // MaNV
+  fullName    String
+  position    String
+  phone       String
+  email       String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  invoices    Invoice[]
+  rentalSlips RentalSlip[]
+}
+
+model RoomType {
+  id           String @id @default(uuid())
+  code         String @unique
+  name         String
+  price        Float
+  maxOccupancy Int
+  rooms        Room[]
+}
+
+enum RoomStatus {
+  Available
+  Occupied
+  Maintenance
+  Reserved
+  Cleaning
+}
+
+model Room {
+  id             String          @id @default(uuid())
+  code           String          @unique // MaPhong
+  roomTypeId     String
+  roomType       RoomType        @relation(fields: [roomTypeId], references: [id])
+  price          Float
+  status         RoomStatus      @default(Available)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  bookingDetails BookingDetail[]
+  rentalSlips    RentalSlip[]
+}
+
+model Customer {
+  id           String    @id @default(uuid())
+  code         String    @unique // MaKH
+  userId       String?   @unique
+  user         User?     @relation(fields: [userId], references: [id])
+  fullName     String
+  identityCard String    @unique // CCCD/Passport
+  phone        String
+  email        String?
+  address      String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  bookings     Booking[]
+  invoices     Invoice[]
+}
+
+enum BookingStatus {
+  Pending
+  Confirmed
+  CheckedIn
+  CheckedOut
+  Cancelled
+  NoShow
+}
+
+model Booking {
+  id          String           @id @default(uuid())
+  code        String           @unique // MaDatPhong
+  customerId  String?
+  customer    Customer?        @relation(fields: [customerId], references: [id])
+  roomClass   String // HangPhong
+  startDate   DateTime // NgayDen
+  endDate     DateTime // NgayDi
+  guestCount  Int // SoKhach
+  deposit     Float // TienCoc
+  totalAmount Float // TongTien
+  status      BookingStatus    @default(Pending)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  details     BookingDetail[]
+  rentalSlips RentalSlip[]
+  history     BookingHistory[]
+}
+
+model BookingDetail {
+  id        String  @id @default(uuid())
+  code      String // MaCTDP
+  bookingId String
+  booking   Booking @relation(fields: [bookingId], references: [id])
+  roomId    String
+  room      Room    @relation(fields: [roomId], references: [id])
+}
+
+// 4. Thuê phòng & Dịch vụ
+enum RentalSlipStatus {
+  CheckedIn
+  CheckedOut
+  Cancelled
+}
+
+model RentalSlip {
+  id                   String           @id @default(uuid())
+  code                 String           @unique // MaPTP
+  bookingId            String
+  booking              Booking          @relation(fields: [bookingId], references: [id])
+  roomId               String
+  room                 Room             @relation(fields: [roomId], references: [id])
+  checkInDate          DateTime
+  expectedCheckOutDate DateTime
+  actualGuestCount     Int
+  adjustedPrice        Float
+  checkInStaffId       String
+  checkInStaff         Staff            @relation(fields: [checkInStaffId], references: [id])
+  status               RentalSlipStatus @default(CheckedIn)
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+  serviceUsages        ServiceUsage[]
+  invoices             Invoice[]
+}
+
+model Service {
+  id            String         @id @default(uuid())
+  code          String         @unique // MaDV
+  name          String
+  price         Float
+  serviceUsages ServiceUsage[]
+}
+
+enum ServiceUsageStatus {
+  Pending
+  In_Progress
+  Completed
+  Cancelled
+}
+
+model ServiceUsage {
+  id           String             @id @default(uuid())
+  code         String             @unique // MaSDDV
+  rentalSlipId String
+  rentalSlip   RentalSlip         @relation(fields: [rentalSlipId], references: [id])
+  serviceId    String
+  service      Service            @relation(fields: [serviceId], references: [id])
+  quantity     Int
+  unitPrice    Float
+  totalAmount  Float
+  requestedAt  DateTime           @default(now())
+  status       ServiceUsageStatus @default(Pending)
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+}
+
+// 5. Hóa đơn & Thanh toán
+enum InvoicePaymentStatus {
+  Unpaid
+  Paid
+  PartiallyPaid
+  Refunded
+}
+
+model PaymentMethod {
+  id       String    @id @default(uuid())
+  code     String    @unique // MaPTTT
+  name     String
+  invoices Invoice[]
+}
+
+model Invoice {
+  id              String               @id @default(uuid())
+  code            String               @unique // MaHD
+  rentalSlipId    String
+  rentalSlip      RentalSlip           @relation(fields: [rentalSlipId], references: [id])
+  cashierStaffId  String
+  cashierStaff    Staff                @relation(fields: [cashierStaffId], references: [id])
+  customerId      String
+  customer        Customer             @relation(fields: [customerId], references: [id])
+  invoiceDate     DateTime             @default(now())
+  roomTotal       Float
+  serviceTotal    Float
+  surcharge       Float
+  damageCharge    Float
+  deposit         Float
+  grandTotal      Float
+  paymentMethodId String
+  paymentMethod   PaymentMethod        @relation(fields: [paymentMethodId], references: [id])
+  paymentStatus   InvoicePaymentStatus @default(Unpaid)
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  details         InvoiceDetail[]
+}
+
+model InvoiceDetail {
+  id          String  @id @default(uuid())
+  invoiceId   String
+  invoice     Invoice @relation(fields: [invoiceId], references: [id])
+  code        String // MaCTHD
+  itemName    String
+  quantity    Int
+  unitPrice   Float
+  totalAmount Float
+}
+
+model BookingHistory {
+  id        String        @id @default(uuid())
+  code      String        @unique // MaLSDP
+  bookingId String
+  booking   Booking       @relation(fields: [bookingId], references: [id])
+  oldStatus BookingStatus
+  newStatus BookingStatus
+  changedAt DateTime      @default(now())
+  userId    String?
+  user      User?         @relation(fields: [userId], references: [id])
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+// 6. Tiện ích hệ thống
+model Settings {
+  id    String @id @default(uuid())
+  key   String @unique
+  value String
+}
+
+model ResetPasswordOTP {
+  id        String   @id @default(uuid())
+  userId    String
+  otp       String
+  expiredAt DateTime
+}

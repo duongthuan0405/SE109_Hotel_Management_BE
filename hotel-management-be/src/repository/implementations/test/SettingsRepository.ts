@@ -1,5 +1,5 @@
-import { type ISettingsRepository } from "../types/ISettingsRepository.js";
-import { type Settings } from "../../models/Settings.js";
+import { type ISettingsRepository } from "../../types/ISettingsRepository.js";
+import { type Settings } from "../../../models/Settings.js";
 
 const DEFAULT_SETTINGS: Settings = {
   id: "settings-1",

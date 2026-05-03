@@ -1,5 +1,5 @@
-import { type IRentalReceiptRepository, type RentalReceiptInclude } from "../types/IRentalReceiptRepository.js";
-import { type RentalSlip } from "../../models/RentalSlip.js";
+import { type IRentalReceiptRepository, type RentalReceiptInclude } from "../../types/IRentalReceiptRepository.js";
+import { type RentalSlip } from "../../../models/RentalSlip.js";
 import crypto from "crypto";
 import bookingRepository from "./BookingRepository.js";
 import roomRepository from "./RoomRepository.js";

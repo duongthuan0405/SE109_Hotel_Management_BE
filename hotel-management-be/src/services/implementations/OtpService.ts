@@ -11,11 +11,11 @@ const otpService: IOtpService = {
       otp += Math.floor(Math.random() * 10).toString();
     }
 
-    const expiresAt = Date.now() + durationInMinutes * 60 * 1000;
+    const expiredAt = new Date(Date.now() + durationInMinutes * 60 * 1000);
 
     return {
       otp,
-      expiresAt,
+      expiredAt,
     };
   },
 };

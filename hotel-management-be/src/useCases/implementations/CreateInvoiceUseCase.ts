@@ -56,6 +56,7 @@ export const createInvoice: ICreateInvoiceUseCase = {
       customer: true,
       paymentMethod: true,
       rentalSlip: true,
+      details: true,
     });
 
     return populated!;

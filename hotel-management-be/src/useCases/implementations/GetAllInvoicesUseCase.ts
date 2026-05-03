@@ -9,6 +9,7 @@ export const getAllInvoices: IGetAllInvoicesUseCase = {
       cashierStaff: true,
       customer: true,
       paymentMethod: true,
+      details: true,
     });
   },
 };

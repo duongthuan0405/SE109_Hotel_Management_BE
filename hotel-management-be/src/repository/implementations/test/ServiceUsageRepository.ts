@@ -1,5 +1,5 @@
-import { type IServiceUsageRepository, type ServiceUsageInclude } from "../types/IServiceUsageRepository.js";
-import { type ServiceUsage } from "../../models/ServiceUsage.js";
+import { type IServiceUsageRepository, type ServiceUsageInclude } from "../../types/IServiceUsageRepository.js";
+import { type ServiceUsage } from "../../../models/ServiceUsage.js";
 import crypto from "crypto";
 import rentalReceiptRepository from "./RentalReceiptRepository.js";
 import serviceRepository from "./ServiceRepository.js";

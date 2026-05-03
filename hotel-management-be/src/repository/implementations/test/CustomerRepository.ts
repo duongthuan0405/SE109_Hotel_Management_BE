@@ -1,5 +1,5 @@
-import { type Customer } from "../../models/Customer.js";
-import { type ICustomerRepository, type CustomerInclude } from "../types/ICustomerRepository.js";
+import { type Customer } from "../../../models/Customer.js";
+import { type ICustomerRepository, type CustomerInclude } from "../../types/ICustomerRepository.js";
 import userRepository, { SEED_USER_ID_CUSTOMER } from "./UserRepository.js";
 import crypto from "crypto";
 

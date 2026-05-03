@@ -1,5 +1,5 @@
-import { type ResetPasswordOTP } from "../../models/ResetPasswordOTP.js";
-import { type IResetPasswordOTPRepository } from "../types/IResetPasswordOTPRepository.js";
+import { type ResetPasswordOTP } from "../../../models/ResetPasswordOTP.js";
+import { type IResetPasswordOTPRepository } from "../../types/IResetPasswordOTPRepository.js";
 
 let mockOTPs: ResetPasswordOTP[] = [];
 

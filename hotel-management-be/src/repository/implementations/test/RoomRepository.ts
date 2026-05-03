@@ -1,5 +1,5 @@
-import { type IRoomRepository, type RoomInclude } from "../types/IRoomRepository.js";
-import { type Room, type RoomStatus } from "../../models/Room.js";
+import { type IRoomRepository, type RoomInclude } from "../../types/IRoomRepository.js";
+import { type Room, type RoomStatus } from "../../../models/Room.js";
 import crypto from "crypto";
 import roomTypeRepository from "./RoomTypeRepository.js";
 
