@@ -16,6 +16,11 @@ const serviceUsageRoutes = Router();
  *     responses:
  *       200:
  *         description: List of service usages
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ServiceUsageListResponse'
+
  */
 serviceUsageRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Manager", "Receptionist"]), serviceUsageController.getAllServiceUsages);
 
@@ -30,6 +35,11 @@ serviceUsageRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Manager", 
  *     responses:
  *       200:
  *         description: My service usages
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ServiceUsageListResponse'
+
  */
 serviceUsageRoutes.get("/me", authMiddleware, serviceUsageController.getMyServiceUsages);
 
@@ -50,6 +60,11 @@ serviceUsageRoutes.get("/me", authMiddleware, serviceUsageController.getMyServic
  *     responses:
  *       201:
  *         description: Service ordered
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ServiceUsageResponse'
+
  */
 serviceUsageRoutes.post("/customer/order", authMiddleware, serviceUsageController.customerOrderService);
 
@@ -70,6 +85,11 @@ serviceUsageRoutes.post("/customer/order", authMiddleware, serviceUsageControlle
  *     responses:
  *       200:
  *         description: List of service usages for customer
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ServiceUsageListResponse'
+
  */
 serviceUsageRoutes.get("/customer/:customerId", authMiddleware, roleMiddleware(["Admin", "Manager", "Receptionist"]), serviceUsageController.getServiceUsagesByCustomerId);
 
@@ -90,6 +110,11 @@ serviceUsageRoutes.get("/customer/:customerId", authMiddleware, roleMiddleware([
  *     responses:
  *       200:
  *         description: Service usage details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ServiceUsageResponse'
+
  */
 serviceUsageRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Manager", "Receptionist"]), serviceUsageController.getServiceUsageById);
 
@@ -110,6 +135,11 @@ serviceUsageRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Manager
  *     responses:
  *       201:
  *         description: Service usage record created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ServiceUsageResponse'
+
  */
 serviceUsageRoutes.post("/", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), serviceUsageController.createServiceUsage);
 
@@ -136,6 +166,11 @@ serviceUsageRoutes.post("/", authMiddleware, roleMiddleware(["Admin", "Reception
  *     responses:
  *       200:
  *         description: Service usage record updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ServiceUsageResponse'
+
  */
 serviceUsageRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), serviceUsageController.updateServiceUsage);
 
@@ -156,6 +191,11 @@ serviceUsageRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Recepti
  *     responses:
  *       200:
  *         description: Service usage record deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ServiceUsageBaseResponse'
+
  */
 serviceUsageRoutes.delete("/:id", authMiddleware, roleMiddleware(["Admin"]), serviceUsageController.deleteServiceUsage);
 

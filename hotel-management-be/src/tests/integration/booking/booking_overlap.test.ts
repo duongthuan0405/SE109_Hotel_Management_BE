@@ -11,7 +11,8 @@ describe("Booking Overlap Logic Tests", () => {
       TenDangNhap: "admin",
       MatKhau: "123456",
     });
-    adminToken = adminLogin.body.token;
+    adminToken = adminLogin.body.data.token;
+
   });
 
   it("should block booking if it overlaps exactly with an existing one", async () => {

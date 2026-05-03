@@ -29,6 +29,15 @@ export type LoginRequestDTO = {
  *           type: string
  *         VaiTro:
  *           type: string
+ *     LoginResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           $ref: '#/components/schemas/LoginResponseDTO'
  */
 export type LoginResponseDTO = {
   token: string;
@@ -87,6 +96,15 @@ export type RegisterRequestDTO = {
  *           type: string
  *         VaiTro:
  *           type: string
+ *     RegisterResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           $ref: '#/components/schemas/RegisterResponseDTO'
  */
 export type RegisterResponseDTO = {
   id: string;
@@ -119,6 +137,17 @@ export type ForgotPasswordRequestDTO = {
  *       properties:
  *         message:
  *           type: string
+ *         otp:
+ *           type: string
+ *     ForgotPasswordResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           $ref: '#/components/schemas/ForgotPasswordResponseDTO'
  */
 export type ForgotPasswordResponseDTO = {
   message: string;
@@ -158,6 +187,15 @@ export type ResetPasswordRequestDTO = {
  *       properties:
  *         message:
  *           type: string
+ *     ResetPasswordResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           $ref: '#/components/schemas/ResetPasswordResponseDTO'
  */
 export type ResetPasswordResponseDTO = {
   message: string;

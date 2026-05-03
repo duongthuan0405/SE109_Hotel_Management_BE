@@ -27,6 +27,54 @@ export type AccountResponseWrapper<T = undefined> = {
  * @swagger
  * components:
  *   schemas:
+ *     AccountBaseResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         error:
+ *           type: string
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     AccountResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           $ref: '#/components/schemas/AccountDataDTO'
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     AccountListResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/AccountDataDTO'
+ */
+
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
  *     AccountDataDTO:
  *       type: object
  *       properties:

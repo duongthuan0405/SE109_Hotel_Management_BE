@@ -16,6 +16,11 @@ const paymentMethodRoutes = Router();
  *     responses:
  *       200:
  *         description: List of payment methods
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/PaymentMethodListResponse'
+
  */
 paymentMethodRoutes.get("/", authMiddleware, paymentMethodController.getAllPaymentMethods);
 
@@ -36,6 +41,11 @@ paymentMethodRoutes.get("/", authMiddleware, paymentMethodController.getAllPayme
  *     responses:
  *       200:
  *         description: Payment method details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/PaymentMethodResponse'
+
  */
 paymentMethodRoutes.get("/:id", authMiddleware, paymentMethodController.getPaymentMethodById);
 
@@ -56,6 +66,11 @@ paymentMethodRoutes.get("/:id", authMiddleware, paymentMethodController.getPayme
  *     responses:
  *       201:
  *         description: Payment method created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/PaymentMethodResponse'
+
  */
 paymentMethodRoutes.post("/", authMiddleware, roleMiddleware(["Admin"]), paymentMethodController.createPaymentMethod);
 
@@ -82,6 +97,11 @@ paymentMethodRoutes.post("/", authMiddleware, roleMiddleware(["Admin"]), payment
  *     responses:
  *       200:
  *         description: Payment method updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/PaymentMethodResponse'
+
  */
 paymentMethodRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin"]), paymentMethodController.updatePaymentMethod);
 
@@ -102,6 +122,11 @@ paymentMethodRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin"]), payme
  *     responses:
  *       200:
  *         description: Payment method deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/PaymentMethodBaseResponse'
+
  */
 paymentMethodRoutes.delete("/:id", authMiddleware, roleMiddleware(["Admin"]), paymentMethodController.deletePaymentMethod);
 

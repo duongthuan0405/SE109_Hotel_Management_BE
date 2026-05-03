@@ -32,10 +32,18 @@ import paymentMethodRepositoryPrisma from "./implementations/prisma/PaymentMetho
 import invoiceRepositoryPrisma from "./implementations/prisma/InvoicePrismaRepository.js";
 import bookingHistoryRepositoryPrisma from "./implementations/prisma/BookingHistoryPrismaRepository.js";
 
+// --- Import UnitOfWork ---
+import unitOfWorkPrisma from "./implementations/prisma/PrismaUnitOfWork.js";
+import unitOfWorkMock from "./implementations/test/MockUnitOfWork.js";
+
 // Quyết định sử dụng bộ repository nào dựa trên NODE_ENV
 const isTest = env.NODE_ENV === "test";
 
+// Export UnitOfWork tương ứng với môi trường
+export const unitOfWork = isTest ? unitOfWorkMock : unitOfWorkPrisma;
+
 export const userRepository = isTest ? userRepositoryMock : userRepositoryPrisma;
+
 export const resetPasswordOTPRepository = isTest ? resetPasswordOTPRepositoryMock : resetPasswordOTPRepositoryPrisma;
 export const roomTypeRepository = isTest ? roomTypeRepositoryMock : roomTypeRepositoryPrisma;
 export const bookingRepository = isTest ? bookingRepositoryMock : bookingRepositoryPrisma;

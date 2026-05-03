@@ -10,6 +10,8 @@ import {
 } from "../useCases/index.js";
 import type { AccountUCOutput, UpdateAccountUCInput } from "../useCases/types/IAccountUseCases.js";
 
+
+
 const mapToDTO = (account: AccountUCOutput): AccountDataDTO => ({
   _id: account.id,
   TenDangNhap: account.username,
@@ -27,15 +29,12 @@ const accountController = {
         data: mapToDTO(result),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: AccountResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi lấy thông tin tài khoản",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
   },
+
+
 
 
   changePassword: async (req: Request, res: Response, next: NextFunction) => {
@@ -54,15 +53,12 @@ const accountController = {
         message: "Thay đổi mật khẩu thành công",
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: AccountResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi thay đổi mật khẩu",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
   },
+
+
 
   getAllAccounts: async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -73,15 +69,12 @@ const accountController = {
         data: result.map(mapToDTO),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: AccountResponseWrapper<undefined> = {
-        success: false,
-        message: "Lỗi khi lấy danh sách tài khoản",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
   },
+
+
 
   getAccountById: async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -100,15 +93,12 @@ const accountController = {
         data: mapToDTO(result),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: AccountResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi lấy thông tin tài khoản",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
   },
+
+
 
   createAccount: async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -124,15 +114,12 @@ const accountController = {
         data: mapToDTO(result),
       };
       res.status(201).json(response);
-    } catch (error: any) {
-      const response: AccountResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi tạo tài khoản",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
   },
+
+
 
   updateAccount: async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -148,15 +135,12 @@ const accountController = {
         data: mapToDTO(result),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: AccountResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi cập nhật tài khoản",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
   },
+
+
 
   deleteAccount: async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -174,15 +158,12 @@ const accountController = {
         message: "Xóa tài khoản thành công",
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: AccountResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi xóa tài khoản",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
   },
+
+
 };
 
 export default accountController;

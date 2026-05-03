@@ -2,7 +2,71 @@
  * @swagger
  * components:
  *   schemas:
+ *     InvoiceBaseResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         error:
+ *           type: string
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     InvoiceResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           $ref: '#/components/schemas/InvoiceDataDTO'
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     InvoiceListResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/InvoiceDataDTO'
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     PreviewInvoiceResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           $ref: '#/components/schemas/PreviewInvoiceResponseDTO'
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
  *     CreateInvoiceDetailDTO:
+
+
  *       type: object
  *       required:
  *         - TenHang

@@ -16,6 +16,11 @@ const settingsRoutes = Router();
  *     responses:
  *       200:
  *         description: System settings
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SettingsResponse'
+
  */
 settingsRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Manager"]), settingsController.getSettings);
 
@@ -36,6 +41,11 @@ settingsRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Manager"]), se
  *     responses:
  *       200:
  *         description: Settings updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SettingsResponse'
+
  */
 settingsRoutes.put("/", authMiddleware, roleMiddleware(["Admin"]), settingsController.updateSettings);
 

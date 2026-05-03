@@ -23,6 +23,11 @@ const staffRoles = ["Admin", "Manager", "Receptionist"];
  *     responses:
  *       200:
  *         description: Invoice preview details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/PreviewInvoiceResponse'
+
  */
 invoiceRoutes.get("/preview", authMiddleware, roleMiddleware(staffRoles), invoiceController.getPreview);
 
@@ -43,6 +48,11 @@ invoiceRoutes.get("/preview", authMiddleware, roleMiddleware(staffRoles), invoic
  *     responses:
  *       201:
  *         description: Checkout invoice created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InvoiceResponse'
+
  */
 invoiceRoutes.post("/checkout", authMiddleware, roleMiddleware(staffRoles), invoiceController.createCheckoutInvoice);
 
@@ -63,6 +73,11 @@ invoiceRoutes.post("/checkout", authMiddleware, roleMiddleware(staffRoles), invo
  *     responses:
  *       201:
  *         description: Invoice created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InvoiceResponse'
+
  */
 invoiceRoutes.post("/", authMiddleware, roleMiddleware(staffRoles), invoiceController.createInvoice);
 
@@ -77,6 +92,11 @@ invoiceRoutes.post("/", authMiddleware, roleMiddleware(staffRoles), invoiceContr
  *     responses:
  *       200:
  *         description: List of invoices
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InvoiceListResponse'
+
  */
 invoiceRoutes.get("/", authMiddleware, roleMiddleware(staffRoles), invoiceController.getAllInvoices);
 
@@ -91,6 +111,11 @@ invoiceRoutes.get("/", authMiddleware, roleMiddleware(staffRoles), invoiceContro
  *     responses:
  *       200:
  *         description: My invoices
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InvoiceListResponse'
+
  */
 invoiceRoutes.get("/me", authMiddleware, roleMiddleware(["Customer"]), invoiceController.getMyInvoices);
 
@@ -111,6 +136,11 @@ invoiceRoutes.get("/me", authMiddleware, roleMiddleware(["Customer"]), invoiceCo
  *     responses:
  *       200:
  *         description: Invoice details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InvoiceResponse'
+
  */
 invoiceRoutes.get("/:id", authMiddleware, roleMiddleware([...staffRoles, "Customer"]), invoiceController.getInvoiceById);
 
@@ -131,6 +161,11 @@ invoiceRoutes.get("/:id", authMiddleware, roleMiddleware([...staffRoles, "Custom
  *     responses:
  *       200:
  *         description: Invoice updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InvoiceResponse'
+
  */
 invoiceRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Manager"]), invoiceController.updateInvoice);
 
@@ -151,6 +186,11 @@ invoiceRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Manager"]), 
  *     responses:
  *       200:
  *         description: Invoice deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InvoiceBaseResponse'
+
  */
 invoiceRoutes.delete("/:id", authMiddleware, roleMiddleware(["Admin", "Manager"]), invoiceController.deleteInvoice);
 

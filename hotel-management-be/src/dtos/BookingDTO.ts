@@ -21,6 +21,54 @@ export type BookingResponseWrapper<T> = {
   error?: string | undefined;
 };
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     BookingBaseResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         error:
+ *           type: string
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     BookingResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           $ref: '#/components/schemas/BookingDataDTO'
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     BookingListResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/BookingDataDTO'
+ */
+
+
 export type CreateBookingDetailDTO = {
   Phong: string; // ID của phòng
 };

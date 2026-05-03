@@ -40,14 +40,10 @@ const roomController = {
         data: result.map(mapToDTO),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: RoomResponseWrapper<undefined> = {
-        success: false,
-        message: "Lỗi khi lấy danh sách phòng",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 
   getRoomById: async (req: Request, res: Response, next: NextFunction) => {
@@ -62,14 +58,10 @@ const roomController = {
         data: mapToDTO(result),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: RoomResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi lấy thông tin phòng",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 
   createRoom: async (req: Request, res: Response, next: NextFunction) => {
@@ -86,14 +78,10 @@ const roomController = {
         data: mapToDTO(result),
       };
       res.status(201).json(response);
-    } catch (error: any) {
-      const response: RoomResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi tạo phòng",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 
   updateRoom: async (req: Request, res: Response, next: NextFunction) => {
@@ -114,14 +102,10 @@ const roomController = {
         data: mapToDTO(result),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: RoomResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi cập nhật phòng",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 
   updateStatus: async (req: Request, res: Response, next: NextFunction) => {
@@ -137,14 +121,10 @@ const roomController = {
         data: mapToDTO(result),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: RoomResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi cập nhật trạng thái phòng",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 
   deleteRoom: async (req: Request, res: Response, next: NextFunction) => {
@@ -155,14 +135,10 @@ const roomController = {
         message: "Xóa phòng thành công",
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: RoomResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi xóa phòng",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 };
 

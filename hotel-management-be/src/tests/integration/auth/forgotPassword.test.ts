@@ -30,7 +30,9 @@ describe("Auth API Integration Tests - Forgot Password", () => {
       Email: "forgotuser@example.com",
     });
     expect(res.status).toBe(200);
-    expect(res.body).toHaveProperty("otp");
-    expect(res.body.message).toContain("Email simulation");
+    expect(res.body.success).toBe(true);
+    expect(res.body.data).toHaveProperty("otp");
+    expect(res.body.data.message).toContain("Email simulation");
+
   });
 });

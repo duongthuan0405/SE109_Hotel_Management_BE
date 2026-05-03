@@ -6,7 +6,7 @@ import app from "../../../server.js";
 
 describe("Payment Method API Integration Tests", () => {
   let adminToken = "";
-  let managerToken = "";
+
   let createdId = "";
 
   beforeAll(async () => {
@@ -15,14 +15,11 @@ describe("Payment Method API Integration Tests", () => {
       TenDangNhap: "admin",
       MatKhau: "123456",
     });
-    adminToken = adminRes.body.token;
+    adminToken = adminRes.body.data.token;
 
-    // Login as Manager
-    const managerRes = await request(app).post("/api/auth/login").send({
-      TenDangNhap: "manager1", // Oh wait, I don't have manager1 in mock. Will use Customer instead below.
-      MatKhau: "123456",
-    });
-    managerToken = managerRes.body.token;
+
+
+
   });
 
   describe("GET /api/payment-methods", () => {

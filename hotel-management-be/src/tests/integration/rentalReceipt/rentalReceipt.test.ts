@@ -38,7 +38,8 @@ describe("Rental Receipt API Integration Tests (Legacy Compatibility)", () => {
       TenDangNhap: "admin",
       MatKhau: "123456",
     });
-    adminToken = adminLoginRes.body.token;
+    adminToken = adminLoginRes.body.data.token;
+
 
     // Login as Receptionist (Staff)
     const receptionistLoginRes = await request(app).post("/api/auth/login").send({
@@ -46,8 +47,9 @@ describe("Rental Receipt API Integration Tests (Legacy Compatibility)", () => {
       MatKhau: "123456",
     }).catch(() => null);
 
-    if (receptionistLoginRes && receptionistLoginRes.body.token) {
-      receptionistToken = receptionistLoginRes.body.token;
+    if (receptionistLoginRes && receptionistLoginRes.body.data && receptionistLoginRes.body.data.token) {
+      receptionistToken = receptionistLoginRes.body.data.token;
+
     } else {
       receptionistToken = adminToken; // Fallback if test receptionist not created
     }

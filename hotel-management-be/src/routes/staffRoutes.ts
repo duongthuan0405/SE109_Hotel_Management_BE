@@ -16,6 +16,11 @@ const staffRoutes = Router();
  *     responses:
  *       200:
  *         description: Staff profile details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/StaffResponse'
+
  */
 staffRoutes.get("/me", authMiddleware, roleMiddleware(["Admin", "Manager", "Receptionist"]), staffController.getMyProfile);
 
@@ -36,6 +41,11 @@ staffRoutes.get("/me", authMiddleware, roleMiddleware(["Admin", "Manager", "Rece
  *     responses:
  *       200:
  *         description: Profile updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/StaffResponse'
+
  */
 staffRoutes.put("/me", authMiddleware, roleMiddleware(["Admin", "Manager", "Receptionist"]), staffController.updateMyProfile);
 
@@ -50,6 +60,11 @@ staffRoutes.put("/me", authMiddleware, roleMiddleware(["Admin", "Manager", "Rece
  *     responses:
  *       200:
  *         description: List of staff members
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/StaffListResponse'
+
  */
 staffRoutes.get("/", authMiddleware, roleMiddleware(["Admin"]), staffController.getAllStaffs);
 
@@ -70,6 +85,11 @@ staffRoutes.get("/", authMiddleware, roleMiddleware(["Admin"]), staffController.
  *     responses:
  *       200:
  *         description: Staff details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/StaffResponse'
+
  */
 staffRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin"]), staffController.getStaffById);
 
@@ -90,6 +110,11 @@ staffRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin"]), staffControll
  *     responses:
  *       201:
  *         description: Staff created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/StaffResponse'
+
  */
 staffRoutes.post("/", authMiddleware, roleMiddleware(["Admin"]), staffController.createStaff);
 
@@ -116,6 +141,11 @@ staffRoutes.post("/", authMiddleware, roleMiddleware(["Admin"]), staffController
  *     responses:
  *       200:
  *         description: Staff updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/StaffResponse'
+
  */
 staffRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin"]), staffController.updateStaff);
 
@@ -136,6 +166,11 @@ staffRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin"]), staffControll
  *     responses:
  *       200:
  *         description: Staff deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/StaffBaseResponse'
+
  */
 staffRoutes.delete("/:id", authMiddleware, roleMiddleware(["Admin"]), staffController.deleteStaff);
 

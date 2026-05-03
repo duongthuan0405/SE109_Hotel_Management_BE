@@ -35,9 +35,11 @@ describe("Auth API Integration Tests - Login", () => {
       });
 
     expect(res.status).toBe(200);
-    expect(res.body).toHaveProperty("token");
-    expect(res.body).toHaveProperty("VaiTro");
-    expect(res.body.VaiTro).toBe("Admin");
+    expect(res.body.success).toBe(true);
+    expect(res.body.data).toHaveProperty("token");
+    expect(res.body.data).toHaveProperty("VaiTro");
+    expect(res.body.data.VaiTro).toBe("Admin");
+
   });
 
   it("should return token and role customer for valid credentials", async () => {
@@ -49,8 +51,10 @@ describe("Auth API Integration Tests - Login", () => {
       });
 
     expect(res.status).toBe(200);
-    expect(res.body).toHaveProperty("token");
-    expect(res.body).toHaveProperty("VaiTro");
-    expect(res.body.VaiTro).toBe("Customer");
+    expect(res.body.success).toBe(true);
+    expect(res.body.data).toHaveProperty("token");
+    expect(res.body.data).toHaveProperty("VaiTro");
+    expect(res.body.data.VaiTro).toBe("Customer");
+
   });
 });

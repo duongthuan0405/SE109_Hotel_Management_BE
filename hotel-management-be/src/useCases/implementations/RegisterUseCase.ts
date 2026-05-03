@@ -1,4 +1,4 @@
-import { userRepository } from "../../repository/index.js";
+import { unitOfWork, userRepository, customerRepository } from "../../repository/index.js";
 import { type IRegisterUseCase, type RegisterUCInput, type RegisterUCOutput } from "../types/IRegisterUseCase.js";
 import { passwordService } from "../../services/index.js";
 import createCustomerUseCase from "./CreateCustomerUseCase.js";
@@ -6,47 +6,53 @@ import type { User } from "../../models/User.js";
 
 const registerUseCase: IRegisterUseCase = {
   execute: async (input: RegisterUCInput): Promise<RegisterUCOutput> => {
-    const { username, password, fullName, identityCard, phone, email, address } = input;
+    // Bọc trong transaction mà không cần dùng biến uow trong callback
+    return await unitOfWork.runInTransaction(async () => {
+      const { username, password, fullName, identityCard, phone, email, address } = input;
 
-    if (!username || !password) {
-      throw { status: 400, message: "Tên đăng nhập và mật khẩu là bắt buộc" };
-    }
+      if (!username || !password) {
+        throw { status: 400, message: "Tên đăng nhập và mật khẩu là bắt buộc" };
+      }
 
-    if (password.length < 6) {
-      throw { status: 400, message: "Mật khẩu phải có ít nhất 6 ký tự" };
-    }
+      if (password.length < 6) {
+        throw { status: 400, message: "Mật khẩu phải có ít nhất 6 ký tự" };
+      }
 
-    const existingUser = await userRepository.findByUsername(username);
-    if (existingUser) {
-      throw { status: 409, message: "Tài khoản đã tồn tại" };
-    }
+      const existingUser = await userRepository.findByUsername(username);
+      if (existingUser) {
+        throw { status: 409, message: "Tài khoản đã tồn tại" };
+      }
 
-    const passwordHash = await passwordService.hashPassword(password);
+      const passwordHash = await passwordService.hashPassword(password);
 
-    const userToCreate: Omit<User, "id"> = {
-      username,
-      passwordHash,
-      role: "Customer",
-    };
-    
-    const newUser = await userRepository.create(userToCreate);
+      const userToCreate: Omit<User, "id"> = {
+        username,
+        passwordHash,
+        role: "Customer",
+      };
+      
+      const newUser = await userRepository.create(userToCreate);
 
-    // Sử dụng CreateCustomerUseCase để tạo profile khách hàng (có MaKH)
-    await createCustomerUseCase.execute({
-      fullName: fullName || "Khách hàng mới",
-      identityCard: identityCard || "CMND_" + Date.now(),
-      phone: phone || "0000000000",
-      email: email || username,
-      address: address || "",
-      userId: newUser.id,
+      // Sử dụng CreateCustomerUseCase để tạo profile khách hàng
+      // CreateCustomerUseCase cũng sẽ tự động tham gia vào transaction này
+      await createCustomerUseCase.execute({
+        fullName: fullName || "Khách hàng mới",
+        identityCard: identityCard || "CMND_" + Date.now(),
+        phone: phone || "0000000000",
+        email: email || username,
+        address: address || "",
+        userId: newUser.id,
+      });
+
+      return {
+        id: newUser.id,
+        username: newUser.username,
+        role: newUser.role,
+      };
     });
-
-    return {
-      id: newUser.id,
-      username: newUser.username,
-      role: newUser.role,
-    };
   },
 };
 
 export default registerUseCase;
+
+

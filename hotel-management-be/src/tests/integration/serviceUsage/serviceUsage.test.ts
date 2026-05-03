@@ -14,7 +14,8 @@ describe("Service Usage API Integration Tests (Legacy Compatibility)", () => {
       TenDangNhap: "admin",
       MatKhau: "123456",
     });
-    adminToken = adminLoginRes.body.token;
+    adminToken = adminLoginRes.body.data.token;
+
 
     // Tạo phiếu thuê phòng trước (cần cho service usage)
     await request(app)

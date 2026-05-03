@@ -33,14 +33,10 @@ const serviceController = {
         data: result.map(mapToDTO),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: ServiceResponseWrapper<undefined> = {
-        success: false,
-        message: "Lỗi khi lấy danh sách dịch vụ",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
   getById: async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -51,14 +47,10 @@ const serviceController = {
         data: mapToDTO(result),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: ServiceResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi lấy thông tin dịch vụ",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
   create: async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -73,14 +65,10 @@ const serviceController = {
         data: mapToDTO(result),
       };
       res.status(201).json(response);
-    } catch (error: any) {
-      const response: ServiceResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi tạo dịch vụ",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
   update: async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -96,14 +84,10 @@ const serviceController = {
         data: mapToDTO(result),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: ServiceResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi cập nhật dịch vụ",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
   delete: async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -113,14 +97,10 @@ const serviceController = {
         message: "Xóa dịch vụ thành công",
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: ServiceResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi xóa dịch vụ",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 };
 

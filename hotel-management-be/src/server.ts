@@ -1,4 +1,6 @@
 import express, { type Request, type Response } from "express";
+import { errorHandler } from "./middlewares/errorMiddleware.js";
+
 import env from "./config/env.js";
 import authRoutes from "./routes/authRoutes.js";
 import accountRoutes from "./routes/accountRoutes.js";
@@ -41,10 +43,9 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello từ Express + TypeScript!");
 });
 
-app.use((err: any, req: Request, res: Response, next: express.NextFunction) => {
-  const status = err.status || 500;
-  res.status(status).json({ message: err.message || "Internal Server Error" });
-});
+app.use(errorHandler);
+
+
 
 if (process.env.NODE_ENV !== "test") {
   app.listen(PORT, () => {

@@ -14,7 +14,8 @@ describe("Booking History API", () => {
       TenDangNhap: "admin",
       MatKhau: "123456",
     });
-    mockToken = adminRes.body.token;
+    mockToken = adminRes.body.data.token;
+
 
     // Xóa dữ liệu cũ nếu có (ở môi trường mock, có thể bỏ qua hoặc clear mock array)
     // Tạo 1 history mẫu

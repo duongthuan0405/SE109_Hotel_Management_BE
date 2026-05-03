@@ -39,8 +39,9 @@ describe("Auth API Integration Tests - Register", () => {
       Email: "newuser@example.com",
     });
     expect(res.status).toBe(201);
-    expect(res.body).toHaveProperty("id");
-    expect(res.body.TenDangNhap).toBe("newuser123_reg");
-    expect(res.body.VaiTro).toBe("Customer"); // Must be Customer
+    expect(res.body.data).toHaveProperty("id");
+    expect(res.body.data.TenDangNhap).toBe("newuser123_reg");
+    expect(res.body.data.VaiTro).toBe("Customer"); // Must be Customer
+
   });
 });

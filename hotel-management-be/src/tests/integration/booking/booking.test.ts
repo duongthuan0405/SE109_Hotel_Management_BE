@@ -14,14 +14,14 @@ describe("Booking API Integration Tests", () => {
       TenDangNhap: "admin",
       MatKhau: "123456",
     });
-    adminToken = adminLogin.body.token;
+    adminToken = adminLogin.body.data.token;
 
     // Login as Customer
     const customerLogin = await request(app).post("/api/auth/login").send({
       TenDangNhap: "customer1",
       MatKhau: "123456",
     });
-    customerToken = customerLogin.body.token;
+    customerToken = customerLogin.body.data.token;
   });
 
   describe("Customer Endpoints (Wrapped Response)", () => {
@@ -81,7 +81,8 @@ describe("Booking API Integration Tests", () => {
     });
   });
 
-  describe("Staff Endpoints (Raw Response)", () => {
+  describe("Staff Endpoints (Wrapped Response)", () => {
+
     let staffBookingId = "";
 
     it("should create a walk-in booking via POST /api/bookings/walk-in", async () => {
@@ -101,9 +102,11 @@ describe("Booking API Integration Tests", () => {
         });
 
       expect(res.status).toBe(201);
-      expect(res.body.HangPhong).toBe("2");
-      expect(res.body._id).toBeDefined();
-      staffBookingId = res.body._id;
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.HangPhong).toBe("2");
+      expect(res.body.data._id).toBeDefined();
+      staffBookingId = res.body.data._id;
+
     });
 
     it("should get all bookings for staff via GET /api/bookings/", async () => {
@@ -112,8 +115,10 @@ describe("Booking API Integration Tests", () => {
         .set("Authorization", `Bearer ${adminToken}`);
 
       expect(res.status).toBe(200);
-      expect(Array.isArray(res.body)).toBe(true);
-      expect(res.body.some((b: any) => b._id === staffBookingId)).toBe(true);
+      expect(res.body.success).toBe(true);
+      expect(Array.isArray(res.body.data)).toBe(true);
+      expect(res.body.data.some((b: any) => b._id === staffBookingId)).toBe(true);
+
     });
 
     it("should update booking via PUT /api/bookings/:id", async () => {
@@ -125,7 +130,9 @@ describe("Booking API Integration Tests", () => {
         });
 
       expect(res.status).toBe(200);
-      expect(res.body.SoKhach).toBe(3);
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.SoKhach).toBe(3);
+
     });
 
     it("should delete booking via DELETE /api/bookings/:id", async () => {
@@ -134,13 +141,14 @@ describe("Booking API Integration Tests", () => {
         .set("Authorization", `Bearer ${adminToken}`);
 
       expect(res.status).toBe(200);
-      expect(res.body.ok).toBe(true);
+      expect(res.body.success).toBe(true);
 
       // Verify deletion
       const checkRes = await request(app)
         .get("/api/bookings/")
         .set("Authorization", `Bearer ${adminToken}`);
-      expect(checkRes.body.some((b: any) => b._id === staffBookingId)).toBe(false);
+      expect(checkRes.body.data.some((b: any) => b._id === staffBookingId)).toBe(false);
+
     });
   });
 
@@ -181,7 +189,7 @@ describe("Booking API Integration Tests", () => {
         TenDangNhap: "customer2",
         MatKhau: "123456",
       });
-      otherCustomerToken = loginRes.body.token;
+      otherCustomerToken = loginRes.body.data.token;
     });
 
     it("should return 403 if customer tries to GET another customer's booking", async () => {
@@ -227,7 +235,9 @@ describe("Booking API Integration Tests", () => {
         .set("Authorization", `Bearer ${adminToken}`);
       
       expect(res.status).toBe(200);
-      expect(res.body._id).toBe(testBookingId);
+      expect(res.body.success).toBe(true);
+      expect(res.body.data._id).toBe(testBookingId);
+
     });
   });
 });

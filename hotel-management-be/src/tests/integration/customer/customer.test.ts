@@ -14,14 +14,16 @@ describe("Customer API Integration Tests", () => {
       TenDangNhap: "admin",
       MatKhau: "123456",
     });
-    adminToken = adminRes.body.token;
+    adminToken = adminRes.body.data.token;
+
 
     // Login as Customer
     const customerRes = await request(app).post("/api/auth/login").send({
       TenDangNhap: "customer1",
       MatKhau: "123456",
     });
-    customerToken = customerRes.body.token;
+    customerToken = customerRes.body.data.token;
+
   });
 
   describe("Customer Profile Access", () => {
