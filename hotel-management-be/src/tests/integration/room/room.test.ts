@@ -12,7 +12,8 @@ describe("Room API Integration Tests (Legacy Compatibility)", () => {
       TenDangNhap: "admin",
       MatKhau: "123456",
     });
-    adminToken = adminLoginRes.body.token;
+    adminToken = adminLoginRes.body.data.token;
+
   });
 
   describe("GET /api/rooms Compatibility", () => {

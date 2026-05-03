@@ -19,6 +19,11 @@ const adminRoles = ["Admin", "Manager"];
  *     responses:
  *       200:
  *         description: List of services
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ServiceListResponse'
+
  */
 serviceRoutes.get("/", authMiddleware, roleMiddleware(allRoles), serviceController.getAll);
 
@@ -39,6 +44,11 @@ serviceRoutes.get("/", authMiddleware, roleMiddleware(allRoles), serviceControll
  *     responses:
  *       200:
  *         description: Service details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ServiceResponse'
+
  */
 serviceRoutes.get("/:id", authMiddleware, roleMiddleware(allRoles), serviceController.getById);
 
@@ -59,6 +69,11 @@ serviceRoutes.get("/:id", authMiddleware, roleMiddleware(allRoles), serviceContr
  *     responses:
  *       201:
  *         description: Service created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ServiceResponse'
+
  */
 serviceRoutes.post("/", authMiddleware, roleMiddleware(adminRoles), serviceController.create);
 
@@ -85,6 +100,11 @@ serviceRoutes.post("/", authMiddleware, roleMiddleware(adminRoles), serviceContr
  *     responses:
  *       200:
  *         description: Service updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ServiceResponse'
+
  */
 serviceRoutes.put("/:id", authMiddleware, roleMiddleware(adminRoles), serviceController.update);
 
@@ -105,6 +125,11 @@ serviceRoutes.put("/:id", authMiddleware, roleMiddleware(adminRoles), serviceCon
  *     responses:
  *       200:
  *         description: Service deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ServiceBaseResponse'
+
  */
 serviceRoutes.delete("/:id", authMiddleware, roleMiddleware(adminRoles), serviceController.delete);
 

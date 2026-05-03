@@ -13,7 +13,8 @@ describe("RoomType API Integration Tests", () => {
       TenDangNhap: "admin",
       MatKhau: "123456",
     });
-    adminToken = adminLoginRes.body.token;
+    adminToken = adminLoginRes.body.data.token;
+
 
     // 2. Register & Login as Customer
     await request(app).post("/api/auth/register").send({
@@ -24,7 +25,8 @@ describe("RoomType API Integration Tests", () => {
       TenDangNhap: "customer_roomtype_test",
       MatKhau: "123456",
     });
-    customerToken = customerLoginRes.body.token;
+    customerToken = customerLoginRes.body.data.token;
+
   });
 
   describe("Public Endpoints (GET)", () => {

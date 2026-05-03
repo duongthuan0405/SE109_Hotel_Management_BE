@@ -2,7 +2,55 @@
  * @swagger
  * components:
  *   schemas:
+ *     PaymentMethodBaseResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         error:
+ *           type: string
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     PaymentMethodResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           $ref: '#/components/schemas/PaymentMethodDataDTO'
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     PaymentMethodListResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/PaymentMethodDataDTO'
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
  *     CreatePaymentMethodRequestDTO:
+
  *       type: object
  *       required:
  *         - TenPTTT

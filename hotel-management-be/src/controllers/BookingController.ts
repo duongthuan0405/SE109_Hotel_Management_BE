@@ -144,7 +144,8 @@ const bookingController = {
         details: body.ChiTietDatPhong?.map(d => ({ roomId: d.Phong })),
         executorUserId: (req as any).user.id
       });
-      res.status(201).json(mapToDTO(result));
+      res.status(201).json({ success: true, message: "Tạo đặt phòng thành công", data: mapToDTO(result) });
+
     } catch (error) { next(error); }
   },
   staffCreateWalkIn: async (req: Request, res: Response, next: NextFunction) => {
@@ -164,19 +165,22 @@ const bookingController = {
         details: body.ChiTietDatPhong?.map((d: any) => ({ roomId: d.Phong })),
         executorUserId: (req as any).user.id
       });
-      res.status(201).json(mapToDTO(result));
+      res.status(201).json({ success: true, message: "Tạo đặt phòng walk-in thành công", data: mapToDTO(result) });
+
     } catch (error) { next(error); }
   },
   staffGetAll: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await staffGetAllBookingsUseCase.execute();
-      res.status(200).json(result.map(mapToDTO));
+      res.status(200).json({ success: true, message: "Lấy danh sách đặt phòng thành công", data: result.map(mapToDTO) });
+
     } catch (error) { next(error); }
   },
   staffGetById: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await staffGetBookingByIdUseCase.execute({ id: req.params.id as string});
-      res.status(200).json(mapToDTO(result));
+      res.status(200).json({ success: true, message: "Lấy thông tin đặt phòng thành công", data: mapToDTO(result) });
+
     } catch (error) { next(error); }
   },
   staffUpdate: async (req: Request, res: Response, next: NextFunction) => {
@@ -193,7 +197,8 @@ const bookingController = {
         details: body.ChiTietDatPhong?.map(d => ({ roomId: d.Phong })),
         executorUserId: (req as any).user.id
       });
-      res.status(200).json(mapToDTO(result));
+      res.status(200).json({ success: true, message: "Cập nhật đặt phòng thành công", data: mapToDTO(result) });
+
     } catch (error) { next(error); }
   },
   staffCancel: async (req: Request, res: Response, next: NextFunction) => {
@@ -202,13 +207,15 @@ const bookingController = {
         id: req.params.id as string,
         executorUserId: (req as any).user.id
       });
-      res.status(200).json(mapToDTO(result));
+      res.status(200).json({ success: true, message: "Hủy đặt phòng thành công", data: mapToDTO(result) });
+
     } catch (error) { next(error); }
   },
   staffDelete: async (req: Request, res: Response, next: NextFunction) => {
     try {
       await staffDeleteBookingUseCase.execute({ id: req.params.id as string });
-      res.status(200).json({ ok: true });
+      res.status(200).json({ success: true, message: "Xóa đặt phòng thành công" });
+
     } catch (error) { next(error); }
   },
 };

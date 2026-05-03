@@ -16,6 +16,11 @@ const rentalReceiptRoutes = Router();
  *     responses:
  *       200:
  *         description: List of rental receipts
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RentalReceiptListResponse'
+
  */
 rentalReceiptRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Manager", "Receptionist"]), rentalReceiptController.getAllRentalReceipts);
 
@@ -36,6 +41,11 @@ rentalReceiptRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Manager",
  *     responses:
  *       200:
  *         description: Rental receipt details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RentalReceiptResponse'
+
  */
 rentalReceiptRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Manager", "Receptionist"]), rentalReceiptController.getRentalReceiptById);
 
@@ -56,6 +66,11 @@ rentalReceiptRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Manage
  *     responses:
  *       201:
  *         description: Rental receipt created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RentalReceiptResponse'
+
  */
 rentalReceiptRoutes.post("/", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), rentalReceiptController.createRentalReceipt);
 
@@ -82,6 +97,11 @@ rentalReceiptRoutes.post("/", authMiddleware, roleMiddleware(["Admin", "Receptio
  *     responses:
  *       200:
  *         description: Rental receipt updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RentalReceiptResponse'
+
  */
 rentalReceiptRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), rentalReceiptController.updateRentalReceipt);
 
@@ -102,6 +122,11 @@ rentalReceiptRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Recept
  *     responses:
  *       200:
  *         description: Rental receipt deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RentalReceiptBaseResponse'
+
  */
 rentalReceiptRoutes.delete("/:id", authMiddleware, roleMiddleware(["Admin"]), rentalReceiptController.deleteRentalReceipt);
 

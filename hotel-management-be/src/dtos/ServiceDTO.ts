@@ -62,6 +62,54 @@ export type ServiceResponseWrapper<T = undefined> = {
  * @swagger
  * components:
  *   schemas:
+ *     ServiceBaseResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         error:
+ *           type: string
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ServiceResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           $ref: '#/components/schemas/ServiceResponseDTO'
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ServiceListResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/ServiceResponseDTO'
+ */
+
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
  *     ServiceResponseDTO:
  *       type: object
  *       properties:

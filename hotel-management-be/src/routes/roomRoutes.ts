@@ -14,6 +14,11 @@ const roomRoutes = Router();
  *     responses:
  *       200:
  *         description: List of rooms
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RoomListResponse'
+
  */
 roomRoutes.get("/", roomController.getAllRooms);
 
@@ -32,6 +37,11 @@ roomRoutes.get("/", roomController.getAllRooms);
  *     responses:
  *       200:
  *         description: Room details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RoomResponse'
+
  */
 roomRoutes.get("/:id", roomController.getRoomById);
 
@@ -52,6 +62,11 @@ roomRoutes.get("/:id", roomController.getRoomById);
  *     responses:
  *       201:
  *         description: Room created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RoomResponse'
+
  */
 roomRoutes.post("/", authMiddleware, roleMiddleware(["Admin"]), roomController.createRoom);
 
@@ -78,6 +93,11 @@ roomRoutes.post("/", authMiddleware, roleMiddleware(["Admin"]), roomController.c
  *     responses:
  *       200:
  *         description: Room updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RoomResponse'
+
  */
 roomRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), roomController.updateRoom);
 
@@ -107,6 +127,11 @@ roomRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionist"])
  *     responses:
  *       200:
  *         description: Status updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RoomResponse'
+
  */
 roomRoutes.post("/:id/status", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), roomController.updateStatus);
 
@@ -127,6 +152,11 @@ roomRoutes.post("/:id/status", authMiddleware, roleMiddleware(["Admin", "Recepti
  *     responses:
  *       200:
  *         description: Room deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RoomBaseResponse'
+
  */
 roomRoutes.delete("/:id", authMiddleware, roleMiddleware(["Admin"]), roomController.deleteRoom);
 

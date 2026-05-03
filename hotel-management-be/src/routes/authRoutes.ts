@@ -18,6 +18,12 @@ const authRoutes = Router();
  *     responses:
  *       201:
  *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RegisterResponse'
+
+
  */
 authRoutes.post("/register", authController.register);
 
@@ -39,7 +45,8 @@ authRoutes.post("/register", authController.register);
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/LoginResponseDTO'
+ *               $ref: '#/components/schemas/LoginResponse'
+
  */
 authRoutes.post("/login", authController.login);
 
@@ -58,6 +65,12 @@ authRoutes.post("/login", authController.login);
  *     responses:
  *       200:
  *         description: OTP sent to user email
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ForgotPasswordResponse'
+
+
  */
 authRoutes.post("/forgot-password", authController.forgotPassword);
 
@@ -76,6 +89,12 @@ authRoutes.post("/forgot-password", authController.forgotPassword);
  *     responses:
  *       200:
  *         description: Password reset successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ResetPasswordResponse'
+
+
  */
 authRoutes.post("/reset-password-otp", authController.resetPasswordWithOTP);
 

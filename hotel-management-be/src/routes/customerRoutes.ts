@@ -16,6 +16,11 @@ const customerRoutes = Router();
  *     responses:
  *       200:
  *         description: Customer profile details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CustomerResponse'
+
  */
 customerRoutes.get("/me", authMiddleware, roleMiddleware(["Customer"]), customerController.getMyProfile);
 
@@ -36,6 +41,11 @@ customerRoutes.get("/me", authMiddleware, roleMiddleware(["Customer"]), customer
  *     responses:
  *       200:
  *         description: Profile updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CustomerResponse'
+
  */
 customerRoutes.put("/me", authMiddleware, roleMiddleware(["Customer"]), customerController.updateMyProfile);
 
@@ -50,6 +60,11 @@ customerRoutes.put("/me", authMiddleware, roleMiddleware(["Customer"]), customer
  *     responses:
  *       200:
  *         description: List of customers
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CustomerListResponse'
+
  */
 customerRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), customerController.getAllCustomers);
 
@@ -70,6 +85,11 @@ customerRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Receptionist"]
  *     responses:
  *       200:
  *         description: Customer details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CustomerResponse'
+
  */
 customerRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), customerController.getCustomerById);
 
@@ -90,6 +110,11 @@ customerRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionis
  *     responses:
  *       201:
  *         description: Customer created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CustomerResponse'
+
  */
 customerRoutes.post("/", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), customerController.createCustomer);
 
@@ -116,6 +141,11 @@ customerRoutes.post("/", authMiddleware, roleMiddleware(["Admin", "Receptionist"
  *     responses:
  *       200:
  *         description: Customer updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CustomerResponse'
+
  */
 customerRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), customerController.updateCustomer);
 
@@ -136,6 +166,11 @@ customerRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionis
  *     responses:
  *       200:
  *         description: Customer deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CustomerBaseResponse'
+
  */
 customerRoutes.delete("/:id", authMiddleware, roleMiddleware(["Admin"]), customerController.deleteCustomer);
 

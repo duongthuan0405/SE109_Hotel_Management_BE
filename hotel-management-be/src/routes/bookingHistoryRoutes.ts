@@ -19,6 +19,11 @@ router.use(authMiddleware);
  *     responses:
  *       200:
  *         description: List of booking history
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BookingHistoryListResponse'
+
  */
 router.get("/", roleMiddleware(staffRoles), bookingHistoryController.getAllBookingHistory);
 
@@ -33,6 +38,11 @@ router.get("/", roleMiddleware(staffRoles), bookingHistoryController.getAllBooki
  *     responses:
  *       200:
  *         description: My booking history
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BookingHistoryListResponse'
+
  */
 router.get("/me", roleMiddleware(["Customer"]), bookingHistoryController.getMyHistory);
 
@@ -53,6 +63,11 @@ router.get("/me", roleMiddleware(["Customer"]), bookingHistoryController.getMyHi
  *     responses:
  *       200:
  *         description: Booking history details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BookingHistoryResponse'
+
  */
 router.get("/:id", roleMiddleware(staffRoles), bookingHistoryController.getBookingHistoryById);
 
@@ -73,6 +88,11 @@ router.get("/:id", roleMiddleware(staffRoles), bookingHistoryController.getBooki
  *     responses:
  *       200:
  *         description: List of history records for booking
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BookingHistoryListResponse'
+
  */
 router.get("/booking/:bookingId", roleMiddleware(staffRoles), bookingHistoryController.getHistoryByBookingId);
 
@@ -93,6 +113,11 @@ router.get("/booking/:bookingId", roleMiddleware(staffRoles), bookingHistoryCont
  *     responses:
  *       200:
  *         description: History record deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BookingHistoryBaseResponse'
+
  */
 router.delete("/:id", roleMiddleware(["Admin", "Manager"]), bookingHistoryController.deleteBookingHistory);
 

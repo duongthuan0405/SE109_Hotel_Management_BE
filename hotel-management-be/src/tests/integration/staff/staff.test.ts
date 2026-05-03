@@ -13,7 +13,8 @@ describe("Staff API Integration Tests", () => {
       TenDangNhap: "admin",
       MatKhau: "123456",
     });
-    adminToken = adminRes.body.token;
+    adminToken = adminRes.body.data.token;
+
   });
 
   describe("Staff Profile Access", () => {

@@ -27,6 +27,54 @@ export type RoomResponseWrapper<T = undefined> = {
  * @swagger
  * components:
  *   schemas:
+ *     RoomBaseResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         error:
+ *           type: string
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     RoomResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           $ref: '#/components/schemas/RoomDataDTO'
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     RoomListResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/RoomDataDTO'
+ */
+
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
  *     RoomDataDTO:
  *       type: object
  *       properties:

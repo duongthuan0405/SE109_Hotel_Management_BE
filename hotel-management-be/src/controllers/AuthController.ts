@@ -27,14 +27,12 @@ const authController = {
         VaiTro: result.role,
       };
 
-      res.status(201).json(response);
-    } catch (error: any) {
-      if (error.status) {
-        res.status(error.status).json({ message: error.message, details: error.details });
-        return;
-      }
+      res.status(201).json({ success: true, message: "Đăng ký tài khoản thành công", data: response });
+
+    } catch (error) {
       next(error);
     }
+
   },
   login: async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -52,14 +50,12 @@ const authController = {
         VaiTro: result.role,
       };
 
-      res.json(response);
-    } catch (error: any) {
-      if (error.status) {
-        res.status(error.status).json({ message: error.message });
-        return;
-      }
+      res.status(200).json({ success: true, message: "Đăng nhập thành công", data: response });
+
+    } catch (error) {
       next(error);
     }
+
   },
   forgotPassword: async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -71,14 +67,12 @@ const authController = {
       };
       if (result.otp !== undefined) response.otp = result.otp;
 
-      res.json(response);
-    } catch (error: any) {
-      if (error.status) {
-        res.status(error.status).json({ message: error.message, details: error.details });
-        return;
-      }
+      res.status(200).json({ success: true, message: "Yêu cầu đặt lại mật khẩu đã được gửi", data: response });
+
+    } catch (error) {
       next(error);
     }
+
   },
   resetPasswordWithOTP: async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -92,14 +86,12 @@ const authController = {
       const response: ResetPasswordResponseDTO = {
         message: result.message,
       };
-      res.json(response);
-    } catch (error: any) {
-      if (error.status) {
-        res.status(error.status).json({ message: error.message });
-        return;
-      }
+      res.status(200).json({ success: true, message: "Đặt lại mật khẩu thành công", data: response });
+
+    } catch (error) {
       next(error);
     }
+
   }
 };
 

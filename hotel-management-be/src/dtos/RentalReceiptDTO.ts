@@ -109,7 +109,23 @@ export type RentalReceiptDataDTO = {
  * @swagger
  * components:
  *   schemas:
- *     RentalReceiptResponseDTO:
+ *     RentalReceiptBaseResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         error:
+ *           type: string
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     RentalReceiptResponse:
+
  *       type: object
  *       properties:
  *         success:
@@ -129,7 +145,8 @@ export type RentalReceiptResponseDTO = {
  * @swagger
  * components:
  *   schemas:
- *     RentalReceiptListResponseDTO:
+ *     RentalReceiptListResponse:
+
  *       type: object
  *       properties:
  *         success:

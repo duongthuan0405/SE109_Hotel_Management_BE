@@ -19,7 +19,8 @@ describe("Checkout Cascade Integration Tests", () => {
       TenDangNhap: "admin",
       MatKhau: "123456",
     });
-    adminToken = adminRes.body.token;
+    adminToken = adminRes.body.data.token;
+
 
     // 2. Lấy Payment Method
     const pmRes = await request(app).get("/api/payment-methods").set("Authorization", `Bearer ${adminToken}`);

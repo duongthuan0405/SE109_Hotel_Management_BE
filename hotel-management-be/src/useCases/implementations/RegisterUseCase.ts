@@ -1,4 +1,5 @@
-import { userRepository } from "../../repository/index.js";
+import { userRepository, customerRepository } from "../../repository/index.js";
+
 import { type IRegisterUseCase, type RegisterUCInput, type RegisterUCOutput } from "../types/IRegisterUseCase.js";
 import { passwordService } from "../../services/index.js";
 import createCustomerUseCase from "./CreateCustomerUseCase.js";
@@ -20,6 +21,22 @@ const registerUseCase: IRegisterUseCase = {
     if (existingUser) {
       throw { status: 409, message: "Tài khoản đã tồn tại" };
     }
+
+    // Kiểm tra CMND/Email trước khi tạo User để tránh tạo User rác
+    if (identityCard) {
+      const existingCMND = await customerRepository.findByIdentityCard(identityCard);
+      if (existingCMND) {
+        throw { status: 409, message: "Số CMND đã tồn tại trong hệ thống" };
+      }
+    }
+
+    if (email) {
+      const existingEmail = await customerRepository.findByEmail(email);
+      if (existingEmail) {
+        throw { status: 409, message: "Email đã tồn tại trong hệ thống" };
+      }
+    }
+
 
     const passwordHash = await passwordService.hashPassword(password);
 

@@ -44,7 +44,8 @@ describe("Auth API Integration Tests - Reset Password", () => {
     const forgotRes = await request(app).post("/api/auth/forgot-password").send({
       Email: "resetuser@example.com",
     });
-    const otp = forgotRes.body.otp;
+    const otp = forgotRes.body.data.otp;
+
 
     // 3. Reset password
     const res = await request(app).post("/api/auth/reset-password-otp").send({
@@ -54,7 +55,9 @@ describe("Auth API Integration Tests - Reset Password", () => {
     });
     
     expect(res.status).toBe(200);
-    expect(res.body.message).toBe("Mật khẩu đã được đặt lại thành công");
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.message).toBe("Mật khẩu đã được đặt lại thành công");
+
 
     // 4. Verify login with new password
     const loginRes = await request(app).post("/api/auth/login").send({

@@ -25,6 +25,54 @@ export type StaffResponseWrapper<T = undefined> = {
  * @swagger
  * components:
  *   schemas:
+ *     StaffBaseResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         error:
+ *           type: string
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     StaffResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           $ref: '#/components/schemas/StaffDataDTO'
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     StaffListResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/StaffDataDTO'
+ */
+
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
  *     StaffDataDTO:
  *       type: object
  *       properties:

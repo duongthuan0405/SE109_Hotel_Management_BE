@@ -14,6 +14,11 @@ const roomTypeRoutes = Router();
  *     responses:
  *       200:
  *         description: List of room types
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RoomTypeListResponse'
+
  */
 roomTypeRoutes.get("/", roomTypeController.getAllRoomTypes);
 
@@ -32,6 +37,11 @@ roomTypeRoutes.get("/", roomTypeController.getAllRoomTypes);
  *     responses:
  *       200:
  *         description: Room type details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RoomTypeResponse'
+
  */
 roomTypeRoutes.get("/:id", roomTypeController.getRoomTypeById);
 
@@ -52,6 +62,11 @@ roomTypeRoutes.get("/:id", roomTypeController.getRoomTypeById);
  *     responses:
  *       201:
  *         description: Room type created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RoomTypeResponse'
+
  */
 roomTypeRoutes.post("/", authMiddleware, roleMiddleware(["Admin"]), roomTypeController.createRoomType);
 
@@ -78,6 +93,11 @@ roomTypeRoutes.post("/", authMiddleware, roleMiddleware(["Admin"]), roomTypeCont
  *     responses:
  *       200:
  *         description: Room type updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RoomTypeResponse'
+
  */
 roomTypeRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin"]), roomTypeController.updateRoomType);
 
@@ -98,6 +118,11 @@ roomTypeRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin"]), roomTypeCo
  *     responses:
  *       200:
  *         description: Room type deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RoomTypeBaseResponse'
+
  */
 roomTypeRoutes.delete("/:id", authMiddleware, roleMiddleware(["Admin"]), roomTypeController.deleteRoomType);
 

@@ -13,14 +13,16 @@ describe("Service API Integration Tests", () => {
       TenDangNhap: "admin",
       MatKhau: "123456",
     });
-    adminToken = adminLogin.body.token;
+    adminToken = adminLogin.body.data.token;
+
 
     // Login as Customer
     const customerLogin = await request(app).post("/api/auth/login").send({
       TenDangNhap: "customer1",
       MatKhau: "123456",
     });
-    customerToken = customerLogin.body.token;
+    customerToken = customerLogin.body.data.token;
+
   });
 
   it("should get all services via GET /api/services/", async () => {

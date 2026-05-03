@@ -22,6 +22,11 @@ const bookingRoutes = Router();
  *     responses:
  *       201:
  *         description: Booking created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BookingResponse'
+
  */
 bookingRoutes.post("/customer/", authMiddleware, roleMiddleware(["Customer"]), bookingController.customerCreate);
 
@@ -36,6 +41,11 @@ bookingRoutes.post("/customer/", authMiddleware, roleMiddleware(["Customer"]), b
  *     responses:
  *       200:
  *         description: List of bookings
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BookingListResponse'
+
  */
 bookingRoutes.get("/customer/", authMiddleware, roleMiddleware(["Customer"]), bookingController.customerGetAll);
 
@@ -56,6 +66,11 @@ bookingRoutes.get("/customer/", authMiddleware, roleMiddleware(["Customer"]), bo
  *     responses:
  *       200:
  *         description: Booking details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BookingResponse'
+
  */
 bookingRoutes.get("/customer/:id", authMiddleware, roleMiddleware(["Customer"]), bookingController.customerGetById);
 
@@ -82,6 +97,11 @@ bookingRoutes.get("/customer/:id", authMiddleware, roleMiddleware(["Customer"]),
  *     responses:
  *       200:
  *         description: Booking updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BookingResponse'
+
  */
 bookingRoutes.put("/customer/:id", authMiddleware, roleMiddleware(["Customer"]), bookingController.customerUpdate);
 
@@ -102,6 +122,11 @@ bookingRoutes.put("/customer/:id", authMiddleware, roleMiddleware(["Customer"]),
  *     responses:
  *       200:
  *         description: Booking cancelled
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BookingBaseResponse'
+
  */
 bookingRoutes.post("/customer/:id/cancel", authMiddleware, roleMiddleware(["Customer"]), bookingController.customerCancel);
 
@@ -122,6 +147,11 @@ bookingRoutes.post("/customer/:id/cancel", authMiddleware, roleMiddleware(["Cust
  *     responses:
  *       200:
  *         description: Booking deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BookingBaseResponse'
+
  */
 bookingRoutes.delete("/customer/:id", authMiddleware, roleMiddleware(["Customer"]), bookingController.customerDelete);
 
@@ -144,6 +174,11 @@ const staffRoles = ["Admin", "Manager", "Receptionist"];
  *     responses:
  *       201:
  *         description: Booking created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BookingResponse'
+
  */
 bookingRoutes.post("/", authMiddleware, roleMiddleware(staffRoles), bookingController.staffCreate);
 
@@ -164,6 +199,11 @@ bookingRoutes.post("/", authMiddleware, roleMiddleware(staffRoles), bookingContr
  *     responses:
  *       201:
  *         description: Walk-in booking created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BookingResponse'
+
  */
 bookingRoutes.post("/walk-in", authMiddleware, roleMiddleware(staffRoles), bookingController.staffCreateWalkIn);
 
@@ -178,6 +218,11 @@ bookingRoutes.post("/walk-in", authMiddleware, roleMiddleware(staffRoles), booki
  *     responses:
  *       200:
  *         description: List of bookings
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BookingListResponse'
+
  */
 bookingRoutes.get("/", authMiddleware, roleMiddleware(staffRoles), bookingController.staffGetAll);
 
@@ -198,6 +243,11 @@ bookingRoutes.get("/", authMiddleware, roleMiddleware(staffRoles), bookingContro
  *     responses:
  *       200:
  *         description: Booking details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BookingResponse'
+
  */
 bookingRoutes.get("/:id", authMiddleware, roleMiddleware(staffRoles), bookingController.staffGetById);
 
@@ -224,6 +274,11 @@ bookingRoutes.get("/:id", authMiddleware, roleMiddleware(staffRoles), bookingCon
  *     responses:
  *       200:
  *         description: Booking updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BookingResponse'
+
  */
 bookingRoutes.put("/:id", authMiddleware, roleMiddleware(staffRoles), bookingController.staffUpdate);
 
@@ -244,6 +299,11 @@ bookingRoutes.put("/:id", authMiddleware, roleMiddleware(staffRoles), bookingCon
  *     responses:
  *       200:
  *         description: Booking cancelled
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BookingBaseResponse'
+
  */
 bookingRoutes.post("/:id/cancel", authMiddleware, roleMiddleware(staffRoles), bookingController.staffCancel);
 
@@ -264,6 +324,11 @@ bookingRoutes.post("/:id/cancel", authMiddleware, roleMiddleware(staffRoles), bo
  *     responses:
  *       200:
  *         description: Booking deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BookingBaseResponse'
+
  */
 bookingRoutes.delete("/:id", authMiddleware, roleMiddleware(staffRoles), bookingController.staffDelete);
 

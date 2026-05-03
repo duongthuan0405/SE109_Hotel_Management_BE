@@ -63,7 +63,23 @@ export type BookingHistoryDataDTO = {
  * @swagger
  * components:
  *   schemas:
- *     BookingHistoryResponseDTO:
+ *     BookingHistoryBaseResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         error:
+ *           type: string
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     BookingHistoryResponse:
+
  *       type: object
  *       properties:
  *         success:
@@ -83,7 +99,8 @@ export type BookingHistoryResponseDTO = {
  * @swagger
  * components:
  *   schemas:
- *     BookingHistoryListResponseDTO:
+ *     BookingHistoryListResponse:
+
  *       type: object
  *       properties:
  *         success:

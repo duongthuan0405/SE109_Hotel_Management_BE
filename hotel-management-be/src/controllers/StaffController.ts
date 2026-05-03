@@ -39,14 +39,10 @@ const staffController = {
         data: result.map(mapToDTO),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: StaffResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi lấy danh sách nhân viên",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 
   getMyProfile: async (req: Request, res: Response, next: NextFunction) => {
@@ -59,14 +55,10 @@ const staffController = {
         data: mapToDTO(result),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: StaffResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi lấy hồ sơ cá nhân",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 
   updateMyProfile: async (req: Request, res: Response, next: NextFunction) => {
@@ -89,14 +81,10 @@ const staffController = {
         data: mapToDTO(result),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: StaffResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi cập nhật hồ sơ cá nhân",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 
   getStaffById: async (req: Request, res: Response, next: NextFunction) => {
@@ -109,14 +97,10 @@ const staffController = {
         data: mapToDTO(result),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: StaffResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi lấy thông tin nhân viên",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 
   createStaff: async (req: Request, res: Response, next: NextFunction) => {
@@ -135,14 +119,10 @@ const staffController = {
         data: mapToDTO(result),
       };
       res.status(201).json(response);
-    } catch (error: any) {
-      const response: StaffResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi tạo hồ sơ nhân viên",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 
   updateStaff: async (req: Request, res: Response, next: NextFunction) => {
@@ -162,14 +142,10 @@ const staffController = {
         data: mapToDTO(result),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: StaffResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi cập nhật hồ sơ nhân viên",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 
   deleteStaff: async (req: Request, res: Response, next: NextFunction) => {
@@ -181,14 +157,10 @@ const staffController = {
         message: "Xóa hồ sơ nhân viên thành công",
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: StaffResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi xóa hồ sơ nhân viên",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 };
 

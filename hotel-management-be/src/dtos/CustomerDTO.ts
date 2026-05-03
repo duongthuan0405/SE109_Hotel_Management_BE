@@ -25,6 +25,54 @@ export type CustomerResponseWrapper<T = undefined> = {
  * @swagger
  * components:
  *   schemas:
+ *     CustomerBaseResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         error:
+ *           type: string
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     CustomerResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           $ref: '#/components/schemas/CustomerDataDTO'
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     CustomerListResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/CustomerDataDTO'
+ */
+
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
  *     CustomerDataDTO:
  *       type: object
  *       properties:

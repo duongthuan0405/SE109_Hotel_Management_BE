@@ -32,14 +32,10 @@ const roomTypeController = {
         data: result.map(mapToDTO),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: RoomTypeResponseWrapper<undefined> = {
-        success: false,
-        message: "Lỗi khi lấy danh sách loại phòng",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 
   getRoomTypeById: async (req: Request, res: Response, next: NextFunction) => {
@@ -51,14 +47,10 @@ const roomTypeController = {
         data: mapToDTO(result),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: RoomTypeResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi lấy thông tin loại phòng",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 
   createRoomType: async (req: Request, res: Response, next: NextFunction) => {
@@ -75,14 +67,10 @@ const roomTypeController = {
         data: mapToDTO(result),
       };
       res.status(201).json(response);
-    } catch (error: any) {
-      const response: RoomTypeResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi tạo loại phòng",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 
   updateRoomType: async (req: Request, res: Response, next: NextFunction) => {
@@ -100,14 +88,10 @@ const roomTypeController = {
         data: mapToDTO(result),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: RoomTypeResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi cập nhật loại phòng",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 
   deleteRoomType: async (req: Request, res: Response, next: NextFunction) => {
@@ -119,14 +103,10 @@ const roomTypeController = {
         data: mapToDTO(result),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: RoomTypeResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi xóa loại phòng",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 };
 

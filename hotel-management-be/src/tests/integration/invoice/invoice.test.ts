@@ -23,7 +23,8 @@ describe("Invoice API Integration Tests", () => {
       TenDangNhap: "admin",
       MatKhau: "123456",
     });
-    adminToken = adminRes.body.token;
+    adminToken = adminRes.body.data.token;
+
 
     // Get a payment method ID
     const pmRes = await request(app).get("/api/payment-methods").set("Authorization", `Bearer ${adminToken}`);

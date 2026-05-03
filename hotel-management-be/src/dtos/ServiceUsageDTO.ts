@@ -101,7 +101,23 @@ export type ServiceUsageDataDTO = {
  * @swagger
  * components:
  *   schemas:
- *     ServiceUsageResponseDTO:
+ *     ServiceUsageBaseResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         error:
+ *           type: string
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ServiceUsageResponse:
+
  *       type: object
  *       properties:
  *         success:
@@ -121,7 +137,8 @@ export type ServiceUsageResponseDTO = {
  * @swagger
  * components:
  *   schemas:
- *     ServiceUsageListResponseDTO:
+ *     ServiceUsageListResponse:
+
  *       type: object
  *       properties:
  *         success:

@@ -112,3 +112,32 @@ export type SettingsDataDTO = {
   createdAt: Date | undefined;
   updatedAt: Date | undefined;
 };
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     SettingsResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         data:
+ *           $ref: '#/components/schemas/SettingsDataDTO'
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     SettingsBaseResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *         message:
+ *           type: string
+ *         error:
+ *           type: string
+ */

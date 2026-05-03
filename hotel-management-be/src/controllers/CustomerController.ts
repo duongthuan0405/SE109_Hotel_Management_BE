@@ -40,14 +40,10 @@ const customerController = {
         data: result.map(mapToDTO),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: CustomerResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi lấy danh sách khách hàng",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 
   getCustomerById: async (req: Request, res: Response, next: NextFunction) => {
@@ -60,14 +56,10 @@ const customerController = {
         data: mapToDTO(result),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: CustomerResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi lấy thông tin khách hàng",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 
   getMyProfile: async (req: Request, res: Response, next: NextFunction) => {
@@ -80,14 +72,10 @@ const customerController = {
         data: mapToDTO(result),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: CustomerResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi lấy hồ sơ cá nhân",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 
   createCustomer: async (req: Request, res: Response, next: NextFunction) => {
@@ -107,14 +95,10 @@ const customerController = {
         data: mapToDTO(result),
       };
       res.status(201).json(response);
-    } catch (error: any) {
-      const response: CustomerResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi tạo khách hàng",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 
   updateCustomer: async (req: Request, res: Response, next: NextFunction) => {
@@ -135,14 +119,10 @@ const customerController = {
         data: mapToDTO(result),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: CustomerResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi cập nhật thông tin khách hàng",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 
   updateMyProfile: async (req: Request, res: Response, next: NextFunction) => {
@@ -166,14 +146,10 @@ const customerController = {
         data: mapToDTO(result),
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: CustomerResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi cập nhật hồ sơ cá nhân",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 
   deleteCustomer: async (req: Request, res: Response, next: NextFunction) => {
@@ -185,14 +161,10 @@ const customerController = {
         message: "Xóa khách hàng thành công",
       };
       res.status(200).json(response);
-    } catch (error: any) {
-      const response: CustomerResponseWrapper<undefined> = {
-        success: false,
-        message: error.message || "Lỗi khi xóa khách hàng",
-        error: error.message,
-      };
-      res.status(error.status || 500).json(response);
+    } catch (error) {
+      next(error);
     }
+
   },
 };
 

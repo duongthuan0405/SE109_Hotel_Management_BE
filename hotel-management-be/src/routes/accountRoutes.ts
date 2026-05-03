@@ -16,6 +16,11 @@ const accountRoutes = Router();
  *     responses:
  *       200:
  *         description: Current account details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AccountResponse'
+
  */
 accountRoutes.get("/me", authMiddleware, accountController.getMe);
 
@@ -36,6 +41,11 @@ accountRoutes.get("/me", authMiddleware, accountController.getMe);
  *     responses:
  *       200:
  *         description: Password changed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AccountBaseResponse'
+
  */
 accountRoutes.put("/me/change-password", authMiddleware, accountController.changePassword);
 
@@ -56,6 +66,11 @@ accountRoutes.put("/me/change-password", authMiddleware, accountController.chang
  *     responses:
  *       201:
  *         description: Account created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AccountResponse'
+
  */
 accountRoutes.post("/", authMiddleware, roleMiddleware(["Admin"]), accountController.createAccount);
 
@@ -70,6 +85,11 @@ accountRoutes.post("/", authMiddleware, roleMiddleware(["Admin"]), accountContro
  *     responses:
  *       200:
  *         description: List of accounts
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AccountListResponse'
+
  */
 accountRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), accountController.getAllAccounts);
 
@@ -90,6 +110,11 @@ accountRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Receptionist"])
  *     responses:
  *       200:
  *         description: Account details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AccountResponse'
+
  */
 accountRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), accountController.getAccountById);
 
@@ -116,6 +141,11 @@ accountRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionist
  *     responses:
  *       200:
  *         description: Account updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AccountResponse'
+
  */
 accountRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin"]), accountController.updateAccount);
 
@@ -136,6 +166,11 @@ accountRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin"]), accountCont
  *     responses:
  *       200:
  *         description: Account deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AccountBaseResponse'
+
  */
 accountRoutes.delete("/:id", authMiddleware, roleMiddleware(["Admin"]), accountController.deleteAccount);
 
