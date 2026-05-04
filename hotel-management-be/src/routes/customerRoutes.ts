@@ -66,7 +66,7 @@ customerRoutes.put("/me", authMiddleware, roleMiddleware(["Customer"]), customer
  *               $ref: '#/components/schemas/CustomerListResponse'
 
  */
-customerRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), customerController.getAllCustomers);
+customerRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Staff"]), customerController.getAllCustomers);
 
 /**
  * @swagger
@@ -91,7 +91,7 @@ customerRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Receptionist"]
  *               $ref: '#/components/schemas/CustomerResponse'
 
  */
-customerRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), customerController.getCustomerById);
+customerRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Staff"]), customerController.getCustomerById);
 
 /**
  * @swagger
@@ -116,7 +116,7 @@ customerRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionis
  *               $ref: '#/components/schemas/CustomerResponse'
 
  */
-customerRoutes.post("/", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), customerController.createCustomer);
+customerRoutes.post("/", authMiddleware, roleMiddleware(["Admin", "Staff"]), customerController.createCustomer);
 
 /**
  * @swagger
@@ -147,7 +147,7 @@ customerRoutes.post("/", authMiddleware, roleMiddleware(["Admin", "Receptionist"
  *               $ref: '#/components/schemas/CustomerResponse'
 
  */
-customerRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), customerController.updateCustomer);
+customerRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Staff"]), customerController.updateCustomer);
 
 /**
  * @swagger

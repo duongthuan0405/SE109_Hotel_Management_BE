@@ -35,7 +35,7 @@ const serviceUsageHistoryRoutes = Router();
  *             schema:
  *               $ref: '#/components/schemas/ServiceUsageHistoryListResponse'
  */
-serviceUsageHistoryRoutes.get("/usage/:serviceUsageId", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), serviceUsageHistoryController.getByServiceUsageId);
+serviceUsageHistoryRoutes.get("/usage/:serviceUsageId", authMiddleware, roleMiddleware(["Admin", "Staff"]), serviceUsageHistoryController.getByServiceUsageId);
 
 /**
  * @swagger
@@ -53,7 +53,7 @@ serviceUsageHistoryRoutes.get("/usage/:serviceUsageId", authMiddleware, roleMidd
  *             schema:
  *               $ref: '#/components/schemas/ServiceUsageHistoryListResponse'
  */
-serviceUsageHistoryRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), serviceUsageHistoryController.getAll);
+serviceUsageHistoryRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Staff"]), serviceUsageHistoryController.getAll);
 
 /**
  * @swagger
@@ -77,7 +77,7 @@ serviceUsageHistoryRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Rec
  *             schema:
  *               $ref: '#/components/schemas/ServiceUsageHistoryResponse'
  */
-serviceUsageHistoryRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), serviceUsageHistoryController.getById);
+serviceUsageHistoryRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Staff"]), serviceUsageHistoryController.getById);
 
 /**
  * @swagger
@@ -101,7 +101,7 @@ serviceUsageHistoryRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "
  *             schema:
  *               $ref: '#/components/schemas/ServiceUsageHistoryResponse'
  */
-serviceUsageHistoryRoutes.post("/", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), serviceUsageHistoryController.create);
+serviceUsageHistoryRoutes.post("/", authMiddleware, roleMiddleware(["Admin", "Staff"]), serviceUsageHistoryController.create);
 
 /**
  * @swagger
@@ -131,7 +131,7 @@ serviceUsageHistoryRoutes.post("/", authMiddleware, roleMiddleware(["Admin", "Re
  *             schema:
  *               $ref: '#/components/schemas/ServiceUsageHistoryResponse'
  */
-serviceUsageHistoryRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), serviceUsageHistoryController.update);
+serviceUsageHistoryRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Staff"]), serviceUsageHistoryController.update);
 
 /**
  * @swagger

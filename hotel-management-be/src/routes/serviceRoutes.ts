@@ -5,7 +5,7 @@ import serviceController from "../controllers/ServiceController.js";
 
 const serviceRoutes = Router();
 
-const allRoles = ["Admin", "Manager", "Receptionist", "Customer"];
+const allRoles = ["Admin", "Manager", "Staff", "Customer"];
 const adminRoles = ["Admin", "Manager"];
 
 /**

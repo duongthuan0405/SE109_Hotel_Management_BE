@@ -99,7 +99,7 @@ roomRoutes.post("/", authMiddleware, roleMiddleware(["Admin"]), roomController.c
  *               $ref: '#/components/schemas/RoomResponse'
 
  */
-roomRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), roomController.updateRoom);
+roomRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Staff"]), roomController.updateRoom);
 
 /**
  * @swagger
@@ -133,7 +133,7 @@ roomRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionist"])
  *               $ref: '#/components/schemas/RoomResponse'
 
  */
-roomRoutes.post("/:id/status", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), roomController.updateStatus);
+roomRoutes.post("/:id/status", authMiddleware, roleMiddleware(["Admin", "Staff"]), roomController.updateStatus);
 
 /**
  * @swagger

@@ -4,7 +4,7 @@ import { authMiddleware } from "../middlewares/authMiddleware.js";
 import { roleMiddleware } from "../middlewares/roleMiddleware.js";
 
 const invoiceRoutes = Router();
-const staffRoles = ["Admin", "Manager", "Receptionist"];
+const staffRoles = ["Admin", "Manager", "Staff"];
 
 /**
  * @swagger

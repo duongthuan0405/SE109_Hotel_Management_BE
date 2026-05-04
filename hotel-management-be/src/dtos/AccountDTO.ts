@@ -108,7 +108,7 @@ export type AccountDataDTO = {
  *           type: string
  *         VaiTro:
  *           type: string
- *           enum: [Admin, Manager, Receptionist, Customer]
+ *           enum: [Admin, Manager, Staff, Customer]
  */
 export type CreateAccountRequestDTO = {
   TenDangNhap: string;
@@ -125,7 +125,7 @@ export type CreateAccountRequestDTO = {
  *       properties:
  *         VaiTro:
  *           type: string
- *           enum: [Admin, Manager, Receptionist, Customer]
+ *           enum: [Admin, Manager, Staff, Customer]
  */
 export type UpdateAccountRequestDTO = {
   VaiTro?: string | undefined;

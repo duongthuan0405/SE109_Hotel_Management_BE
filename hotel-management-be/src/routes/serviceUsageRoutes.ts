@@ -22,7 +22,7 @@ const serviceUsageRoutes = Router();
  *               $ref: '#/components/schemas/ServiceUsageListResponse'
 
  */
-serviceUsageRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Manager", "Receptionist"]), serviceUsageController.getAllServiceUsages);
+serviceUsageRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Manager", "Staff"]), serviceUsageController.getAllServiceUsages);
 
 /**
  * @swagger
@@ -91,7 +91,7 @@ serviceUsageRoutes.post("/customer/order", authMiddleware, serviceUsageControlle
  *               $ref: '#/components/schemas/ServiceUsageListResponse'
 
  */
-serviceUsageRoutes.get("/customer/:customerId", authMiddleware, roleMiddleware(["Admin", "Manager", "Receptionist"]), serviceUsageController.getServiceUsagesByCustomerId);
+serviceUsageRoutes.get("/customer/:customerId", authMiddleware, roleMiddleware(["Admin", "Manager", "Staff"]), serviceUsageController.getServiceUsagesByCustomerId);
 
 /**
  * @swagger
@@ -116,7 +116,7 @@ serviceUsageRoutes.get("/customer/:customerId", authMiddleware, roleMiddleware([
  *               $ref: '#/components/schemas/ServiceUsageResponse'
 
  */
-serviceUsageRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Manager", "Receptionist"]), serviceUsageController.getServiceUsageById);
+serviceUsageRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Manager", "Staff"]), serviceUsageController.getServiceUsageById);
 
 /**
  * @swagger
@@ -141,7 +141,7 @@ serviceUsageRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Manager
  *               $ref: '#/components/schemas/ServiceUsageResponse'
 
  */
-serviceUsageRoutes.post("/", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), serviceUsageController.createServiceUsage);
+serviceUsageRoutes.post("/", authMiddleware, roleMiddleware(["Admin", "Staff"]), serviceUsageController.createServiceUsage);
 
 /**
  * @swagger
@@ -172,7 +172,7 @@ serviceUsageRoutes.post("/", authMiddleware, roleMiddleware(["Admin", "Reception
  *               $ref: '#/components/schemas/ServiceUsageResponse'
 
  */
-serviceUsageRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), serviceUsageController.updateServiceUsage);
+serviceUsageRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Staff"]), serviceUsageController.updateServiceUsage);
 
 /**
  * @swagger
