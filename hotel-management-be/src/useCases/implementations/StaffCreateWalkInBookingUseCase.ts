@@ -141,8 +141,8 @@ const staffCreateWalkInBookingUseCase: IStaffCreateWalkInBookingUseCase = {
       // 7. Ghi lịch sử
       await createBookingHistoryUseCase.execute({
         bookingId: booking.id,
-        oldStatus: "None" as any,
-        newStatus: status as any,
+        oldStatus: undefined,
+        newStatus: status,
         userId: input.executorUserId,
       });
 

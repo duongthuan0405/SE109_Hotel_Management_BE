@@ -27,7 +27,7 @@ const applyInclude = async (customer: Customer, include?: CustomerInclude): Prom
 };
 
 const customerRepository: ICustomerRepository = {
-  findAll: async (include): Promise<Customer[]> => {
+  findAll: async (include?: CustomerInclude): Promise<Customer[]> => {
     return Promise.all(mockCustomers.map((c) => applyInclude(c, include)));
   },
   findById: async (id: string, include?: CustomerInclude): Promise<Customer | null> => {
@@ -65,12 +65,12 @@ const customerRepository: ICustomerRepository = {
       updatedAt: new Date(),
     };
     mockCustomers.push(newCustomer);
-    return newCustomer;
+    return { ...newCustomer };
   },
-  update: async (id, data, include): Promise<Customer | null> => {
+  update: async (id: string, data: Partial<Customer>, include?: CustomerInclude): Promise<Customer | null> => {
     const index = mockCustomers.findIndex((c) => c.id === id);
     if (index === -1) return null;
-    mockCustomers[index] = { ...mockCustomers[index]!, ...data, updatedAt: new Date() };
+    mockCustomers[index] = { ...mockCustomers[index]!, ...data, updatedAt: new Date() } as Customer;
     return applyInclude(mockCustomers[index]!, include);
   },
   delete: async (id: string): Promise<boolean> => {
@@ -86,5 +86,6 @@ const customerRepository: ICustomerRepository = {
     return `KH${nextNum.toString().padStart(3, "0")}`;
   },
 };
+
 
 export default customerRepository;

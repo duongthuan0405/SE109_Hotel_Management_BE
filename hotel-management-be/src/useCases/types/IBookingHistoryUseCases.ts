@@ -4,7 +4,7 @@ import { type BookingHistory, type BookingStatusValue } from "../../models/Booki
 // Create
 export type CreateBookingHistoryUCInput = {
   bookingId: string;
-  oldStatus: BookingStatusValue;
+  oldStatus?: BookingStatusValue | undefined;
   newStatus: BookingStatusValue;
   userId?: string | undefined;
 };

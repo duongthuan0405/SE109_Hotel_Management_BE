@@ -3,35 +3,50 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
+  provider = "postgresql"
 }
 
 // 1. Hệ thống Tài khoản & Nhân viên
 model User {
-  id               String           @id @default(uuid())
-  username         String           @unique
-  passwordHash     String
-  role             String
-  staff            Staff?
-  customer         Customer?
-  bookingHistories BookingHistory[]
+  id                    String                @id @default(uuid())
+  username              String                @unique
+  passwordHash          String
+  role                  String
+  staff                 Staff?
+  customer              Customer?
+  bookingHistories      BookingHistory[]
+  notifications         Notification[]
+  serviceUsageHistories ServiceUsageHistory[]
+}
+
+model Position {
+  id        String   @id @default(uuid())
+  code      String   @unique // MaChucVu
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  staffs    Staff[]
 }
 
 model Staff {
-  id          String       @id @default(uuid())
-  userId      String       @unique
-  user        User         @relation(fields: [userId], references: [id])
-  code        String       @unique // MaNV
-  fullName    String
-  position    String
-  phone       String
-  email       String
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  invoices    Invoice[]
-  rentalSlips RentalSlip[]
+  id               String        @id @default(uuid())
+  userId           String        @unique
+  user             User          @relation(fields: [userId], references: [id])
+  code             String        @unique // MaNV
+  fullName         String
+  position         String // Giữ String để tương thích cũ, hoặc dùng positionRelation
+  phone            String
+  email            String
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  invoices         Invoice[]
+  rentalSlips      RentalSlip[]
+  maintenances     Maintenance[]
+  positionId       String?
+  positionRelation Position?     @relation(fields: [positionId], references: [id])
 }
 
+// 2. Quản lý Phòng
 model RoomType {
   id           String @id @default(uuid())
   code         String @unique
@@ -60,8 +75,10 @@ model Room {
   updatedAt      DateTime        @updatedAt
   bookingDetails BookingDetail[]
   rentalSlips    RentalSlip[]
+  maintenances   Maintenance[]
 }
 
+// 3. Khách hàng & Đặt phòng
 model Customer {
   id           String    @id @default(uuid())
   code         String    @unique // MaKH
@@ -76,6 +93,7 @@ model Customer {
   updatedAt    DateTime  @updatedAt
   bookings     Booking[]
   invoices     Invoice[]
+  maintenances Maintenance[]
 }
 
 enum BookingStatus {
@@ -158,19 +176,34 @@ enum ServiceUsageStatus {
 }
 
 model ServiceUsage {
-  id           String             @id @default(uuid())
-  code         String             @unique // MaSDDV
-  rentalSlipId String
-  rentalSlip   RentalSlip         @relation(fields: [rentalSlipId], references: [id])
-  serviceId    String
-  service      Service            @relation(fields: [serviceId], references: [id])
-  quantity     Int
-  unitPrice    Float
-  totalAmount  Float
-  requestedAt  DateTime           @default(now())
-  status       ServiceUsageStatus @default(Pending)
-  createdAt    DateTime           @default(now())
-  updatedAt    DateTime           @updatedAt
+  id                    String                @id @default(uuid())
+  code                  String                @unique // MaSDDV
+  rentalSlipId          String
+  rentalSlip            RentalSlip            @relation(fields: [rentalSlipId], references: [id])
+  serviceId             String
+  service               Service               @relation(fields: [serviceId], references: [id])
+  quantity              Int
+  unitPrice             Float
+  totalAmount           Float
+  requestedAt           DateTime              @default(now())
+  status                ServiceUsageStatus    @default(Pending)
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  serviceUsageHistories ServiceUsageHistory[]
+}
+
+model ServiceUsageHistory {
+  id             String             @id @default(uuid())
+  code           String             @unique // MaLSDV
+  serviceUsageId String
+  serviceUsage   ServiceUsage       @relation(fields: [serviceUsageId], references: [id])
+  oldStatus      ServiceUsageStatus?
+  newStatus      ServiceUsageStatus
+  changedAt      DateTime           @default(now())
+  userId         String?
+  user           User?              @relation(fields: [userId], references: [id])
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
 }
 
 // 5. Hóa đơn & Thanh toán
@@ -228,7 +261,7 @@ model BookingHistory {
   code      String        @unique // MaLSDP
   bookingId String
   booking   Booking       @relation(fields: [bookingId], references: [id])
-  oldStatus BookingStatus
+  oldStatus BookingStatus?
   newStatus BookingStatus
   changedAt DateTime      @default(now())
   userId    String?
@@ -238,6 +271,49 @@ model BookingHistory {
 }
 
 // 6. Tiện ích hệ thống
+model Maintenance {
+  id           String            @id @default(uuid())
+  code         String            @unique // MaPBT
+  roomId       String
+  room         Room              @relation(fields: [roomId], references: [id])
+  customerId   String?
+  customer     Customer?         @relation(fields: [customerId], references: [id])
+  technicianId String?
+  technician   Staff?            @relation(fields: [technicianId], references: [id])
+  content      String
+  startDate    DateTime
+  endDate      DateTime
+  status       MaintenanceStatus @default(Pending)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+}
+
+enum MaintenanceStatus {
+  Pending
+  Completed
+  Cancelled
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id])
+  title     String
+  content   String
+  type      NotificationType @default(General)
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+}
+
+enum NotificationType {
+  Booking
+  Service
+  Maintenance
+  Promotion
+  General
+}
+
 model Settings {
   id    String @id @default(uuid())
   key   String @unique

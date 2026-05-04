@@ -8,7 +8,7 @@ export type BookingHistory = {
   code: string; // MaLSDP
   bookingId: string; // DatPhong (ID)
   booking?: Booking | undefined; // DatPhong (Object)
-  oldStatus: BookingStatusValue; // TrangThaiCu
+  oldStatus?: BookingStatusValue | undefined; // TrangThaiCu
   newStatus: BookingStatusValue; // TrangThaiMoi
   changedAt: Date; // ThoiGian
   userId?: string | undefined; // TaiKhoan (ID)

@@ -6,7 +6,7 @@ const mapToEntity = (history: any): BookingHistory => ({
   id: history.id,
   code: history.code,
   bookingId: history.bookingId,
-  oldStatus: history.oldStatus as any,
+  oldStatus: (history.oldStatus as any) || undefined,
   newStatus: history.newStatus as any,
   changedAt: history.changedAt,
   userId: history.userId || undefined,
@@ -74,7 +74,7 @@ const bookingHistoryPrismaRepository: IBookingHistoryRepository = {
       data: {
         code,
         bookingId: data.bookingId,
-        oldStatus: data.oldStatus,
+        oldStatus: data.oldStatus ?? null,
         newStatus: data.newStatus,
         userId: data.userId || null,
         changedAt: new Date(),

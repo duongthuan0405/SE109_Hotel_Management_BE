@@ -199,3 +199,55 @@ export const getMyBookingHistoryUseCase = getMyBookingHistoryUseCaseImpl;
 export const getBookingHistoryByIdUseCase = getBookingHistoryByIdUseCaseImpl;
 export const getHistoryByBookingIdUseCase = getHistoryByBookingIdUseCaseImpl;
 export const deleteBookingHistoryUseCase = deleteBookingHistoryUseCaseImpl;
+
+import getAllMaintenanceUseCaseImpl from "./implementations/Maintenance/GetAllMaintenanceUseCase.js";
+import getMaintenanceByIdUseCaseImpl from "./implementations/Maintenance/GetMaintenanceByIdUseCase.js";
+import getNextMaintenanceCodeUseCaseImpl from "./implementations/Maintenance/GetNextMaintenanceCodeUseCase.js";
+import createMaintenanceUseCaseImpl from "./implementations/Maintenance/CreateMaintenanceUseCase.js";
+import updateMaintenanceUseCaseImpl from "./implementations/Maintenance/UpdateMaintenanceUseCase.js";
+import deleteMaintenanceUseCaseImpl from "./implementations/Maintenance/DeleteMaintenanceUseCase.js";
+import guestGetMaintenanceRequestsUseCaseImpl from "./implementations/Maintenance/GuestGetMaintenanceRequestsUseCase.js";
+import guestCreateMaintenanceRequestUseCaseImpl from "./implementations/Maintenance/GuestCreateMaintenanceRequestUseCase.js";
+
+export const getAllMaintenanceUseCase = getAllMaintenanceUseCaseImpl;
+export const getMaintenanceByIdUseCase = getMaintenanceByIdUseCaseImpl;
+export const getNextMaintenanceCodeUseCase = getNextMaintenanceCodeUseCaseImpl;
+export const createMaintenanceUseCase = createMaintenanceUseCaseImpl;
+export const updateMaintenanceUseCase = updateMaintenanceUseCaseImpl;
+export const deleteMaintenanceUseCase = deleteMaintenanceUseCaseImpl;
+export const guestGetMaintenanceRequestsUseCase = guestGetMaintenanceRequestsUseCaseImpl;
+export const guestCreateMaintenanceRequestUseCase = guestCreateMaintenanceRequestUseCaseImpl;
+
+import getNotificationsUseCaseImpl from "./implementations/Notification/GetNotificationsUseCase.js";
+import markNotificationAsReadUseCaseImpl from "./implementations/Notification/MarkNotificationAsReadUseCase.js";
+import createNotificationUseCaseImpl from "./implementations/Notification/CreateNotificationUseCase.js";
+
+export const getNotificationsUseCase = getNotificationsUseCaseImpl;
+export const markNotificationAsReadUseCase = markNotificationAsReadUseCaseImpl;
+export const createNotificationUseCase = createNotificationUseCaseImpl;
+
+import getAllPositionsUseCaseImpl from "./implementations/Position/GetAllPositionsUseCase.js";
+import getPositionByIdUseCaseImpl from "./implementations/Position/GetPositionByIdUseCase.js";
+import createPositionUseCaseImpl from "./implementations/Position/CreatePositionUseCase.js";
+import updatePositionUseCaseImpl from "./implementations/Position/UpdatePositionUseCase.js";
+import deletePositionUseCaseImpl from "./implementations/Position/DeletePositionUseCase.js";
+
+export const getAllPositionsUseCase = getAllPositionsUseCaseImpl;
+export const getPositionByIdUseCase = getPositionByIdUseCaseImpl;
+export const createPositionUseCase = createPositionUseCaseImpl;
+export const updatePositionUseCase = updatePositionUseCaseImpl;
+export const deletePositionUseCase = deletePositionUseCaseImpl;
+
+import getAllServiceUsageHistoryUseCaseImpl from "./implementations/ServiceUsageHistory/GetAllServiceUsageHistoryUseCase.js";
+import getServiceUsageHistoryByIdUseCaseImpl from "./implementations/ServiceUsageHistory/GetServiceUsageHistoryByIdUseCase.js";
+import getHistoryByServiceUsageIdUseCaseImpl from "./implementations/ServiceUsageHistory/GetHistoryByServiceUsageIdUseCase.js";
+import createServiceUsageHistoryUseCaseImpl from "./implementations/ServiceUsageHistory/CreateServiceUsageHistoryUseCase.js";
+import updateServiceUsageHistoryUseCaseImpl from "./implementations/ServiceUsageHistory/UpdateServiceUsageHistoryUseCase.js";
+import deleteServiceUsageHistoryUseCaseImpl from "./implementations/ServiceUsageHistory/DeleteServiceUsageHistoryUseCase.js";
+
+export const getAllServiceUsageHistoryUseCase = getAllServiceUsageHistoryUseCaseImpl;
+export const getServiceUsageHistoryByIdUseCase = getServiceUsageHistoryByIdUseCaseImpl;
+export const getHistoryByServiceUsageIdUseCase = getHistoryByServiceUsageIdUseCaseImpl;
+export const createServiceUsageHistoryUseCase = createServiceUsageHistoryUseCaseImpl;
+export const updateServiceUsageHistoryUseCase = updateServiceUsageHistoryUseCaseImpl;
+export const deleteServiceUsageHistoryUseCase = deleteServiceUsageHistoryUseCaseImpl;

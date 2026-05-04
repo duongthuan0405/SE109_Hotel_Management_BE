@@ -56,9 +56,9 @@ const bookingController = {
     try {
       const body = req.body as CreateBookingRequestDTO;
       const userId = (req as any).user?.id;
-      
+      console.log((req as any).user);
       const result = await customerCreateBookingUseCase.execute({
-        userId, // UC tự tìm Customer
+        userId: userId, // UC tự tìm Customer
         roomClass: body.HangPhong,
         startDate: new Date(body.NgayDen),
         endDate: new Date(body.NgayDi),

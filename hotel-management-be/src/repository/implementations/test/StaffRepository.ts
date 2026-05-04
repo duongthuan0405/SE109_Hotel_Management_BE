@@ -27,7 +27,7 @@ const applyInclude = async (staff: Staff, include?: StaffInclude): Promise<Staff
 };
 
 const staffRepository: IStaffRepository = {
-  findAll: async (include): Promise<Staff[]> => {
+  findAll: async (include?: StaffInclude): Promise<Staff[]> => {
     return Promise.all(mockStaffs.map((s) => applyInclude(s, include)));
   },
   findById: async (id: string, include?: StaffInclude): Promise<Staff | null> => {
@@ -62,10 +62,10 @@ const staffRepository: IStaffRepository = {
     mockStaffs.push(newStaff);
     return { ...newStaff };
   },
-  update: async (id, data, include): Promise<Staff | null> => {
+  update: async (id: string, data: Partial<Staff>, include?: StaffInclude): Promise<Staff | null> => {
     const index = mockStaffs.findIndex((s) => s.id === id);
     if (index === -1) return null;
-    mockStaffs[index] = { ...mockStaffs[index]!, ...data, updatedAt: new Date() };
+    mockStaffs[index] = { ...mockStaffs[index]!, ...data, updatedAt: new Date() } as Staff;
     return applyInclude(mockStaffs[index]!, include);
   },
   delete: async (id: string): Promise<boolean> => {
@@ -81,5 +81,6 @@ const staffRepository: IStaffRepository = {
     return `NV${nextNum.toString().padStart(3, "0")}`;
   },
 };
+
 
 export default staffRepository;

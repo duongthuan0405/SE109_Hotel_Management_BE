@@ -6,7 +6,7 @@ import app from "../../../server.js";
 
 describe("Rental Receipt API Integration Tests (Legacy Compatibility)", () => {
   let adminToken = "";
-  let receptionistToken = "";
+  let staffToken = "";
   let createdReceiptId = "";
   let testBookingId = "";
   let testStaffId = "";
@@ -41,17 +41,17 @@ describe("Rental Receipt API Integration Tests (Legacy Compatibility)", () => {
     adminToken = adminLoginRes.body.data.token;
 
 
-    // Login as Receptionist (Staff)
-    const receptionistLoginRes = await request(app).post("/api/auth/login").send({
-      TenDangNhap: "receptionist_test_rental",
+    // Login as Staff
+    const staffLoginRes = await request(app).post("/api/auth/login").send({
+      TenDangNhap: "staff_test_rental",
       MatKhau: "123456",
     }).catch(() => null);
 
-    if (receptionistLoginRes && receptionistLoginRes.body.data && receptionistLoginRes.body.data.token) {
-      receptionistToken = receptionistLoginRes.body.data.token;
+    if (staffLoginRes && staffLoginRes.body.data && staffLoginRes.body.data.token) {
+      staffToken = staffLoginRes.body.data.token;
 
     } else {
-      receptionistToken = adminToken; // Fallback if test receptionist not created
+      staffToken = adminToken; // Fallback if test staff not created
     }
   });
 

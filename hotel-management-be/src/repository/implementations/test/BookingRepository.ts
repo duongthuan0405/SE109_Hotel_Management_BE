@@ -46,20 +46,20 @@ const applyInclude = async (booking: Booking, include?: BookingInclude): Promise
 };
 
 const bookingRepositoryImpl: IBookingRepository = {
-  findAll: async (include): Promise<Booking[]> => {
+  findAll: async (include?: BookingInclude): Promise<Booking[]> => {
     return Promise.all(mockBookings.map((b) => applyInclude(b, include)));
   },
-  findById: async (id, include): Promise<Booking | null> => {
+  findById: async (id: string, include?: BookingInclude): Promise<Booking | null> => {
     const booking = mockBookings.find((b) => b.id === id);
     if (!booking) return null;
     return applyInclude(booking, include);
   },
-  findByCode: async (code, include): Promise<Booking | null> => {
+  findByCode: async (code: string, include?: BookingInclude): Promise<Booking | null> => {
     const booking = mockBookings.find((b) => b.code === code);
     if (!booking) return null;
     return applyInclude(booking, include);
   },
-  findByCustomerId: async (customerId, include): Promise<Booking[]> => {
+  findByCustomerId: async (customerId: string, include?: BookingInclude): Promise<Booking[]> => {
     const filtered = mockBookings.filter((b) => b.customerId === customerId);
     return Promise.all(filtered.map((b) => applyInclude(b, include)));
   },
@@ -79,7 +79,7 @@ const bookingRepositoryImpl: IBookingRepository = {
     mockBookings.push(newBooking);
     return newBooking;
   },
-  save: async (booking, include): Promise<Booking> => {
+  save: async (booking: Booking, include?: BookingInclude): Promise<Booking> => {
     const index = mockBookings.findIndex((b) => b.id === booking.id);
     if (index !== -1) {
       const updatedBooking = {
@@ -124,7 +124,7 @@ const bookingRepositoryImpl: IBookingRepository = {
     });
     return overlap || null;
   },
-  updateStatus: async (id: string, status: any): Promise<void> => {
+  updateStatus: async (id: string, status: Booking["status"]): Promise<void> => {
     const booking = mockBookings.find(b => b.id === id);
     if (booking) {
       booking.status = status;
@@ -132,5 +132,6 @@ const bookingRepositoryImpl: IBookingRepository = {
     }
   },
 };
+
 
 export default bookingRepositoryImpl;

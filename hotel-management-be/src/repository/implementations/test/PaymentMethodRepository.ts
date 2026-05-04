@@ -40,12 +40,12 @@ const paymentMethodRepository: IPaymentMethodRepository = {
     return { ...newMethod };
   },
 
-  findById: async (id): Promise<PaymentMethod | null> => {
+  findById: async (id: string): Promise<PaymentMethod | null> => {
     const method = paymentMethods.find((pm) => pm.id === id);
     return method ? { ...method } : null;
   },
 
-  findByCode: async (code): Promise<PaymentMethod | null> => {
+  findByCode: async (code: string): Promise<PaymentMethod | null> => {
     const method = paymentMethods.find((pm) => pm.code === code);
     return method ? { ...method } : null;
   },
@@ -54,7 +54,7 @@ const paymentMethodRepository: IPaymentMethodRepository = {
     return paymentMethods.map((pm) => ({ ...pm }));
   },
 
-  update: async (id, data): Promise<PaymentMethod | null> => {
+  update: async (id: string, data: Partial<PaymentMethod>): Promise<PaymentMethod | null> => {
     const index = paymentMethods.findIndex((pm) => pm.id === id);
     if (index === -1) return null;
 
@@ -62,16 +62,17 @@ const paymentMethodRepository: IPaymentMethodRepository = {
       ...paymentMethods[index]!,
       ...data,
       updatedAt: new Date(),
-    };
+    } as PaymentMethod;
     paymentMethods[index] = updated;
     return { ...updated };
   },
 
-  delete: async (id): Promise<boolean> => {
+  delete: async (id: string): Promise<boolean> => {
     const initialLength = paymentMethods.length;
     paymentMethods = paymentMethods.filter((pm) => pm.id !== id);
     return paymentMethods.length < initialLength;
   },
+
 
   countAll: async (): Promise<number> => {
     return paymentMethods.length;

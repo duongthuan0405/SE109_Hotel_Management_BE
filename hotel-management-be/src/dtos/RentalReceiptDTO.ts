@@ -73,8 +73,36 @@ export type UpdateRentalReceiptRequestDTO = {
  *           type: string
  *         DatPhong:
  *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *             MaDatPhong:
+ *               type: string
+ *             HangPhong:
+ *               type: string
+ *             NgayDen:
+ *               type: string
+ *               format: date-time
+ *             NgayDi:
+ *               type: string
+ *               format: date-time
+ *             SoKhach:
+ *               type: number
+ *             TienCoc:
+ *               type: number
+ *             TrangThai:
+ *               type: string
  *         Phong:
  *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *             MaPhong:
+ *               type: string
+ *             GiaPhong:
+ *               type: number
+ *             TrangThai:
+ *               type: string
  *         NgayNhanPhong:
  *           type: string
  *           format: date-time
@@ -87,6 +115,13 @@ export type UpdateRentalReceiptRequestDTO = {
  *           type: number
  *         NhanVienCheckIn:
  *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *             MaNV:
+ *               type: string
+ *             HoTen:
+ *               type: string
  *         TrangThai:
  *           type: string
  */

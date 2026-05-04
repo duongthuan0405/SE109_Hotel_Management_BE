@@ -198,10 +198,25 @@ export type CreateCheckoutInvoiceRequestDTO = {
  *           type: string
  *         PhieuThuePhong:
  *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *             MaPTP:
+ *               type: string
  *         NhanVienThuNgan:
  *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *             HoTen:
+ *               type: string
  *         KhachHang:
  *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *             HoTen:
+ *               type: string
  *         NgayLap:
  *           type: string
  *           format: date-time
@@ -219,6 +234,11 @@ export type CreateCheckoutInvoiceRequestDTO = {
  *           type: number
  *         PhuongThucThanhToan:
  *           type: object
+ *           properties:
+ *             _id:
+ *               type: string
+ *             TenPTTT:
+ *               type: string
  *         TrangThaiThanhToan:
  *           type: string
  *         ChiTietHoaDon:

@@ -50,8 +50,8 @@ describe("Staff API Integration Tests", () => {
         .set("Authorization", `Bearer ${adminToken}`)
         .send({
           MaNV: "NV002",
-          HoTen: "New Receptionist",
-          ChucVu: "Receptionist",
+          HoTen: "New Staff",
+          ChucVu: "Staff",
           SDT: "0111222333",
           Email: "recep@test.com",
           TaiKhoanId: "new-user-id" // Đã sửa từ TaiKhoan sang TaiKhoanId
