@@ -11,7 +11,7 @@ export type IGetHistoryByServiceUsageIdUseCase = IUseCase<string, ServiceUsageHi
 
 export type CreateServiceUsageHistoryUCInput = {
   serviceUsageId: string;
-  oldStatus: ServiceUsageHistoryStatus;
+  oldStatus?: ServiceUsageHistoryStatus | undefined;
   newStatus: ServiceUsageHistoryStatus;
   userId?: string | undefined;
 };

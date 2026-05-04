@@ -197,7 +197,7 @@ model ServiceUsageHistory {
   code           String             @unique // MaLSDV
   serviceUsageId String
   serviceUsage   ServiceUsage       @relation(fields: [serviceUsageId], references: [id])
-  oldStatus      ServiceUsageStatus
+  oldStatus      ServiceUsageStatus?
   newStatus      ServiceUsageStatus
   changedAt      DateTime           @default(now())
   userId         String?
@@ -261,7 +261,7 @@ model BookingHistory {
   code      String        @unique // MaLSDP
   bookingId String
   booking   Booking       @relation(fields: [bookingId], references: [id])
-  oldStatus BookingStatus
+  oldStatus BookingStatus?
   newStatus BookingStatus
   changedAt DateTime      @default(now())
   userId    String?

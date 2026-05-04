@@ -109,7 +109,7 @@ const staffCreateBookingUseCase: IStaffCreateBookingUseCase = {
       // 6. Ghi lịch sử tự động
       await createBookingHistoryUseCase.execute({
         bookingId: booking.id,
-        oldStatus: "None" as any,
+        oldStatus: undefined,
         newStatus: "Confirmed",
         userId: input.executorUserId, // ID Nhân viên thực hiện
       });
