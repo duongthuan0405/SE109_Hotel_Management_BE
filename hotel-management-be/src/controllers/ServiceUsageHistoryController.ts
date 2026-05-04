@@ -106,7 +106,7 @@ const serviceUsageHistoryController = {
     try {
       const body = req.body as CreateServiceUsageHistoryRequestDTO;
 
-      if (!body.SuDungDichVu || !body.TrangThaiCu || !body.TrangThaiMoi) {
+      if (!body.SuDungDichVu || !body.TrangThaiMoi) {
         throw { status: 400, message: "Vui lòng cung cấp đủ thông tin lịch sử sử dụng dịch vụ" };
       }
 

@@ -19,7 +19,7 @@
  */
 export type CreateBookingHistoryRequestDTO = {
   DatPhong: string;
-  TrangThaiCu: string;
+  TrangThaiCu?: string | undefined;
   TrangThaiMoi: string;
 };
 
@@ -51,7 +51,7 @@ export type BookingHistoryDataDTO = {
   _id: string;
   MaLSDP: string;
   DatPhong: any; // Populated Booking or ID
-  TrangThaiCu: string;
+  TrangThaiCu: string | undefined;
   TrangThaiMoi: string;
   ThoiGian: Date;
   TaiKhoan: any; // Populated User or ID

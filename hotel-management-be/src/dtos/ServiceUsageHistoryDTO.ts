@@ -84,7 +84,7 @@ export type ServiceUsageHistoryDataDTO = {
   _id: string;
   MaLSDV: string;
   SuDungDichVu: any;           // Populated or ID
-  TrangThaiCu: ServiceUsageHistoryStatus;
+  TrangThaiCu: ServiceUsageHistoryStatus | undefined;
   TrangThaiMoi: ServiceUsageHistoryStatus;
   ThoiGian: Date;
   TaiKhoan: any;               // Populated or ID
@@ -112,7 +112,7 @@ export type ServiceUsageHistoryDataDTO = {
  */
 export type CreateServiceUsageHistoryRequestDTO = {
   SuDungDichVu: string;
-  TrangThaiCu: ServiceUsageHistoryStatus;
+  TrangThaiCu?: ServiceUsageHistoryStatus | undefined;
   TrangThaiMoi: ServiceUsageHistoryStatus;
   TaiKhoan?: string | undefined;
 };

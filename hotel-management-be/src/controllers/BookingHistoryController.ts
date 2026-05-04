@@ -46,7 +46,7 @@ const bookingHistoryController = {
     try {
       const body = req.body as CreateBookingHistoryRequestDTO;
 
-      if (!body.DatPhong || !body.TrangThaiCu || !body.TrangThaiMoi) {
+      if (!body.DatPhong || !body.TrangThaiMoi) {
         throw { status: 400, message: "Vui lòng cung cấp đủ thông tin lịch sử đặt phòng" };
       }
 
