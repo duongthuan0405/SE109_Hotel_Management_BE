@@ -39,12 +39,14 @@ import maintenanceRepositoryPrisma from "./implementations/psql/MaintenancePrism
 import notificationRepositoryPrisma from "./implementations/psql/NotificationPrismaRepository.js";
 import positionRepositoryPrisma from "./implementations/psql/PositionPrismaRepository.js";
 import serviceUsageHistoryRepositoryPrisma from "./implementations/psql/ServiceUsageHistoryPrismaRepository.js";
+import dashboardRepositoryPrisma from "./implementations/psql/DashboardPrismaRepository.js";
 
 
 
 // --- Import UnitOfWork ---
 import unitOfWorkPrisma from "./implementations/psql/PrismaUnitOfWork.js";
 import unitOfWorkMock from "./implementations/test/MockUnitOfWork.js";
+import dashboardRepositoryMock from "./implementations/test/DashboardRepository.js";
 
 // Quyết định sử dụng bộ repository nào dựa trên NODE_ENV
 const isTest = env.NODE_ENV === "test";
@@ -71,6 +73,7 @@ export const maintenanceRepository = isTest ? maintenanceRepositoryMock : mainte
 export const notificationRepository = isTest ? notificationRepositoryMock : notificationRepositoryPrisma;
 export const positionRepository = isTest ? positionRepositoryMock : positionRepositoryPrisma;
 export const serviceUsageHistoryRepository = isTest ? serviceUsageHistoryRepositoryMock : serviceUsageHistoryRepositoryPrisma;
+export const dashboardRepository = isTest ? dashboardRepositoryMock : dashboardRepositoryPrisma;
 
 // Helper vì customerRepository cần xử lý đặc biệt một chút nếu có logic liên đới
 function customerMockRepository(isTest: boolean) {
