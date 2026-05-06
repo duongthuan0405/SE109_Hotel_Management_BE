@@ -251,3 +251,6 @@ export const getHistoryByServiceUsageIdUseCase = getHistoryByServiceUsageIdUseCa
 export const createServiceUsageHistoryUseCase = createServiceUsageHistoryUseCaseImpl;
 export const updateServiceUsageHistoryUseCase = updateServiceUsageHistoryUseCaseImpl;
 export const deleteServiceUsageHistoryUseCase = deleteServiceUsageHistoryUseCaseImpl;
+
+import { getDashboardData as getDashboardDataImpl } from "./implementations/GetDashboardDataUseCase.js";
+export const getDashboardDataUseCase = getDashboardDataImpl;

@@ -21,6 +21,7 @@ import maintenanceRoutes from "./routes/maintenanceRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
 import positionRoutes from "./routes/positionRoutes.js";
 import serviceUsageHistoryRoutes from "./routes/serviceUsageHistoryRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
 
 const app = express();
 setupSwagger(app);
@@ -46,6 +47,7 @@ app.use("/api/maintenance", maintenanceRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/positions", positionRoutes);
 app.use("/api/service-usage-history", serviceUsageHistoryRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello từ Express + TypeScript!");
