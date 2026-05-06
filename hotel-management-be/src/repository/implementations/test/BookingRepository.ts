@@ -105,17 +105,34 @@ const bookingRepositoryImpl: IBookingRepository = {
     return mockBookings.length;
   },
   generateNextCode: async (): Promise<string> => {
-    const nextId = mockBookings.length + 1;
-    return `DP${String(nextId).padStart(3, "0")}`;
+    const codes = await bookingRepositoryImpl.generateNextCodes(1);
+    return codes[0] as string;
   },
+
+  generateNextCodes: async (quantity: number): Promise<string[]> => {
+    // Tìm mã lớn nhất trong mock data
+    let maxNumber = 0;
+    mockBookings.forEach(b => {
+      const num = parseInt(b.code.replace("DP", ""), 10);
+      if (!isNaN(num) && num > maxNumber) maxNumber = num;
+    });
+
+    const codes: string[] = [];
+    for (let i = 1; i <= quantity; i++) {
+      codes.push(`DP${String(maxNumber + i).padStart(4, "0")}`);
+    }
+    return codes;
+  },
+
   generateNextDetailCode: (index: number): string => {
     return `CTDP-${Date.now()}-${index}`;
   },
+
   findOverlappingByRoom: async (roomId: string, startDate: Date, endDate: Date, excludeBookingId?: string): Promise<Booking | null> => {
     const overlap = mockBookings.find((b) => {
       if (excludeBookingId && b.id === excludeBookingId) return false;
       if (["Cancelled", "CheckedOut", "NoShow"].includes(b.status)) return false;
-      
+
       const hasRoom = b.details.some(d => d.roomId === roomId);
       if (!hasRoom) return false;
 
@@ -124,6 +141,7 @@ const bookingRepositoryImpl: IBookingRepository = {
     });
     return overlap || null;
   },
+
   updateStatus: async (id: string, status: Booking["status"]): Promise<void> => {
     const booking = mockBookings.find(b => b.id === id);
     if (booking) {
@@ -131,6 +149,8 @@ const bookingRepositoryImpl: IBookingRepository = {
       booking.updatedAt = new Date();
     }
   },
+
+
 };
 
 

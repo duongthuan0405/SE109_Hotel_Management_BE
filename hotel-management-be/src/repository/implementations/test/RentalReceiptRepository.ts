@@ -85,9 +85,22 @@ const rentalReceiptRepository: IRentalReceiptRepository = {
     return rentalSlips.length;
   },
   generateNextCode: async (): Promise<string> => {
-    const nextId = rentalSlips.length + 1;
-    return `PTP${String(nextId).padStart(3, "0")}`;
+    const codes = await rentalReceiptRepository.generateNextCodes(1);
+    return codes[0] as string;
   },
+  generateNextCodes: async (quantity: number): Promise<string[]> => {
+    let maxNumber = 0;
+    rentalSlips.forEach(s => {
+      const num = parseInt(s.code.replace("PTP", ""), 10);
+      if (!isNaN(num) && num > maxNumber) maxNumber = num;
+    });
+    const codes: string[] = [];
+    for (let i = 1; i <= quantity; i++) {
+      codes.push(`PTP${(maxNumber + i).toString().padStart(4, "0")}`);
+    }
+    return codes;
+  },
+
 };
 
 

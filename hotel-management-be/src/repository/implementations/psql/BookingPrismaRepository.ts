@@ -41,6 +41,19 @@ const mapToEntity = (booking: any): Booking => ({
   })),
   createdAt: booking.createdAt,
   updatedAt: booking.updatedAt,
+  rentalSlips: (booking.rentalSlips || []).map((s: any) => ({
+    id: s.id,
+    code: s.code,
+    bookingId: s.bookingId,
+    roomId: s.roomId,
+    checkInDate: s.checkInDate,
+    expectedCheckOutDate: s.expectedCheckOutDate,
+    adjustedPrice: s.adjustedPrice,
+    checkInStaffId: s.checkInStaffId,
+    status: s.status,
+    createdAt: s.createdAt,
+    updatedAt: s.updatedAt,
+  })),
 });
 
 const bookingPrismaRepository: IBookingRepository = {
@@ -49,6 +62,7 @@ const bookingPrismaRepository: IBookingRepository = {
       include: {
         customer: include?.customer || false,
         details: include?.rooms ? { include: { room: true } } : true,
+        rentalSlips: include?.rentalSlips || false,
       },
     });
     return bookings.map(mapToEntity);
@@ -60,10 +74,12 @@ const bookingPrismaRepository: IBookingRepository = {
       include: {
         customer: include?.customer || false,
         details: include?.rooms ? { include: { room: true } } : true,
+        rentalSlips: include?.rentalSlips || false,
       },
     });
     return booking ? mapToEntity(booking) : null;
   },
+
 
   findByCode: async (code: string, include?: BookingInclude): Promise<Booking | null> => {
     const booking = await prisma.booking.findUnique({
@@ -71,6 +87,7 @@ const bookingPrismaRepository: IBookingRepository = {
       include: {
         customer: include?.customer || false,
         details: include?.rooms ? { include: { room: true } } : true,
+        rentalSlips: include?.rentalSlips || false,
       },
     });
     return booking ? mapToEntity(booking) : null;
@@ -82,10 +99,12 @@ const bookingPrismaRepository: IBookingRepository = {
       include: {
         customer: include?.customer || false,
         details: include?.rooms ? { include: { room: true } } : true,
+        rentalSlips: include?.rentalSlips || false,
       },
     });
     return bookings.map(mapToEntity);
   },
+
 
   create: async (data: CreateBookingData): Promise<Booking> => {
     const code = data.code || (await bookingPrismaRepository.generateNextCode());
@@ -128,10 +147,12 @@ const bookingPrismaRepository: IBookingRepository = {
       include: {
         customer: include?.customer || false,
         details: include?.rooms ? { include: { room: true } } : true,
+        rentalSlips: include?.rentalSlips || false,
       },
     });
     return mapToEntity(saved);
   },
+
 
   deleteById: async (id: string): Promise<void> => {
     await prisma.bookingDetail.deleteMany({ where: { bookingId: id } });
@@ -143,9 +164,29 @@ const bookingPrismaRepository: IBookingRepository = {
   },
 
   generateNextCode: async (): Promise<string> => {
-    const count = await prisma.booking.count();
-    return `DP${(count + 1).toString().padStart(4, "0")}`;
+    const codes = await bookingPrismaRepository.generateNextCodes(1);
+    return codes[0] as string;
   },
+
+  generateNextCodes: async (quantity: number): Promise<string[]> => {
+    const lastBooking = await prisma.booking.findFirst({
+      orderBy: { code: "desc" },
+      select: { code: true }
+    });
+
+    let lastNumber = 0;
+    if (lastBooking) {
+      lastNumber = parseInt(lastBooking.code.replace("DP", ""), 10);
+    }
+
+    const codes: string[] = [];
+    for (let i = 1; i <= quantity; i++) {
+      codes.push(`DP${(lastNumber + i).toString().padStart(4, "0")}`);
+    }
+    return codes;
+  },
+
+
 
   generateNextDetailCode: (index: number): string => {
     return `CTDP${Date.now()}${index}`;

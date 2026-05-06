@@ -77,9 +77,22 @@ const staffRepository: IStaffRepository = {
     return false;
   },
   generateNextCode: async (): Promise<string> => {
-    const nextNum = mockStaffs.length + 1;
-    return `NV${nextNum.toString().padStart(3, "0")}`;
+    const codes = await staffRepository.generateNextCodes(1);
+    return codes[0] as string;
   },
+  generateNextCodes: async (quantity: number): Promise<string[]> => {
+    let maxNumber = 0;
+    mockStaffs.forEach(s => {
+      const num = parseInt(s.code.replace("NV", ""), 10);
+      if (!isNaN(num) && num > maxNumber) maxNumber = num;
+    });
+    const codes: string[] = [];
+    for (let i = 1; i <= quantity; i++) {
+      codes.push(`NV${(maxNumber + i).toString().padStart(3, "0")}`);
+    }
+    return codes;
+  },
+
 };
 
 

@@ -1,5 +1,6 @@
 import { type Customer } from "./Customer.js";
 import { type Room } from "./Room.js";
+import { type RentalSlip } from "./RentalSlip.js";
 
 export type BookingDetail = {
   id?: string | undefined;
@@ -20,6 +21,7 @@ export type Booking = {
   deposit: number; // TienCoc
   totalAmount: number; // TongTien
   details: BookingDetail[]; // ChiTietDatPhong
+  rentalSlips?: RentalSlip[]; // Danh sách phiếu thuê
   status: "Pending" | "Confirmed" | "CheckedIn" | "CheckedOut" | "Cancelled" | "NoShow"; // TrangThai
   createdAt?: Date | undefined;
   updatedAt?: Date | undefined;

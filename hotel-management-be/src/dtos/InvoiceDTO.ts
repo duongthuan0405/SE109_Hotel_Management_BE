@@ -139,7 +139,7 @@ export type InvoiceDetailDTO = CreateInvoiceDetailDTO & {
 };
 
 export type CreateInvoiceRequestDTO = {
-  PhieuThuePhong: string;
+  DatPhong: string;
   KhachHang?: string;
   PhuongThucThanhToan: string;
   TongTienPhong?: number;
@@ -157,32 +157,23 @@ export type CreateInvoiceRequestDTO = {
  *     CreateCheckoutInvoiceRequestDTO:
  *       type: object
  *       required:
- *         - PhieuThuePhong
+ *         - DatPhong
  *         - PhuongThucThanhToan
  *       properties:
- *         PhieuThuePhong:
- *           type: string
- *         KhachHang:
+ *         DatPhong:
  *           type: string
  *         PhuongThucThanhToan:
  *           type: string
- *         TongTienPhong:
- *           type: number
  *         PhuThu:
  *           type: number
  *         TienBoiThuong:
  *           type: number
- *         TienDaCoc:
- *           type: number
  */
 export type CreateCheckoutInvoiceRequestDTO = {
-  PhieuThuePhong: string;
-  KhachHang?: string;
+  DatPhong: string;
   PhuongThucThanhToan: string;
-  TongTienPhong?: number;
   PhuThu?: number;
   TienBoiThuong?: number;
-  TienDaCoc?: number;
 };
 
 /**
@@ -196,12 +187,12 @@ export type CreateCheckoutInvoiceRequestDTO = {
  *           type: string
  *         MaHD:
  *           type: string
- *         PhieuThuePhong:
+ *         DatPhong:
  *           type: object
  *           properties:
  *             _id:
  *               type: string
- *             MaPTP:
+ *             MaDatPhong:
  *               type: string
  *         NhanVienThuNgan:
  *           type: object
@@ -249,7 +240,7 @@ export type CreateCheckoutInvoiceRequestDTO = {
 export type InvoiceDataDTO = {
   _id: string;
   MaHD: string;
-  PhieuThuePhong: any;
+  DatPhong: any;
   NhanVienThuNgan: any;
   KhachHang: any;
   NgayLap: Date;

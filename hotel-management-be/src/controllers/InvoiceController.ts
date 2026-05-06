@@ -22,7 +22,7 @@ const mapToDTO = (inv: Invoice): InvoiceDataDTO => {
   return {
     _id: inv.id,
     MaHD: inv.code,
-    PhieuThuePhong: mapPopulated(inv.rentalSlip) || inv.rentalSlipId,
+    DatPhong: mapPopulated(inv.booking) || inv.bookingId,
     NhanVienThuNgan: mapPopulated(inv.cashierStaff) || inv.cashierStaffId,
     KhachHang: mapPopulated(inv.customer) || inv.customerId,
     NgayLap: inv.invoiceDate,
@@ -52,13 +52,14 @@ const invoiceController = {
       const body = req.body as CreateInvoiceRequestDTO;
       const userId = (req as any).user?.id;
 
-      if (!body.PhieuThuePhong || !body.PhuongThucThanhToan) {
-        res.status(400).json({ success: false, message: "Thiếu thông tin bắt buộc" });
+      const bookingId = body.DatPhong || (body as any).PhieuThuePhong;
+      if (!bookingId || !body.PhuongThucThanhToan) {
+        res.status(400).json({ success: false, message: "Thiếu thông tin bắt buộc (DatPhong hoặc PhieuThuePhong, PhuongThucThanhToan)" });
         return;
       }
 
       const result = await createInvoiceUseCase.execute({
-        rentalSlipId: body.PhieuThuePhong,
+        bookingId: bookingId,
         cashierUserId: userId, // Lấy từ Token
         customerId: body.KhachHang,
         paymentMethodId: body.PhuongThucThanhToan,
@@ -86,21 +87,20 @@ const invoiceController = {
       const body = req.body as CreateCheckoutInvoiceRequestDTO;
       const userId = (req as any).user?.id;
 
-      if (!body.PhieuThuePhong || !body.PhuongThucThanhToan) {
-        res.status(400).json({ success: false, message: "Thiếu thông tin bắt buộc" });
+      const bookingId = body.DatPhong || (body as any).PhieuThuePhong;
+      if (!bookingId || !body.PhuongThucThanhToan) {
+        res.status(400).json({ success: false, message: "Thiếu thông tin bắt buộc (DatPhong hoặc PhieuThuePhong, PhuongThucThanhToan)" });
         return;
       }
 
       const result = await createCheckoutInvoiceUseCase.execute({
-        rentalSlipId: body.PhieuThuePhong,
+        bookingId: bookingId,
         cashierUserId: userId,
-        customerId: body.KhachHang,
         paymentMethodId: body.PhuongThucThanhToan,
-        roomTotal: body.TongTienPhong,
         surcharge: body.PhuThu,
         damageCharge: body.TienBoiThuong,
-        deposit: body.TienDaCoc,
       });
+
 
       res.status(201).json({ success: true, message: "Tạo hóa đơn checkout thành công", data: mapToDTO(result) });
     } catch (error) {
@@ -110,18 +110,19 @@ const invoiceController = {
 
   getPreview: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const phieuId = req.query.phieuId as string;
-      if (!phieuId) {
-        res.status(400).json({ success: false, message: "Thiếu phieuId" });
+      const bookingId = req.query.bookingId as string;
+      if (!bookingId) {
+        res.status(400).json({ success: false, message: "Thiếu bookingId" });
         return;
       }
 
-      const result = await getPreviewInvoiceUseCase.execute({ rentalSlipId: phieuId });
+      const result = await getPreviewInvoiceUseCase.execute({ bookingId });
       res.status(200).json({ success: true, data: result });
     } catch (error) {
       next(error);
     }
   },
+
 
   getAllInvoices: async (req: Request, res: Response, next: NextFunction) => {
     try {

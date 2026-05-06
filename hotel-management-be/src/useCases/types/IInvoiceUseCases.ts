@@ -7,14 +7,14 @@ export type InvoicePreview = {
   roomTotal: number;
   serviceTotal: number;
   deposit: number;
-  rentalSlipId: string;
+  bookingId: string;
 };
 
 export type CreateInvoiceDetailUCInput = Omit<InvoiceDetail, "code">;
 
 // Create (Manual)
 export type CreateInvoiceUCInput = {
-  rentalSlipId: string;
+  bookingId: string;
   cashierUserId: string;
   customerId?: string | undefined;
   paymentMethodId: string;
@@ -28,22 +28,20 @@ export type CreateInvoiceUCInput = {
 export type ICreateInvoiceUseCase = IUseCase<CreateInvoiceUCInput, Invoice>;
 
 export type CreateCheckoutInvoiceUCInput = {
-  rentalSlipId: string;
+  bookingId: string;
   cashierUserId: string; // Truyền User ID từ Token
-  customerId?: string | undefined;
   paymentMethodId: string;
-  roomTotal?: number | undefined;
   surcharge?: number | undefined;
   damageCharge?: number | undefined;
-  deposit?: number | undefined;
 };
 export type ICreateCheckoutInvoiceUseCase = IUseCase<CreateCheckoutInvoiceUCInput, Invoice>;
 
 // Get Preview
 export type GetPreviewInvoiceUCInput = {
-  rentalSlipId: string;
+  bookingId: string;
 };
 export type IGetPreviewInvoiceUseCase = IUseCase<GetPreviewInvoiceUCInput, InvoicePreview>;
+
 
 // Get All
 export type IGetAllInvoicesUseCase = IUseCase<{}, Invoice[]>;

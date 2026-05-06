@@ -88,7 +88,7 @@ describe("Invoice API Integration Tests", () => {
   describe("GET /api/invoices/preview", () => {
     it("should calculate correct preview totals for slip-1", async () => {
       const res = await request(app)
-        .get(`/api/invoices/preview?phieuId=${rentalSlipId}`)
+        .get(`/api/invoices/preview?bookingId=${rentalSlipId}`)
         .set("Authorization", `Bearer ${adminToken}`);
 
       expect(res.status).toBe(200);
@@ -103,7 +103,7 @@ describe("Invoice API Integration Tests", () => {
       expect(data.deposit).toBe(500000);
     });
 
-    it("should fail without phieuId", async () => {
+    it("should fail without bookingId", async () => {
       const res = await request(app)
         .get(`/api/invoices/preview`)
         .set("Authorization", `Bearer ${adminToken}`);
@@ -119,7 +119,7 @@ describe("Invoice API Integration Tests", () => {
         .post("/api/invoices/checkout")
         .set("Authorization", `Bearer ${adminToken}`)
         .send({
-          PhieuThuePhong: rentalSlipId,
+          DatPhong: rentalSlipId,
           PhuongThucThanhToan: paymentMethodId,
           // TUYỆT ĐỐI KHÔNG gửi NhanVienThuNgan ở đây
         });
@@ -177,7 +177,7 @@ describe("Invoice API Integration Tests", () => {
 
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.PhieuThuePhong).toBeDefined();
+      expect(res.body.data.DatPhong).toBeDefined();
     });
   });
 

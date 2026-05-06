@@ -116,9 +116,29 @@ const staffPrismaRepository: IStaffRepository = {
   },
 
   generateNextCode: async (): Promise<string> => {
-    const count = await prisma.staff.count();
-    return `NV${(count + 1).toString().padStart(3, "0")}`;
+    const codes = await staffPrismaRepository.generateNextCodes(1);
+    return codes[0] as string;
   },
+
+  generateNextCodes: async (quantity: number): Promise<string[]> => {
+    const lastStaff = await prisma.staff.findFirst({
+      orderBy: { code: "desc" },
+      select: { code: true }
+    });
+
+    let lastNumber = 0;
+    if (lastStaff) {
+      lastNumber = parseInt(lastStaff.code.replace("NV", ""), 10);
+    }
+
+    const codes: string[] = [];
+    for (let i = 1; i <= quantity; i++) {
+      codes.push(`NV${(lastNumber + i).toString().padStart(3, "0")}`);
+    }
+    return codes;
+  },
+
+
 };
 
 export default staffPrismaRepository;

@@ -156,9 +156,30 @@ const rentalReceiptPrismaRepository: IRentalReceiptRepository = {
   },
 
   generateNextCode: async (): Promise<string> => {
-    const count = await prisma.rentalSlip.count();
-    return `PTP${(count + 1).toString().padStart(4, "0")}`;
+    const codes = await rentalReceiptPrismaRepository.generateNextCodes(1);
+    return codes[0] as string;
   },
+
+
+  generateNextCodes: async (quantity: number): Promise<string[]> => {
+    const lastSlip = await prisma.rentalSlip.findFirst({
+      orderBy: { code: "desc" },
+      select: { code: true }
+    });
+
+    let lastNumber = 0;
+    if (lastSlip) {
+      lastNumber = parseInt(lastSlip.code.replace("PTP", ""), 10);
+    }
+
+    const codes: string[] = [];
+    for (let i = 1; i <= quantity; i++) {
+      codes.push(`PTP${(lastNumber + i).toString().padStart(4, "0")}`);
+    }
+    return codes;
+  },
+
+
 };
 
 export default rentalReceiptPrismaRepository;

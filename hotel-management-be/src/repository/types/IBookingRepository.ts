@@ -3,7 +3,9 @@ import { type Booking, type BookingDetail } from "../../models/Booking.js";
 export type BookingInclude = {
   customer?: boolean;
   rooms?: boolean; // Populate rooms in details
+  rentalSlips?: boolean;
 };
+
 
 export type CreateBookingData = Omit<Booking, "id" | "createdAt" | "updatedAt" | "customer" | "details" | "code"> & {
   code?: string | undefined;
@@ -22,7 +24,9 @@ export type IBookingRepository = {
   
   // Các phương thức bổ trợ logic nghiệp vụ
   generateNextCode: () => Promise<string>;
+  generateNextCodes: (quantity: number) => Promise<string[]>;
   generateNextDetailCode: (index: number) => string;
+
   findOverlappingByRoom: (roomId: string, startDate: Date, endDate: Date, excludeBookingId?: string) => Promise<Booking | null>;
   updateStatus: (id: string, status: "Pending" | "Confirmed" | "CheckedIn" | "CheckedOut" | "Cancelled" | "NoShow") => Promise<void>;
 };

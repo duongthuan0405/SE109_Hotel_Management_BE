@@ -25,9 +25,10 @@ export const createRentalReceipt: ICreateRentalReceiptUseCase = {
 
       const createdSlips: RentalSlip[] = [];
 
-      // 3. Chuẩn bị mã số
-      const currentCount = await rentalReceiptRepository.countAll();
-      let nextNumber = currentCount + 1;
+      // 3. Chuẩn bị mã số hàng loạt từ Repository
+      const detailCount = booking.details?.length || 0;
+      const nextCodes = await rentalReceiptRepository.generateNextCodes(detailCount);
+      let codeIndex = 0;
 
       // 4. Check-in TOÀN BỘ các phòng đã đặt trong Booking
       for (const detail of booking.details || []) {
@@ -43,13 +44,14 @@ export const createRentalReceipt: ICreateRentalReceiptUseCase = {
         // Kiểm tra tính hợp lệ của ngày trả
         if (finalCheckOutDate && isNaN(new Date(finalCheckOutDate).getTime())) {
           console.error(`[CheckIn] Ngày trả phòng không hợp lệ cho phòng ${roomId}`);
+          codeIndex++;
           continue; 
         }
 
-        const generatedCode = `PTP${nextNumber.toString().padStart(4, "0")}`;
-        nextNumber++;
+        const generatedCode = nextCodes[codeIndex++];
 
         console.log(`[CheckIn] Đang tạo phiếu ${generatedCode} cho phòng ${roomId}`);
+
 
         const slip = await rentalReceiptRepository.create({
           code: generatedCode,

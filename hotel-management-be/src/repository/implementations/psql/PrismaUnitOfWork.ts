@@ -20,6 +20,8 @@ const unitOfWork: IUnitOfWork = {
       return await transactionStorage.run(tx, async () => {
         return await work(unitOfWork);
       });
+    }, {
+      timeout: 15000 // Tăng timeout lên 15 giây cho các nghiệp vụ phức tạp
     });
   },
 };

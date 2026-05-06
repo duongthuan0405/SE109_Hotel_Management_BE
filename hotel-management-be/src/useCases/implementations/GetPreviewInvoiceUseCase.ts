@@ -1,26 +1,26 @@
 import { type IGetPreviewInvoiceUseCase, type GetPreviewInvoiceUCInput, type InvoicePreview } from "../types/IInvoiceUseCases.js";
-import { rentalReceiptRepository, serviceUsageRepository, settingsRepository } from "../../repository/index.js";
+import { bookingRepository, serviceUsageRepository, settingsRepository } from "../../repository/index.js";
 
 export const getPreviewInvoice: IGetPreviewInvoiceUseCase = {
   execute: async (input: GetPreviewInvoiceUCInput): Promise<InvoicePreview> => {
-    if (!input.rentalSlipId) {
-      throw { status: 400, message: "Thiếu ID Phiếu thuê phòng" };
+    if (!input.bookingId) {
+      throw { status: 400, message: "Thiếu ID Đơn đặt phòng" };
     }
 
-    const rentalSlip = await rentalReceiptRepository.findById(input.rentalSlipId, { booking: true });
-    if (!rentalSlip) {
-      throw { status: 404, message: "Không tìm thấy Phiếu thuê phòng" };
+    const booking = await bookingRepository.findById(input.bookingId, { rentalSlips: true, customer: true });
+    if (!booking) {
+      throw { status: 404, message: "Không tìm thấy Đơn đặt phòng" };
     }
 
-    const booking = rentalSlip.booking;
     let roomTotal = 0;
+    let serviceTotal = 0;
+    const slips = booking.rentalSlips || [];
 
-    // Calculate room total
-    if (booking) {
-      // 1. rate = rentalSlip.adjustedPrice (ưu tiên)
-      let rate = rentalSlip.adjustedPrice;
+    // 1. Tính tổng tiền phòng của tất cả các Phiếu thuê
+    for (const slip of slips) {
+      let rate = slip.adjustedPrice;
 
-      // 2. Fallback: settings.baseRoomPrices[booking.roomClass]
+      // Fallback nếu không có giá điều chỉnh
       if (!rate || rate <= 0) {
         const settings = await settingsRepository.findByKey("GeneralSettings");
         if (settings) {
@@ -29,29 +29,32 @@ export const getPreviewInvoice: IGetPreviewInvoiceUseCase = {
         }
       }
 
-      // 3. bookedNights = ceil((endDate - startDate) / 1 ngày), tối thiểu 1
-      // CRITICAL BUSINESS RULE: Price based on BOOKED duration, NOT actual stay
       const startDate = booking.startDate.getTime();
       const endDate = booking.endDate.getTime();
       const bookedNights = Math.max(1, Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)));
 
-      roomTotal = bookedNights * rate;
+      roomTotal += bookedNights * rate;
     }
 
-    // Calculate service total
-    const serviceUsages = await serviceUsageRepository.findByRentalSlipIds([rentalSlip.id]);
-    const completedUsages = serviceUsages.filter(u => u.status === "Completed");
-    const serviceTotal = completedUsages.reduce((sum, u) => sum + u.totalAmount, 0);
+    // 2. Tính tổng tiền dịch vụ của tất cả các Phiếu thuê
+    const slipIds = slips.map(s => s.id);
+    if (slipIds.length > 0) {
+      const serviceUsages = await serviceUsageRepository.findByRentalSlipIds(slipIds);
+      serviceTotal = serviceUsages
+        .filter(u => u.status === "Completed")
+        .reduce((sum, u) => sum + u.totalAmount, 0);
+    }
 
-    const deposit = booking?.deposit || 0;
+    const deposit = booking.deposit || 0;
 
     return {
-      customerId: booking?.customerId,
-      customerName: booking?.customer?.fullName, // we might not have it populated deep, but it matches legacy return type
+      customerId: booking.customerId,
+      customerName: booking.customer?.fullName,
       roomTotal,
       serviceTotal,
       deposit,
-      rentalSlipId: rentalSlip.id,
+      bookingId: booking.id,
     };
   },
 };
+

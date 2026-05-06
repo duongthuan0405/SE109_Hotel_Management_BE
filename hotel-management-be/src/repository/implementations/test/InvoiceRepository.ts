@@ -1,7 +1,7 @@
 import { type IInvoiceRepository, type InvoiceInclude } from "../../types/IInvoiceRepository.js";
 import { type Invoice, type InvoiceDetail } from "../../../models/Invoice.js";
 import crypto from "crypto";
-import rentalReceiptRepository from "./RentalReceiptRepository.js";
+import bookingRepository from "./BookingRepository.js";
 import staffRepository from "./StaffRepository.js";
 import customerRepository from "./CustomerRepository.js";
 import paymentMethodRepository from "./PaymentMethodRepository.js";
@@ -13,8 +13,8 @@ const applyInclude = async (invoice: Invoice, include?: InvoiceInclude): Promise
 
   const result = { ...invoice };
 
-  if (include.rentalSlip) {
-    result.rentalSlip = (await rentalReceiptRepository.findById(invoice.rentalSlipId)) || undefined;
+  if (include.booking) {
+    result.booking = (await bookingRepository.findById(invoice.bookingId)) || undefined;
   }
   if (include.cashierStaff) {
     result.cashierStaff = (await staffRepository.findById(invoice.cashierStaffId)) || undefined;
@@ -30,7 +30,7 @@ const applyInclude = async (invoice: Invoice, include?: InvoiceInclude): Promise
 };
 
 const invoiceRepository: IInvoiceRepository = {
-  create: async (data: Omit<Invoice, "id" | "createdAt" | "updatedAt" | "rentalSlip" | "cashierStaff" | "customer" | "paymentMethod" | "code" | "details"> & { 
+  create: async (data: Omit<Invoice, "id" | "createdAt" | "updatedAt" | "booking" | "cashierStaff" | "customer" | "paymentMethod" | "code" | "details"> & { 
     code?: string | undefined;
     details: (Omit<InvoiceDetail, "code"> & { code?: string | undefined })[];
   }): Promise<Invoice> => {
@@ -94,11 +94,15 @@ const invoiceRepository: IInvoiceRepository = {
   countAll: async (): Promise<number> => {
     return invoices.length;
   },
+
   generateNextCode: async (): Promise<string> => {
-    const nextId = invoices.length + 1;
-    return `HD${String(nextId).padStart(3, "0")}`;
+    let maxNumber = 0;
+    invoices.forEach(inv => {
+      const num = parseInt(inv.code.replace("HD", ""), 10);
+      if (!isNaN(num) && num > maxNumber) maxNumber = num;
+    });
+    return `HD${String(maxNumber + 1).padStart(4, "0")}`;
   },
 };
-
 
 export default invoiceRepository;
