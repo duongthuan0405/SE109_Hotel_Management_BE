@@ -66,7 +66,7 @@ staffRoutes.put("/me", authMiddleware, roleMiddleware(["Admin", "Manager", "Staf
  *               $ref: '#/components/schemas/StaffListResponse'
 
  */
-staffRoutes.get("/", authMiddleware, roleMiddleware(["Admin"]), staffController.getAllStaffs);
+staffRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Staff"]), staffController.getAllStaffs);
 
 /**
  * @swagger
