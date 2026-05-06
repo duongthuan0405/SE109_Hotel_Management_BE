@@ -16,8 +16,8 @@ export type CreateMaintenanceUCInput = {
   roomId: string;
   technicianId: string;
   content: string;
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate: Date;
 };
 export type ICreateMaintenanceUseCase = IUseCase<CreateMaintenanceUCInput, MaintenanceUCOutput>;
 
@@ -25,10 +25,11 @@ export type UpdateMaintenanceUCInput = {
   id: string;
   content?: string | undefined;
   technicianId?: string | undefined;
-  startDate?: string | undefined;
-  endDate?: string | undefined;
+  startDate?: Date | undefined;
+  endDate?: Date | undefined;
   status?: MaintenanceStatus | undefined;
 };
+
 export type IUpdateMaintenanceUseCase = IUseCase<UpdateMaintenanceUCInput, MaintenanceUCOutput | null>;
 
 export type IDeleteMaintenanceUseCase = IUseCase<string, boolean>;

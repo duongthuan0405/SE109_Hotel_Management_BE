@@ -15,24 +15,28 @@ export const createRentalReceipt: ICreateRentalReceiptUseCase = {
         throw { status: 403, message: "Nhân viên thực hiện không tồn tại" };
       }
 
-      // 2. Tạo phiếu mới (Mã PTP được Repo tự sinh)
+      // 2. Tìm Booking để lấy số khách mặc định
+      const booking = await bookingRepository.findById(input.bookingId);
+      if (!booking) {
+        throw { status: 404, message: "Đơn đặt phòng không tồn tại" };
+      }
+
+      // 3. Tạo phiếu mới (Mã PTP được Repo tự sinh)
       const slip = await rentalReceiptRepository.create({
         bookingId: input.bookingId,
         roomId: input.roomId,
         checkInDate: new Date(),
         expectedCheckOutDate: input.expectedCheckOutDate,
-        actualGuestCount: input.actualGuestCount,
         adjustedPrice: input.adjustedPrice,
         checkInStaffId: staff.id, // Dùng Staff ID vừa tìm được
         status: "CheckedIn",
       });
 
-      // 3. Cập nhật trạng thái phòng sang Occupied
+      // 4. Cập nhật trạng thái phòng sang Occupied
       await roomRepository.updateStatus(input.roomId, "Occupied");
 
-      // 4. TỰ ĐỘNG HÓA: Cập nhật trạng thái Booking và ghi lịch sử
-      const booking = await bookingRepository.findById(input.bookingId);
-      if (booking && booking.status !== "CheckedIn") {
+      // 5. TỰ ĐỘNG HÓA: Cập nhật trạng thái Booking và ghi lịch sử
+      if (booking.status !== "CheckedIn") {
         const oldStatus = booking.status;
         await bookingRepository.updateStatus(booking.id, "CheckedIn");
 

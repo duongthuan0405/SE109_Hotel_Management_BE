@@ -25,7 +25,6 @@ describe("Service Usage API Integration Tests (Legacy Compatibility)", () => {
         DatPhong: "booking-1",
         Phong: "room-1",
         NgayTraDuKien: new Date(Date.now() + 86400000).toISOString(),
-        SoKhachThucTe: 2,
         DonGiaSauDieuChinh: 500000,
         // ĐÃ XÓA NhanVienCheckIn ở đây
       });

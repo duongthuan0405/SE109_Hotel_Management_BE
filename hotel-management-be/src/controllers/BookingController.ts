@@ -32,7 +32,7 @@ const mapToDTO = (booking: BookingUCOutput): BookingDataDTO => ({
   HangPhong: booking.roomClass,
   NgayDen: booking.startDate,
   NgayDi: booking.endDate,
-  SoKhach: booking.guestCount,
+  SoLuongPhong: booking.roomQuantity,
   TienCoc: booking.deposit,
   ChiTietDatPhong: booking.details.map(d => ({
     MaCTDP: d.code,
@@ -62,7 +62,7 @@ const bookingController = {
         roomClass: body.HangPhong,
         startDate: new Date(body.NgayDen),
         endDate: new Date(body.NgayDi),
-        guestCount: body.SoKhach,
+        roomQuantity: body.SoLuongPhong,
         deposit: body.TienCoc,
         details: body.ChiTietDatPhong?.map(d => ({ roomId: d.Phong }))
       });
@@ -97,7 +97,7 @@ const bookingController = {
         roomClass: body.HangPhong,
         startDate: body.NgayDen ? new Date(body.NgayDen) : undefined,
         endDate: body.NgayDi ? new Date(body.NgayDi) : undefined,
-        guestCount: body.SoKhach,
+        roomQuantity: body.SoLuongPhong,
         deposit: body.TienCoc,
         status: body.TrangThai,
         details: body.ChiTietDatPhong?.map(d => ({ roomId: d.Phong })),
@@ -139,7 +139,7 @@ const bookingController = {
         roomClass: body.HangPhong,
         startDate: new Date(body.NgayDen),
         endDate: new Date(body.NgayDi),
-        guestCount: body.SoKhach,
+        roomQuantity: body.SoLuongPhong,
         deposit: body.TienCoc,
         details: body.ChiTietDatPhong?.map(d => ({ roomId: d.Phong })),
         executorUserId: (req as any).user.id
@@ -160,7 +160,7 @@ const bookingController = {
         roomClass: body.HangPhong,
         startDate: new Date(body.NgayDen),
         endDate: new Date(body.NgayDi),
-        guestCount: body.SoKhach,
+        roomQuantity: body.SoLuongPhong,
         deposit: body.TienCoc,
         details: body.ChiTietDatPhong?.map((d: any) => ({ roomId: d.Phong })),
         executorUserId: (req as any).user.id
@@ -191,7 +191,7 @@ const bookingController = {
         roomClass: body.HangPhong,
         startDate: body.NgayDen ? new Date(body.NgayDen) : undefined,
         endDate: body.NgayDi ? new Date(body.NgayDi) : undefined,
-        guestCount: body.SoKhach,
+        roomQuantity: body.SoLuongPhong,
         deposit: body.TienCoc,
         status: body.TrangThai,
         details: body.ChiTietDatPhong?.map(d => ({ roomId: d.Phong })),

@@ -1,7 +1,8 @@
 export type RevenueStats = {
-  date: string;
+  date: Date;
   amount: number;
 };
+
 
 export type RoomOccupancyStats = {
   status: string;

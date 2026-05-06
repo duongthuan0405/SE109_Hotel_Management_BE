@@ -27,7 +27,6 @@ const mapToEntity = (usage: any): ServiceUsage => ({
     roomId: usage.rentalSlip.roomId,
     checkInDate: usage.rentalSlip.checkInDate,
     expectedCheckOutDate: usage.rentalSlip.expectedCheckOutDate,
-    actualGuestCount: usage.rentalSlip.actualGuestCount,
     adjustedPrice: usage.rentalSlip.adjustedPrice,
     checkInStaffId: usage.rentalSlip.checkInStaffId,
     status: usage.rentalSlip.status,

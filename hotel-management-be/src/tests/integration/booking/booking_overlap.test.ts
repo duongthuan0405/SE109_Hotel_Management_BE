@@ -25,7 +25,6 @@ describe("Booking Overlap Logic Tests", () => {
         HangPhong: "1",
         NgayDen: "2026-10-10",
         NgayDi: "2026-10-15",
-        SoKhach: 1,
         ChiTietDatPhong: [{ MaCTDP: "CT-A", Phong: "room-1" }]
       });
 
@@ -38,7 +37,6 @@ describe("Booking Overlap Logic Tests", () => {
         HangPhong: "1",
         NgayDen: "2026-10-10",
         NgayDi: "2026-10-15",
-        SoKhach: 1,
         ChiTietDatPhong: [{ MaCTDP: "CT-B", Phong: "room-1" }]
       });
 
@@ -56,7 +54,6 @@ describe("Booking Overlap Logic Tests", () => {
         HangPhong: "1",
         NgayDen: "2026-10-15",
         NgayDi: "2026-10-20",
-        SoKhach: 1,
         ChiTietDatPhong: [{ MaCTDP: "CT-E", Phong: "room-1" }]
       });
 

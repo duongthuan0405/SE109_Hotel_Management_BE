@@ -41,7 +41,7 @@ describe("Invoice API Integration Tests", () => {
       roomClass: "Normal",
       startDate: new Date(),
       endDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days later
-      guestCount: 2,
+      roomQuantity: 1,
       deposit: 500000,
       totalAmount: 800000,
       status: "CheckedIn",
@@ -58,7 +58,6 @@ describe("Invoice API Integration Tests", () => {
       status: "CheckedIn",
       checkInDate: new Date(),
       expectedCheckOutDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
-      actualGuestCount: 2,
     });
     // Set slipId
     rentalSlipId = slip.id;
