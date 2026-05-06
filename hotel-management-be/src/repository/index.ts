@@ -15,10 +15,10 @@ import settingsRepositoryMock from "./implementations/test/SettingsRepository.js
 import paymentMethodRepositoryMock from "./implementations/test/PaymentMethodRepository.js";
 import invoiceRepositoryMock from "./implementations/test/InvoiceRepository.js";
 import bookingHistoryRepositoryMock from "./implementations/test/BookingHistoryRepository.js";
-import positionRepositoryImpl from "./implementations/test/PositionRepository.js";
-import serviceUsageHistoryRepositoryImpl from "./implementations/test/ServiceUsageHistoryRepository.js";
-import maintenanceRepositoryImpl from "./implementations/test/MaintenanceRepository.js";
-import notificationRepositoryImpl from "./implementations/test/NotificationRepository.js";
+import positionRepositoryMock from "./implementations/test/PositionRepository.js";
+import serviceUsageHistoryRepositoryMock from "./implementations/test/ServiceUsageHistoryRepository.js";
+import maintenanceRepositoryMock from "./implementations/test/MaintenanceRepository.js";
+import notificationRepositoryMock from "./implementations/test/NotificationRepository.js";
 
 // --- Import Prisma Implementations (cho môi trường dev/prod) ---
 import userRepositoryPrisma from "./implementations/psql/UserPrismaRepository.js";
@@ -35,6 +35,10 @@ import settingsRepositoryPrisma from "./implementations/psql/SettingsPrismaRepos
 import paymentMethodRepositoryPrisma from "./implementations/psql/PaymentMethodPrismaRepository.js";
 import invoiceRepositoryPrisma from "./implementations/psql/InvoicePrismaRepository.js";
 import bookingHistoryRepositoryPrisma from "./implementations/psql/BookingHistoryPrismaRepository.js";
+import maintenanceRepositoryPrisma from "./implementations/psql/MaintenancePrismaRepository.js";
+import notificationRepositoryPrisma from "./implementations/psql/NotificationPrismaRepository.js";
+import positionRepositoryPrisma from "./implementations/psql/PositionPrismaRepository.js";
+import serviceUsageHistoryRepositoryPrisma from "./implementations/psql/ServiceUsageHistoryPrismaRepository.js";
 
 
 
@@ -63,10 +67,10 @@ export const settingsRepository = isTest ? settingsRepositoryMock : settingsRepo
 export const paymentMethodRepository = isTest ? paymentMethodRepositoryMock : paymentMethodRepositoryPrisma;
 export const invoiceRepository = isTest ? invoiceRepositoryMock : invoiceRepositoryPrisma;
 export const bookingHistoryRepository = isTest ? bookingHistoryRepositoryMock : bookingHistoryRepositoryPrisma;
-export const maintenanceRepository = maintenanceRepositoryImpl;
-export const notificationRepository = notificationRepositoryImpl;
-export const positionRepository = positionRepositoryImpl;
-export const serviceUsageHistoryRepository = serviceUsageHistoryRepositoryImpl;
+export const maintenanceRepository = isTest ? maintenanceRepositoryMock : maintenanceRepositoryPrisma;
+export const notificationRepository = isTest ? notificationRepositoryMock : notificationRepositoryPrisma;
+export const positionRepository = isTest ? positionRepositoryMock : positionRepositoryPrisma;
+export const serviceUsageHistoryRepository = isTest ? serviceUsageHistoryRepositoryMock : serviceUsageHistoryRepositoryPrisma;
 
 // Helper vì customerRepository cần xử lý đặc biệt một chút nếu có logic liên đới
 function customerMockRepository(isTest: boolean) {
