@@ -20,8 +20,14 @@ const staffCreateBookingUseCase: IStaffCreateBookingUseCase = {
 
       const start = new Date(startDate);
       const end = new Date(endDate);
+
+      if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+        throw { status: 400, message: "Ngày nhận phòng hoặc ngày trả phòng không hợp lệ" };
+      }
+
       const now = new Date();
       now.setHours(0, 0, 0, 0);
+
 
       // 1. Kiểm tra tính hợp lệ của ngày tháng
       if (start < now) {

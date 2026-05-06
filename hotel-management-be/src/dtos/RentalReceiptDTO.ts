@@ -5,30 +5,41 @@ import { type RentalSlip } from "../models/RentalSlip.js";
  * @swagger
  * components:
  *   schemas:
+ *     CheckInDetailDTO:
+ *       type: object
+ *       required:
+ *         - Phong
+ *       properties:
+ *         Phong:
+ *           type: string
+ *         DonGiaSauDieuChinh:
+ *           type: number
+ *         NgayTraDuKien:
+ *           type: string
+ *           format: date-time
  *     CreateRentalReceiptRequestDTO:
  *       type: object
  *       required:
  *         - DatPhong
- *         - Phong
- *         - NgayTraDuKien
- *         - DonGiaSauDieuChinh
+ *         - ChiTietCheckIn
  *       properties:
  *         DatPhong:
  *           type: string
- *         Phong:
- *           type: string
- *         NgayTraDuKien:
- *           type: string
- *           format: date-time
- *         DonGiaSauDieuChinh:
- *           type: number
+ *         ChiTietCheckIn:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/CheckInDetailDTO'
  */
 export type CreateRentalReceiptRequestDTO = {
   DatPhong: string;
-  Phong: string;
-  NgayTraDuKien: Date;
-  DonGiaSauDieuChinh: number;
+  ChiTietCheckIn: {
+    Phong: string;
+    DonGiaSauDieuChinh?: number;
+    NgayTraDuKien?: Date;
+  }[];
 };
+
+
 
 
 /**

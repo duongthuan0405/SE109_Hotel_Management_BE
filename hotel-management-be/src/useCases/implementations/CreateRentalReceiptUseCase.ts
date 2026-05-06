@@ -7,58 +7,92 @@ import { rentalReceiptRepository, roomRepository, bookingRepository, staffReposi
 import { createBookingHistory as createBookingHistoryUseCase } from "./CreateBookingHistoryUseCase.js";
 
 export const createRentalReceipt: ICreateRentalReceiptUseCase = {
-  execute: async (input: CreateRentalReceiptUCInput): Promise<RentalSlip> => {
+  execute: async (input: CreateRentalReceiptUCInput): Promise<RentalSlip[]> => {
     return await unitOfWork.runInTransaction(async () => {
-      // 1. Tìm Staff từ UserID (Mapping ở UseCase)
+      // 1. Tìm Staff từ UserID
       const staff = await staffRepository.findByUserId(input.checkInStaffUserId);
       if (!staff) {
         throw { status: 403, message: "Nhân viên thực hiện không tồn tại" };
       }
 
-      // 2. Tìm Booking để lấy số khách mặc định
-      const booking = await bookingRepository.findById(input.bookingId);
+      // 2. Tìm Booking và lấy kèm chi tiết phòng
+      const booking = await bookingRepository.findById(input.bookingId, { rooms: true });
       if (!booking) {
         throw { status: 404, message: "Đơn đặt phòng không tồn tại" };
       }
 
-      // 3. Tạo phiếu mới (Mã PTP được Repo tự sinh)
-      const slip = await rentalReceiptRepository.create({
-        bookingId: input.bookingId,
-        roomId: input.roomId,
-        checkInDate: new Date(),
-        expectedCheckOutDate: input.expectedCheckOutDate,
-        adjustedPrice: input.adjustedPrice,
-        checkInStaffId: staff.id, // Dùng Staff ID vừa tìm được
-        status: "CheckedIn",
-      });
+      console.log(`[CheckIn] Tìm thấy ${booking.details?.length || 0} chi tiết phòng cho Booking ${booking.code}`);
 
-      // 4. Cập nhật trạng thái phòng sang Occupied
-      await roomRepository.updateStatus(input.roomId, "Occupied");
+      const createdSlips: RentalSlip[] = [];
 
-      // 5. TỰ ĐỘNG HÓA: Cập nhật trạng thái Booking và ghi lịch sử
+      // 3. Chuẩn bị mã số
+      const currentCount = await rentalReceiptRepository.countAll();
+      let nextNumber = currentCount + 1;
+
+      // 4. Check-in TOÀN BỘ các phòng đã đặt trong Booking
+      for (const detail of booking.details || []) {
+        const roomId = detail.roomId;
+        if (!roomId) continue;
+
+        // Kiểm tra xem Client có gửi thông tin điều chỉnh cho phòng này không
+        const override = input.rooms?.find((r) => r.roomId === roomId);
+
+        const finalPrice = override?.adjustedPrice ?? detail.room?.price ?? 0;
+        const finalCheckOutDate = override?.expectedCheckOutDate ?? booking.endDate;
+
+        // Kiểm tra tính hợp lệ của ngày trả
+        if (finalCheckOutDate && isNaN(new Date(finalCheckOutDate).getTime())) {
+          console.error(`[CheckIn] Ngày trả phòng không hợp lệ cho phòng ${roomId}`);
+          continue; 
+        }
+
+        const generatedCode = `PTP${nextNumber.toString().padStart(4, "0")}`;
+        nextNumber++;
+
+        console.log(`[CheckIn] Đang tạo phiếu ${generatedCode} cho phòng ${roomId}`);
+
+        const slip = await rentalReceiptRepository.create({
+          code: generatedCode,
+          bookingId: input.bookingId,
+          roomId: roomId,
+          checkInDate: new Date(),
+          expectedCheckOutDate: finalCheckOutDate,
+          adjustedPrice: finalPrice,
+          checkInStaffId: staff.id,
+          status: "CheckedIn",
+        });
+
+        // 5. Cập nhật trạng thái phòng sang Occupied
+        await roomRepository.updateStatus(roomId, "Occupied");
+
+        const populatedSlip = await rentalReceiptRepository.findById(slip.id, {
+          booking: true,
+          room: true,
+          checkInStaff: true,
+        });
+        if (populatedSlip) createdSlips.push(populatedSlip);
+      }
+
+      console.log(`[CheckIn] Đã tạo thành công ${createdSlips.length} phiếu thuê`);
+
+
+      // 5. Cập nhật trạng thái Booking sang CheckedIn nếu chưa
       if (booking.status !== "CheckedIn") {
         const oldStatus = booking.status;
         await bookingRepository.updateStatus(booking.id, "CheckedIn");
 
         // Ghi lịch sử tự động
-        // createBookingHistoryUseCase cũng sẽ tự động tham gia transaction này
         await createBookingHistoryUseCase.execute({
           bookingId: booking.id,
           oldStatus: oldStatus as any,
           newStatus: "CheckedIn",
-          userId: input.checkInStaffUserId, // ID Tài khoản thực hiện Check-in
+          userId: input.checkInStaffUserId,
         });
       }
 
-      // 5. Trả về slip đã được populate để khớp với kết quả dự án cũ
-      const populatedSlip = await rentalReceiptRepository.findById(slip.id, {
-        booking: true,
-        room: true,
-        checkInStaff: true,
-      });
-
-      return populatedSlip!;
+      return createdSlips;
     });
   },
 };
+
 

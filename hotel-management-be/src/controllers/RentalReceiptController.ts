@@ -79,21 +79,26 @@ const rentalReceiptController = {
 
       const result = await createRentalReceiptUseCase.execute({
         bookingId: body.DatPhong,
-        roomId: body.Phong,
-        expectedCheckOutDate: new Date(body.NgayTraDuKien),
-        adjustedPrice: body.DonGiaSauDieuChinh,
+        rooms: (body.ChiTietCheckIn || []).map(item => ({
+          roomId: item.Phong,
+          expectedCheckOutDate: item.NgayTraDuKien ? new Date(item.NgayTraDuKien) : undefined,
+          adjustedPrice: item.DonGiaSauDieuChinh,
+        })),
+
+
         checkInStaffUserId: userId,
       });
 
       res.status(201).json({
         success: true,
         message: "Tạo phiếu thuê phòng thành công",
-        data: mapToDTO(result),
+        data: result.map(mapToDTO),
       });
     } catch (error) {
       next(error);
     }
   },
+
 
   updateRentalReceipt: async (req: Request, res: Response, next: NextFunction) => {
     try {
