@@ -33,7 +33,7 @@ describe("Checkout Cascade Integration Tests", () => {
       roomClass: "Normal",
       startDate: new Date(),
       endDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
-      guestCount: 4,
+      roomQuantity: 2,
       deposit: 1000000,
       totalAmount: 2000000,
       status: "CheckedIn",
@@ -53,8 +53,7 @@ describe("Checkout Cascade Integration Tests", () => {
       adjustedPrice: 500000,
       status: "CheckedIn",
       checkInDate: new Date(),
-      expectedCheckOutDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
-      actualGuestCount: 2,
+      expectedCheckOutDate: new Date(Date.now() + 24 * 60 * 60 * 1000)
     });
     slip1Id = slip1.id;
 
@@ -67,8 +66,7 @@ describe("Checkout Cascade Integration Tests", () => {
       adjustedPrice: 500000,
       status: "CheckedIn",
       checkInDate: new Date(),
-      expectedCheckOutDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
-      actualGuestCount: 2,
+      expectedCheckOutDate: new Date(Date.now() + 24 * 60 * 60 * 1000)
     });
     slip2Id = slip2.id;
     

@@ -12,7 +12,7 @@ const mockBookings: Booking[] = [
     roomClass: "STD",
     startDate: new Date("2026-05-01"),
     endDate: new Date("2026-05-03"),
-    guestCount: 2,
+    roomQuantity: 1,
     deposit: 500000,
     totalAmount: 1000000,
     details: [

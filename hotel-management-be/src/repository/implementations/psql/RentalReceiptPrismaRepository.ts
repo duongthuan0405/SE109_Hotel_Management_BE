@@ -9,7 +9,6 @@ const mapToEntity = (slip: any): RentalSlip => ({
   roomId: slip.roomId,
   checkInDate: slip.checkInDate,
   expectedCheckOutDate: slip.expectedCheckOutDate,
-  actualGuestCount: slip.actualGuestCount,
   adjustedPrice: slip.adjustedPrice,
   checkInStaffId: slip.checkInStaffId,
   status: slip.status as RentalSlipStatus,
@@ -21,7 +20,7 @@ const mapToEntity = (slip: any): RentalSlip => ({
     roomClass: slip.booking.roomClass,
     startDate: slip.booking.startDate,
     endDate: slip.booking.endDate,
-    guestCount: slip.booking.guestCount,
+    roomQuantity: slip.booking.roomQuantity,
     deposit: slip.booking.deposit,
     totalAmount: slip.booking.totalAmount,
     status: slip.booking.status,
@@ -61,7 +60,6 @@ const rentalReceiptPrismaRepository: IRentalReceiptRepository = {
         roomId: data.roomId,
         checkInDate: data.checkInDate,
         expectedCheckOutDate: data.expectedCheckOutDate,
-        actualGuestCount: data.actualGuestCount,
         adjustedPrice: data.adjustedPrice,
         checkInStaffId: data.checkInStaffId,
         status: data.status,
@@ -128,7 +126,6 @@ const rentalReceiptPrismaRepository: IRentalReceiptRepository = {
     if (data.roomId !== undefined) updateData.roomId = data.roomId;
     if (data.checkInDate !== undefined) updateData.checkInDate = data.checkInDate;
     if (data.expectedCheckOutDate !== undefined) updateData.expectedCheckOutDate = data.expectedCheckOutDate;
-    if (data.actualGuestCount !== undefined) updateData.actualGuestCount = data.actualGuestCount;
     if (data.adjustedPrice !== undefined) updateData.adjustedPrice = data.adjustedPrice;
     if (data.checkInStaffId !== undefined) updateData.checkInStaffId = data.checkInStaffId;
     if (data.status !== undefined) updateData.status = data.status;

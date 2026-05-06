@@ -23,7 +23,6 @@ const mapToDTO = (history: BookingHistory): BookingHistoryDataDTO => ({
       HangPhong: history.booking.roomClass,
       NgayDen: history.booking.startDate,
       NgayDi: history.booking.endDate,
-      SoKhach: history.booking.guestCount,
       TienCoc: history.booking.deposit,
       TrangThai: history.booking.status,
     }

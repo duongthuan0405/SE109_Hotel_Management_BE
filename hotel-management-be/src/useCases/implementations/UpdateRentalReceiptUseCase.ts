@@ -9,7 +9,6 @@ export const updateRentalReceipt: IUpdateRentalReceiptUseCase = {
   execute: async (input: UpdateRentalReceiptUCInput): Promise<RentalSlip> => {
     const updateData: Parameters<typeof rentalReceiptRepository.update>[1] = {};
     if (input.expectedCheckOutDate !== undefined) updateData.expectedCheckOutDate = input.expectedCheckOutDate;
-    if (input.actualGuestCount !== undefined) updateData.actualGuestCount = input.actualGuestCount;
     if (input.adjustedPrice !== undefined) updateData.adjustedPrice = input.adjustedPrice;
     if (input.status !== undefined) updateData.status = input.status;
 

@@ -6,7 +6,6 @@ export type CreateRentalReceiptUCInput = {
   bookingId: string;
   roomId: string;
   expectedCheckOutDate: Date;
-  actualGuestCount: number;
   adjustedPrice: number;
   checkInStaffUserId: string;
   executorUserId?: string;
@@ -24,7 +23,6 @@ export type IGetRentalReceiptByIdUseCase = IUseCase<GetRentalReceiptByIdUCInput,
 export type UpdateRentalReceiptUCInput = {
   id: string;
   expectedCheckOutDate?: Date | undefined;
-  actualGuestCount?: number | undefined;
   adjustedPrice?: number | undefined;
   status?: RentalSlipStatus | undefined;
 };

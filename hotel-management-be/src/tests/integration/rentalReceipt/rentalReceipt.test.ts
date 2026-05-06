@@ -24,7 +24,7 @@ describe("Rental Receipt API Integration Tests (Legacy Compatibility)", () => {
       roomClass: "Normal",
       startDate: new Date(),
       endDate: new Date(Date.now() + 86400000),
-      guestCount: 2,
+      roomQuantity: 1,
       deposit: 0,
       totalAmount: 500000,
       status: "Confirmed",
@@ -64,7 +64,6 @@ describe("Rental Receipt API Integration Tests (Legacy Compatibility)", () => {
           DatPhong: testBookingId,
           Phong: "room-1",
           NgayTraDuKien: new Date(Date.now() + 86400000).toISOString(),
-          SoKhachThucTe: 2,
           DonGiaSauDieuChinh: 500000,
         });
 
@@ -130,10 +129,10 @@ describe("Rental Receipt API Integration Tests (Legacy Compatibility)", () => {
         .put(`/api/rental-receipts/${createdReceiptId}`)
         .set("Authorization", `Bearer ${adminToken}`)
         .send({
-          SoKhachThucTe: 5,
+          DonGiaSauDieuChinh: 600000,
         });
       expect(res.status).toBe(200);
-      expect(res.body.data.SoKhachThucTe).toBe(5);
+      expect(res.body.data.DonGiaSauDieuChinh).toBe(600000);
     });
   });
 

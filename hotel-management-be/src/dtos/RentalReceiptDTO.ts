@@ -11,7 +11,6 @@ import { type RentalSlip } from "../models/RentalSlip.js";
  *         - DatPhong
  *         - Phong
  *         - NgayTraDuKien
- *         - SoKhachThucTe
  *         - DonGiaSauDieuChinh
  *       properties:
  *         DatPhong:
@@ -21,18 +20,16 @@ import { type RentalSlip } from "../models/RentalSlip.js";
  *         NgayTraDuKien:
  *           type: string
  *           format: date-time
- *         SoKhachThucTe:
- *           type: number
  *         DonGiaSauDieuChinh:
  *           type: number
  */
 export type CreateRentalReceiptRequestDTO = {
   DatPhong: string;
   Phong: string;
-  NgayTraDuKien: string; // ISO String
-  SoKhachThucTe: number;
+  NgayTraDuKien: Date;
   DonGiaSauDieuChinh: number;
 };
+
 
 /**
  * @swagger
@@ -44,8 +41,6 @@ export type CreateRentalReceiptRequestDTO = {
  *         NgayTraDuKien:
  *           type: string
  *           format: date-time
- *         SoKhachThucTe:
- *           type: number
  *         DonGiaSauDieuChinh:
  *           type: number
  *         TrangThai:
@@ -53,11 +48,11 @@ export type CreateRentalReceiptRequestDTO = {
  *           enum: [CheckedIn, CheckedOut, Cancelled]
  */
 export type UpdateRentalReceiptRequestDTO = {
-  NgayTraDuKien?: string;
-  SoKhachThucTe?: number;
+  NgayTraDuKien?: Date;
   DonGiaSauDieuChinh?: number;
   TrangThai?: string;
 };
+
 
 // Response DTOs
 /**
@@ -86,8 +81,6 @@ export type UpdateRentalReceiptRequestDTO = {
  *             NgayDi:
  *               type: string
  *               format: date-time
- *             SoKhach:
- *               type: number
  *             TienCoc:
  *               type: number
  *             TrangThai:
@@ -109,8 +102,6 @@ export type UpdateRentalReceiptRequestDTO = {
  *         NgayTraDuKien:
  *           type: string
  *           format: date-time
- *         SoKhachThucTe:
- *           type: number
  *         DonGiaSauDieuChinh:
  *           type: number
  *         NhanVienCheckIn:
@@ -132,7 +123,6 @@ export type RentalReceiptDataDTO = {
   Phong: any; // Populated Room or ID
   NgayNhanPhong: Date;
   NgayTraDuKien: Date;
-  SoKhachThucTe: number;
   DonGiaSauDieuChinh: number;
   NhanVienCheckIn: any; // Populated Staff or ID
   TrangThai: string;

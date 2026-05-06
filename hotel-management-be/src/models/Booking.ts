@@ -16,7 +16,7 @@ export type Booking = {
   roomClass: string; // HangPhong
   startDate: Date; // NgayDen
   endDate: Date; // NgayDi
-  guestCount: number; // SoKhach
+  roomQuantity: number; // SoLuongPhong
   deposit: number; // TienCoc
   totalAmount: number; // TongTien
   details: BookingDetail[]; // ChiTietDatPhong

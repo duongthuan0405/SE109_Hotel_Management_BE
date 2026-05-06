@@ -12,10 +12,11 @@ export interface GetDashboardDataOutput {
     totalCustomers: number;
     activeRentals: number;
   };
-  revenueStats: { date: string; amount: number }[];
+  revenueStats: { date: Date; amount: number }[];
   roomOccupancy: { status: string; count: number }[];
   topServices: { name: string; count: number; revenue: number }[];
 }
+
 
 export const getDashboardData = {
   execute: async (input: GetDashboardDataInput): Promise<GetDashboardDataOutput> => {

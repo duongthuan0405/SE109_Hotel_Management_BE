@@ -138,10 +138,11 @@ export type BookingDetailDTO = {
  *         NgayDi:
  *           type: string
  *           format: date-time
- *         SoKhach:
+ *         SoLuongPhong:
  *           type: number
  *         TienCoc:
  *           type: number
+
  *         ChiTietDatPhong:
  *           type: array
  *           items:
@@ -156,7 +157,7 @@ export type BookingDataDTO = {
   HangPhong: string;
   NgayDen: Date;
   NgayDi: Date;
-  SoKhach: number;
+  SoLuongPhong: number;
   TienCoc: number;
   ChiTietDatPhong: BookingDetailDTO[];
   TrangThai: string;
@@ -181,7 +182,6 @@ export type BookingDataDTO = {
  *         - HangPhong
  *         - NgayDen
  *         - NgayDi
- *         - SoKhach
  *       properties:
  *         KhachHang:
  *           type: string
@@ -193,24 +193,28 @@ export type BookingDataDTO = {
  *         NgayDi:
  *           type: string
  *           format: date-time
- *         SoKhach:
+ *         SoLuongPhong:
  *           type: number
+ *           default: 1
  *         TienCoc:
  *           type: number
  *         ChiTietDatPhong:
  *           type: array
+ *           description: "Optional: Danh sách phòng cụ thể. Nếu không cung cấp, hệ thống sẽ tự động chọn phòng."
  *           items:
  *             $ref: '#/components/schemas/CreateBookingDetailDTO'
  */
 export type CreateBookingRequestDTO = {
   KhachHang?: string | undefined; 
   HangPhong: string;
-  NgayDen: string;
-  NgayDi: string;
-  SoKhach: number;
+  NgayDen: Date;
+  NgayDi: Date;
+  SoLuongPhong?: number; // Thêm số lượng phòng
   TienCoc?: number | undefined;
   ChiTietDatPhong?: CreateBookingDetailDTO[] | undefined;
 };
+
+
 
 /**
  * @swagger
@@ -227,7 +231,7 @@ export type CreateBookingRequestDTO = {
  *         NgayDi:
  *           type: string
  *           format: date-time
- *         SoKhach:
+ *         SoLuongPhong:
  *           type: number
  *         TienCoc:
  *           type: number
@@ -241,10 +245,11 @@ export type CreateBookingRequestDTO = {
  */
 export type UpdateBookingRequestDTO = {
   HangPhong?: string | undefined;
-  NgayDen?: string | undefined;
-  NgayDi?: string | undefined;
-  SoKhach?: number | undefined;
+  NgayDen?: Date | undefined;
+  NgayDi?: Date | undefined;
+  SoLuongPhong?: number | undefined;
   TienCoc?: number | undefined;
   ChiTietDatPhong?: CreateBookingDetailDTO[] | undefined;
   TrangThai?: string | undefined;
 };
+

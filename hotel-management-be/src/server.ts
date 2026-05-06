@@ -1,5 +1,6 @@
 import express, { type Request, type Response } from "express";
 import { errorHandler } from "./middlewares/errorMiddleware.js";
+import cors from "cors";
 
 import env from "./config/env.js";
 import authRoutes from "./routes/authRoutes.js";
@@ -28,6 +29,10 @@ setupSwagger(app);
 const PORT = env.PORT;
 
 app.use(express.json());
+app.use(cors({
+  origin: env.FRONTEND_URL,
+  credentials: true,
+}));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/accounts", accountRoutes);

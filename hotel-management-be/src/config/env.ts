@@ -14,6 +14,7 @@ const envSchema = z.object({
   DATABASE_URL: z.string().min(1, "Invalid DB connection string"),
   DIRECT_URL: z.string().min(1, "Invalid DB connection string"),
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
+  FRONTEND_URL: z.string().url().optional().default("http://localhost:5173"),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

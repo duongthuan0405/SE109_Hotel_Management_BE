@@ -34,7 +34,6 @@ const mapToEntity = (invoice: any): Invoice => ({
     roomId: invoice.rentalSlip.roomId,
     checkInDate: invoice.rentalSlip.checkInDate,
     expectedCheckOutDate: invoice.rentalSlip.expectedCheckOutDate,
-    actualGuestCount: invoice.rentalSlip.actualGuestCount,
     adjustedPrice: invoice.rentalSlip.adjustedPrice,
     checkInStaffId: invoice.rentalSlip.checkInStaffId,
     status: invoice.rentalSlip.status,

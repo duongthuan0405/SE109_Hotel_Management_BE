@@ -124,18 +124,22 @@ export type MaintenanceDataDTO = {
  *           type: string
  *         NgayThucHien:
  *           type: string
+ *           format: date-time
  *         NgayKetThuc:
  *           type: string
+ *           format: date-time
  *         NoiDung:
  *           type: string
  */
+
 export type CreateMaintenanceRequestDTO = {
   Phong: string;
   NVKyThuat: string;
-  NgayThucHien: string;
-  NgayKetThuc: string;
+  NgayThucHien: Date;
+  NgayKetThuc: Date;
   NoiDung: string;
 };
+
 
 /**
  * @swagger
@@ -150,8 +154,11 @@ export type CreateMaintenanceRequestDTO = {
  *           type: string
  *         NgayThucHien:
  *           type: string
+ *           format: date-time
  *         NgayKetThuc:
  *           type: string
+ *           format: date-time
+
  *         TrangThai:
  *           type: string
  *           enum: [Pending, In_Progress, Completed, Cancelled]
@@ -159,10 +166,11 @@ export type CreateMaintenanceRequestDTO = {
 export type UpdateMaintenanceRequestDTO = {
   NoiDung?: string;
   NVKyThuat?: string;
-  NgayThucHien?: string;
-  NgayKetThuc?: string;
+  NgayThucHien?: Date;
+  NgayKetThuc?: Date;
   TrangThai?: MaintenanceStatus;
 };
+
 
 /**
  * @swagger

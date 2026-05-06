@@ -113,15 +113,15 @@ model Booking {
   roomClass   String // HangPhong
   startDate   DateTime // NgayDen
   endDate     DateTime // NgayDi
-  guestCount  Int // SoKhach
   deposit     Float // TienCoc
   totalAmount Float // TongTien
-  status      BookingStatus    @default(Pending)
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-  details     BookingDetail[]
-  rentalSlips RentalSlip[]
-  history     BookingHistory[]
+  roomQuantity Int              @default(1) // SoLuongPhong
+  status       BookingStatus    @default(Pending)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  details      BookingDetail[]
+  rentalSlips  RentalSlip[]
+  history      BookingHistory[]
 }
 
 model BookingDetail {
@@ -149,7 +149,6 @@ model RentalSlip {
   room                 Room             @relation(fields: [roomId], references: [id])
   checkInDate          DateTime
   expectedCheckOutDate DateTime
-  actualGuestCount     Int
   adjustedPrice        Float
   checkInStaffId       String
   checkInStaff         Staff            @relation(fields: [checkInStaffId], references: [id])

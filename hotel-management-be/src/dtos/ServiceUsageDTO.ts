@@ -31,10 +31,11 @@ export type CreateServiceUsageRequestDTO = {
   PhieuThuePhong: string; // ID phiếu thuê phòng
   DichVu: string; // ID dịch vụ
   SoLuong: number;
-  NgaySDV?: string; // ISO String, optional
+  NgaySDV?: Date; // Optional Date
   DonGia: number;
   ThanhTien: number;
 };
+
 
 /**
  * @swagger

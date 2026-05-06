@@ -23,7 +23,6 @@ const mapToDTO = (slip: RentalSlip): RentalReceiptDataDTO => ({
     HangPhong: slip.booking.roomClass,
     NgayDen: slip.booking.startDate,
     NgayDi: slip.booking.endDate,
-    SoKhach: slip.booking.guestCount,
     TienCoc: slip.booking.deposit,
     TrangThai: slip.booking.status,
   } : slip.bookingId,
@@ -35,7 +34,6 @@ const mapToDTO = (slip: RentalSlip): RentalReceiptDataDTO => ({
   } : slip.roomId,
   NgayNhanPhong: slip.checkInDate,
   NgayTraDuKien: slip.expectedCheckOutDate,
-  SoKhachThucTe: slip.actualGuestCount,
   DonGiaSauDieuChinh: slip.adjustedPrice,
   NhanVienCheckIn: slip.checkInStaff ? { 
     _id: slip.checkInStaff.id, 
@@ -83,7 +81,6 @@ const rentalReceiptController = {
         bookingId: body.DatPhong,
         roomId: body.Phong,
         expectedCheckOutDate: new Date(body.NgayTraDuKien),
-        actualGuestCount: body.SoKhachThucTe,
         adjustedPrice: body.DonGiaSauDieuChinh,
         checkInStaffUserId: userId,
       });
@@ -104,7 +101,6 @@ const rentalReceiptController = {
       const result = await updateRentalReceiptUseCase.execute({
         id: req.params.id as string,
         expectedCheckOutDate: body.NgayTraDuKien ? new Date(body.NgayTraDuKien) : undefined,
-        actualGuestCount: body.SoKhachThucTe,
         adjustedPrice: body.DonGiaSauDieuChinh,
         status: body.TrangThai as any,
       });

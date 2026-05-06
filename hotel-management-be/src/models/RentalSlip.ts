@@ -13,7 +13,6 @@ export type RentalSlip = {
   room?: Room | undefined; // Phong (Object)
   checkInDate: Date; // NgayNhanPhong
   expectedCheckOutDate: Date; // NgayTraDuKien
-  actualGuestCount: number; // SoKhachThucTe
   adjustedPrice: number; // DonGiaSauDieuChinh
   checkInStaffId: string; // NhanVienCheckIn (ID)
   checkInStaff?: Staff | undefined; // NhanVienCheckIn (Object)

@@ -10,7 +10,7 @@ export type CreateBookingUCInput = {
   roomClass: string;
   startDate: Date;
   endDate: Date;
-  guestCount: number;
+  roomQuantity?: number | undefined;
   deposit?: number | undefined;
   details?: { roomId: string }[] | undefined;
   executorUserId?: string | undefined;
@@ -29,7 +29,7 @@ export type UpdateBookingUCInput = {
   roomClass?: string | undefined;
   startDate?: Date | undefined;
   endDate?: Date | undefined;
-  guestCount?: number | undefined;
+  roomQuantity?: number | undefined;
   deposit?: number | undefined;
   status?: string | undefined;
   details?: { roomId: string }[] | undefined;
