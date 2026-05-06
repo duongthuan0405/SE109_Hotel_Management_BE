@@ -29,8 +29,9 @@ const dashboardPrismaRepository: IDashboardRepository = {
     });
 
     return Array.from(statsMap.entries())
-      .map(([date, amount]) => ({ date: date as string, amount: amount as number }))
-      .sort((a, b) => a.date.localeCompare(b.date));
+      .map(([date, amount]) => ({ date: new Date(date), amount: amount as number }))
+      .sort((a, b) => a.date.getTime() - b.date.getTime());
+
   },
 
   getRoomStatusCounts: async (): Promise<RoomOccupancyStats[]> => {
