@@ -133,7 +133,7 @@ const staffPrismaRepository: IStaffRepository = {
 
     const codes: string[] = [];
     for (let i = 1; i <= quantity; i++) {
-      codes.push(`NV${(lastNumber + i).toString().padStart(3, "0")}`);
+      codes.push(`NV${(lastNumber + i).toString().padStart(5, "0")}`);
     }
     return codes;
   },

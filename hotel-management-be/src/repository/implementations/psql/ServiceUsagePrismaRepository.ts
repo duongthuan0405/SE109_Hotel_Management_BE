@@ -150,8 +150,12 @@ const serviceUsagePrismaRepository: IServiceUsageRepository = {
   },
 
   generateNextCode: async (): Promise<string> => {
-    const count = await prisma.serviceUsage.count();
-    return `SDDV${(count + 1).toString().padStart(4, "0")}`;
+    const last = await prisma.serviceUsage.findFirst({
+      orderBy: { code: "desc" },
+      select: { code: true }
+    });
+    const lastNumber = last ? parseInt(last.code.replace("SDDV", ""), 10) : 0;
+    return `SDDV${(lastNumber + 1).toString().padStart(5, "0")}`;
   },
 };
 

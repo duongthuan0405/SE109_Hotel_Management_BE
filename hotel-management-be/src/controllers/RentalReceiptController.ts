@@ -9,7 +9,6 @@ import {
   getAllRentalReceiptsUseCase,
   getRentalReceiptByIdUseCase,
   updateRentalReceiptUseCase,
-  checkOutUseCase,
   deleteRentalReceiptUseCase,
 } from "../useCases/index.js";
 import { type RentalSlip } from "../models/RentalSlip.js";
@@ -113,23 +112,6 @@ const rentalReceiptController = {
       res.status(200).json({
         success: true,
         message: "Cập nhật phiếu thuê phòng thành công",
-        data: mapToDTO(result),
-      });
-    } catch (error) {
-      next(error);
-    }
-  },
-
-  checkOut: async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const userId = (req as any).user?.id;
-      const result = await checkOutUseCase.execute({ 
-        id: req.params.id as string,
-        executorUserId: userId
-      });
-      res.status(200).json({
-        success: true,
-        message: "Check out thành công",
         data: mapToDTO(result),
       });
     } catch (error) {

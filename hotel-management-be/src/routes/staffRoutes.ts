@@ -9,20 +9,20 @@ const staffRoutes = Router();
  * @swagger
  * /api/staffs/me:
  *   get:
- *     summary: Get current staff profile
- *     tags: [Staff]
+ *     summary: Get current receptionist profile
+ *     tags: [Receptionist]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Staff profile details
+ *         description: Receptionist profile details
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/StaffResponse'
+ *               $ref: '#/components/schemas/ReceptionistResponse'
 
  */
-staffRoutes.get("/me", authMiddleware, roleMiddleware(["Admin", "Manager", "Staff"]), staffController.getMyProfile);
+staffRoutes.get("/me", authMiddleware, roleMiddleware(["Admin", "Manager", "Receptionist"]), staffController.getMyProfile);
 
 /**
  * @swagger
@@ -47,7 +47,7 @@ staffRoutes.get("/me", authMiddleware, roleMiddleware(["Admin", "Manager", "Staf
  *               $ref: '#/components/schemas/StaffResponse'
 
  */
-staffRoutes.put("/me", authMiddleware, roleMiddleware(["Admin", "Manager", "Staff"]), staffController.updateMyProfile);
+staffRoutes.put("/me", authMiddleware, roleMiddleware(["Admin", "Manager", "Receptionist"]), staffController.updateMyProfile);
 
 /**
  * @swagger
@@ -66,7 +66,7 @@ staffRoutes.put("/me", authMiddleware, roleMiddleware(["Admin", "Manager", "Staf
  *               $ref: '#/components/schemas/StaffListResponse'
 
  */
-staffRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Staff"]), staffController.getAllStaffs);
+staffRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), staffController.getAllStaffs);
 
 /**
  * @swagger

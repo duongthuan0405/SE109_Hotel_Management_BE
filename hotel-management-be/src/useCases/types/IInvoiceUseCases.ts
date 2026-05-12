@@ -17,7 +17,7 @@ export type CreateInvoiceUCInput = {
   bookingId: string;
   cashierUserId: string;
   customerId?: string | undefined;
-  paymentMethodId: string;
+  paymentMethodId?: string | undefined;
   roomTotal?: number | undefined;
   serviceTotal?: number | undefined;
   surcharge?: number | undefined;
@@ -30,7 +30,7 @@ export type ICreateInvoiceUseCase = IUseCase<CreateInvoiceUCInput, Invoice>;
 export type CreateCheckoutInvoiceUCInput = {
   bookingId: string;
   cashierUserId: string; // Truyền User ID từ Token
-  paymentMethodId: string;
+  paymentMethodId?: string | undefined;
   surcharge?: number | undefined;
   damageCharge?: number | undefined;
 };
@@ -61,6 +61,14 @@ export type UpdateInvoiceUCInput = {
   // (In legacy code, full update was allowed, but usually just status is updated)
 };
 export type IUpdateInvoiceUseCase = IUseCase<UpdateInvoiceUCInput, Invoice>;
+
+// Confirm Payment
+export type ConfirmPaymentUCInput = {
+  invoiceId: string;
+  paymentMethodId: string;
+  cashierUserId: string;
+};
+export type IConfirmPaymentUseCase = IUseCase<ConfirmPaymentUCInput, Invoice>;
 
 // Delete
 export type DeleteInvoiceUCInput = { id: string };

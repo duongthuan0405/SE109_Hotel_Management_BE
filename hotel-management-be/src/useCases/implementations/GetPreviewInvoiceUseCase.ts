@@ -1,5 +1,5 @@
 import { type IGetPreviewInvoiceUseCase, type GetPreviewInvoiceUCInput, type InvoicePreview } from "../types/IInvoiceUseCases.js";
-import { bookingRepository, serviceUsageRepository, settingsRepository } from "../../repository/index.js";
+import { bookingRepository, serviceUsageRepository, settingsRepository, rentalReceiptRepository } from "../../repository/index.js";
 
 export const getPreviewInvoice: IGetPreviewInvoiceUseCase = {
   execute: async (input: GetPreviewInvoiceUCInput): Promise<InvoicePreview> => {
@@ -7,7 +7,16 @@ export const getPreviewInvoice: IGetPreviewInvoiceUseCase = {
       throw { status: 400, message: "Thiếu ID Đơn đặt phòng" };
     }
 
-    const booking = await bookingRepository.findById(input.bookingId, { rentalSlips: true, customer: true });
+    let booking = await bookingRepository.findById(input.bookingId, { rentalSlips: true, customer: true });
+    
+    // Fallback: Nếu không tìm thấy bằng bookingId, thử tìm bằng rentalSlipId
+    if (!booking) {
+      const slip = await rentalReceiptRepository.findById(input.bookingId);
+      if (slip) {
+        booking = await bookingRepository.findById(slip.bookingId, { rentalSlips: true, customer: true });
+      }
+    }
+
     if (!booking) {
       throw { status: 404, message: "Không tìm thấy Đơn đặt phòng" };
     }

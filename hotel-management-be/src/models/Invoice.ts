@@ -30,7 +30,7 @@ export type Invoice = {
   damageCharge: number; // TienBoiThuong
   deposit: number; // TienDaCoc
   grandTotal: number; // TongThanhToan
-  paymentMethodId: string; // PhuongThucThanhToan
+  paymentMethodId?: string | undefined; // PhuongThucThanhToan
   paymentMethod?: PaymentMethod | undefined;
   paymentStatus: InvoicePaymentStatus; // TrangThaiThanhToan
   details: InvoiceDetail[]; // ChiTietHoaDon

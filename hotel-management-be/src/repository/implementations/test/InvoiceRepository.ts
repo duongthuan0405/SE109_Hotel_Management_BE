@@ -23,7 +23,7 @@ const applyInclude = async (invoice: Invoice, include?: InvoiceInclude): Promise
     result.customer = (await customerRepository.findById(invoice.customerId)) || undefined;
   }
   if (include.paymentMethod) {
-    result.paymentMethod = (await paymentMethodRepository.findById(invoice.paymentMethodId)) || undefined;
+    result.paymentMethod = (await paymentMethodRepository.findById(invoice.paymentMethodId ?? "")) || undefined;
   }
 
   return result;

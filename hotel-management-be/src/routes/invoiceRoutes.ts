@@ -4,7 +4,7 @@ import { authMiddleware } from "../middlewares/authMiddleware.js";
 import { roleMiddleware } from "../middlewares/roleMiddleware.js";
 
 const invoiceRoutes = Router();
-const staffRoles = ["Admin", "Manager", "Staff"];
+const staffRoles = ["Admin", "Manager", "Receptionist"];
 
 /**
  * @swagger
@@ -35,7 +35,8 @@ invoiceRoutes.get("/preview", authMiddleware, roleMiddleware(staffRoles), invoic
  * @swagger
  * /api/invoices/checkout:
  *   post:
- *     summary: Create checkout invoice (Final payment)
+ *     summary: Stage 1 - Create checkout invoice & Process room checkout
+ *     description: Creates an unpaid invoice and updates room status to Cleaning.
  *     tags: [Invoices]
  *     security:
  *       - bearerAuth: []
@@ -57,29 +58,6 @@ invoiceRoutes.get("/preview", authMiddleware, roleMiddleware(staffRoles), invoic
 invoiceRoutes.post("/checkout", authMiddleware, roleMiddleware(staffRoles), invoiceController.createCheckoutInvoice);
 
 /**
- * @swagger
- * /api/invoices:
- *   post:
- *     summary: Create a custom invoice
- *     tags: [Invoices]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/CreateInvoiceRequestDTO'
- *     responses:
- *       201:
- *         description: Invoice created
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/InvoiceResponse'
-
- */
-invoiceRoutes.post("/", authMiddleware, roleMiddleware(staffRoles), invoiceController.createInvoice);
 
 /**
  * @swagger
@@ -168,6 +146,37 @@ invoiceRoutes.get("/:id", authMiddleware, roleMiddleware([...staffRoles, "Custom
 
  */
 invoiceRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Manager"]), invoiceController.updateInvoice);
+
+/**
+ * @swagger
+ * /api/invoices/{id}/confirm-payment:
+ *   post:
+ *     summary: Stage 2 - Confirm payment & Collect money
+ *     description: Updates invoice status to Paid and sets the payment method.
+ *     tags: [Invoices]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ConfirmPaymentRequestDTO'
+ *     responses:
+ *       200:
+ *         description: Payment confirmed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InvoiceResponse'
+ */
+invoiceRoutes.post("/:id/confirm-payment", authMiddleware, roleMiddleware(staffRoles), invoiceController.confirmPayment);
 
 /**
  * @swagger

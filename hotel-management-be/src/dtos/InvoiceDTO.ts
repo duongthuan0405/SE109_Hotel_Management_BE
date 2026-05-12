@@ -82,32 +82,6 @@
  *           type: number
  *         ThanhTien:
  *           type: number
- *     CreateInvoiceRequestDTO:
- *       type: object
- *       required:
- *         - PhieuThuePhong
- *         - PhuongThucThanhToan
- *       properties:
- *         PhieuThuePhong:
- *           type: string
- *         KhachHang:
- *           type: string
- *         PhuongThucThanhToan:
- *           type: string
- *         TongTienPhong:
- *           type: number
- *         TongTienDichVu:
- *           type: number
- *         PhuThu:
- *           type: number
- *         TienBoiThuong:
- *           type: number
- *         TienDaCoc:
- *           type: number
- *         ChiTietHoaDon:
- *           type: array
- *           items:
- *             $ref: '#/components/schemas/CreateInvoiceDetailDTO'
  */
 export type CreateInvoiceDetailDTO = {
   TenHang: string;
@@ -138,18 +112,6 @@ export type InvoiceDetailDTO = CreateInvoiceDetailDTO & {
   MaCTHD: string;
 };
 
-export type CreateInvoiceRequestDTO = {
-  DatPhong: string;
-  KhachHang?: string;
-  PhuongThucThanhToan: string;
-  TongTienPhong?: number;
-  TongTienDichVu?: number;
-  PhuThu?: number;
-  TienBoiThuong?: number;
-  TienDaCoc?: number;
-  ChiTietHoaDon?: CreateInvoiceDetailDTO[];
-};
-
 /**
  * @swagger
  * components:
@@ -158,7 +120,6 @@ export type CreateInvoiceRequestDTO = {
  *       type: object
  *       required:
  *         - DatPhong
- *         - PhuongThucThanhToan
  *       properties:
  *         DatPhong:
  *           type: string
@@ -171,9 +132,25 @@ export type CreateInvoiceRequestDTO = {
  */
 export type CreateCheckoutInvoiceRequestDTO = {
   DatPhong: string;
-  PhuongThucThanhToan: string;
+  PhuongThucThanhToan?: string;
   PhuThu?: number;
   TienBoiThuong?: number;
+};
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ConfirmPaymentRequestDTO:
+ *       type: object
+ *       required:
+ *         - PhuongThucThanhToan
+ *       properties:
+ *         PhuongThucThanhToan:
+ *           type: string
+ */
+export type ConfirmPaymentRequestDTO = {
+  PhuongThucThanhToan: string;
 };
 
 /**

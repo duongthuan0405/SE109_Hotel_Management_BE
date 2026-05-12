@@ -4,7 +4,6 @@ import { invoiceRepository, serviceUsageRepository, rentalReceiptRepository, boo
 import { getPreviewInvoice } from "./GetPreviewInvoiceUseCase.js";
 import { createInvoice } from "./CreateInvoiceUseCase.js";
 import { createBookingHistory as createBookingHistoryUseCase } from "./CreateBookingHistoryUseCase.js";
-import { checkOut as checkOutUseCase } from "./CheckOutUseCase.js";
 
 export const createCheckoutInvoice: ICreateCheckoutInvoiceUseCase = {
   execute: async (input: CreateCheckoutInvoiceUCInput): Promise<Invoice> => {

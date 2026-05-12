@@ -181,7 +181,7 @@ const bookingPrismaRepository: IBookingRepository = {
 
     const codes: string[] = [];
     for (let i = 1; i <= quantity; i++) {
-      codes.push(`DP${(lastNumber + i).toString().padStart(4, "0")}`);
+      codes.push(`DP${(lastNumber + i).toString().padStart(5, "0")}`);
     }
     return codes;
   },

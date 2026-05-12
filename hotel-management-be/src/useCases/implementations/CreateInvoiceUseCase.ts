@@ -58,7 +58,7 @@ export const createInvoice: ICreateInvoiceUseCase = {
       damageCharge,
       deposit,
       grandTotal,
-      paymentStatus: "Paid", // Default to paid as per legacy
+      paymentStatus: "Unpaid", // Set as Unpaid by default as per new flow
       details: input.details || [],
     });
 

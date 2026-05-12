@@ -25,7 +25,7 @@ const createAccountUseCase: ICreateAccountUseCase = {
       const newUser = await userRepository.create({
         username,
         passwordHash,
-        role,
+        role: role as any,
       });
 
       // Nếu không phải khách hàng, tự động tạo hồ sơ nhân viên (Staff)

@@ -3,7 +3,14 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
+}
+
+enum UserRole {
+  Admin
+  Manager
+  Receptionist
+  Customer
 }
 
 // 1. Hệ thống Tài khoản & Nhân viên
@@ -11,7 +18,7 @@ model User {
   id                    String                @id @default(uuid())
   username              String                @unique
   passwordHash          String
-  role                  String
+  role                  UserRole
   staff                 Staff?
   customer              Customer?
   bookingHistories      BookingHistory[]
@@ -236,8 +243,8 @@ model Invoice {
   damageCharge    Float
   deposit         Float
   grandTotal      Float
-  paymentMethodId String
-  paymentMethod   PaymentMethod        @relation(fields: [paymentMethodId], references: [id])
+  paymentMethodId String?
+  paymentMethod   PaymentMethod?        @relation(fields: [paymentMethodId], references: [id])
   paymentStatus   InvoicePaymentStatus @default(Unpaid)
   createdAt       DateTime             @default(now())
   updatedAt       DateTime             @updatedAt

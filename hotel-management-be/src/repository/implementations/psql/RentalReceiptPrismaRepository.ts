@@ -174,7 +174,7 @@ const rentalReceiptPrismaRepository: IRentalReceiptRepository = {
 
     const codes: string[] = [];
     for (let i = 1; i <= quantity; i++) {
-      codes.push(`PTP${(lastNumber + i).toString().padStart(4, "0")}`);
+      codes.push(`PTP${(lastNumber + i).toString().padStart(5, "0")}`);
     }
     return codes;
   },

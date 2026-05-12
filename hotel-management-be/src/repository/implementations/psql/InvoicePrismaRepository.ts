@@ -15,7 +15,7 @@ const mapToEntity = (invoice: any): Invoice => ({
   damageCharge: invoice.damageCharge,
   deposit: invoice.deposit,
   grandTotal: invoice.grandTotal,
-  paymentMethodId: invoice.paymentMethodId,
+  paymentMethodId: invoice.paymentMethodId || undefined,
   paymentStatus: invoice.paymentStatus as Invoice["paymentStatus"],
   createdAt: invoice.createdAt,
   updatedAt: invoice.updatedAt,
@@ -90,7 +90,7 @@ const invoicePrismaRepository: IInvoiceRepository = {
         damageCharge: data.damageCharge,
         deposit: data.deposit,
         grandTotal: data.grandTotal,
-        paymentMethodId: data.paymentMethodId,
+        paymentMethodId: data.paymentMethodId ?? null,
         paymentStatus: data.paymentStatus,
         details: {
           create: data.details.map((d) => ({
@@ -217,10 +217,10 @@ const invoicePrismaRepository: IInvoiceRepository = {
       select: { code: true }
     });
 
-    if (!lastInvoice) return "HD0001";
+    if (!lastInvoice) return "HD00001";
 
     const lastNumber = parseInt(lastInvoice.code.replace("HD", ""), 10);
-    return `HD${(lastNumber + 1).toString().padStart(4, "0")}`;
+    return `HD${(lastNumber + 1).toString().padStart(5, "0")}`;
   },
 };
 

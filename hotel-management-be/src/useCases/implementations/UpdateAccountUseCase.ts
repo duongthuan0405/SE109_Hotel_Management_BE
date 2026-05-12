@@ -11,7 +11,7 @@ const updateAccountUseCase: IUpdateAccountUseCase = {
     }
 
     if (role !== undefined) {
-      user.role = role;
+      user.role = role as any;
       await userRepository.save(user);
     }
 

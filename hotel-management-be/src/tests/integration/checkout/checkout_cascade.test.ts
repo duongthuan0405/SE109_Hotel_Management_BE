@@ -42,7 +42,7 @@ describe("Checkout Cascade Integration Tests", () => {
         { code: "CT-2", roomId: "room-2" }
       ],
     });
-    multiRoomBookingId = booking.id;
+    multiRoomBookingId = booking.id;  
 
     // 4. Check-in phòng 1
     const slip1 = await rentalReceiptRepository.create({
@@ -82,7 +82,7 @@ describe("Checkout Cascade Integration Tests", () => {
       .post("/api/invoices/checkout")
       .set("Authorization", `Bearer ${adminToken}`)
       .send({
-        DatPhong: slip1Id,
+        DatPhong: multiRoomBookingId,
         PhuongThucThanhToan: paymentMethodId,
       });
 
