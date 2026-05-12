@@ -1,6 +1,6 @@
 import { type ICreateInvoiceUseCase, type CreateInvoiceUCInput } from "../types/IInvoiceUseCases.js";
 import { type Invoice } from "../../models/Invoice.js";
-import { invoiceRepository, rentalReceiptRepository, staffRepository } from "../../repository/index.js";
+import { invoiceRepository, bookingRepository, staffRepository } from "../../repository/index.js";
 
 export const createInvoice: ICreateInvoiceUseCase = {
   execute: async (input: CreateInvoiceUCInput): Promise<Invoice> => {
@@ -14,11 +14,23 @@ export const createInvoice: ICreateInvoiceUseCase = {
     let customerId = input.customerId;
     let deposit = input.deposit ?? 0;
     
-    if (input.rentalSlipId && (!customerId || deposit === 0)) {
-      const rentalSlip = await rentalReceiptRepository.findById(input.rentalSlipId, { booking: true });
-      if (rentalSlip?.booking) {
-        if (!customerId) customerId = rentalSlip.booking.customerId;
-        if (input.deposit === undefined) deposit = rentalSlip.booking.deposit;
+    let bookingId = input.bookingId;
+    if (bookingId && (!customerId || deposit === 0)) {
+      let booking = await bookingRepository.findById(bookingId);
+      
+      if (!booking) {
+        // Hỗ trợ tìm Booking từ RentalSlipId
+        const { rentalReceiptRepository } = await import("../../repository/index.js");
+        const slip = await rentalReceiptRepository.findById(bookingId);
+        if (slip) {
+          bookingId = slip.bookingId;
+          booking = await bookingRepository.findById(bookingId);
+        }
+      }
+
+      if (booking) {
+        if (!customerId) customerId = booking.customerId;
+        if (input.deposit === undefined) deposit = booking.deposit;
       }
     }
 
@@ -35,7 +47,7 @@ export const createInvoice: ICreateInvoiceUseCase = {
     const grandTotal = Math.max(0, roomTotal + serviceTotal + surcharge + damageCharge - deposit);
 
     const invoice = await invoiceRepository.create({
-      rentalSlipId: input.rentalSlipId,
+      bookingId: bookingId as string,
       cashierStaffId: staff.id, // Dùng ID Staff đã tìm thấy
       customerId,
       paymentMethodId: input.paymentMethodId,
@@ -46,7 +58,7 @@ export const createInvoice: ICreateInvoiceUseCase = {
       damageCharge,
       deposit,
       grandTotal,
-      paymentStatus: "Paid", // Default to paid as per legacy
+      paymentStatus: "Unpaid", // Set as Unpaid by default as per new flow
       details: input.details || [],
     });
 
@@ -55,9 +67,10 @@ export const createInvoice: ICreateInvoiceUseCase = {
       cashierStaff: true,
       customer: true,
       paymentMethod: true,
-      rentalSlip: true,
+      booking: true,
       details: true,
     });
+
 
     return populated!;
   },

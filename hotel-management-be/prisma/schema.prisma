@@ -3,7 +3,14 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
+}
+
+enum UserRole {
+  Admin
+  Manager
+  Receptionist
+  Customer
 }
 
 // 1. Hệ thống Tài khoản & Nhân viên
@@ -11,7 +18,7 @@ model User {
   id                    String                @id @default(uuid())
   username              String                @unique
   passwordHash          String
-  role                  String
+  role                  UserRole
   staff                 Staff?
   customer              Customer?
   bookingHistories      BookingHistory[]
@@ -122,6 +129,7 @@ model Booking {
   details      BookingDetail[]
   rentalSlips  RentalSlip[]
   history      BookingHistory[]
+  invoices     Invoice[]
 }
 
 model BookingDetail {
@@ -156,7 +164,6 @@ model RentalSlip {
   createdAt            DateTime         @default(now())
   updatedAt            DateTime         @updatedAt
   serviceUsages        ServiceUsage[]
-  invoices             Invoice[]
 }
 
 model Service {
@@ -223,8 +230,8 @@ model PaymentMethod {
 model Invoice {
   id              String               @id @default(uuid())
   code            String               @unique // MaHD
-  rentalSlipId    String
-  rentalSlip      RentalSlip           @relation(fields: [rentalSlipId], references: [id])
+  bookingId       String
+  booking         Booking              @relation(fields: [bookingId], references: [id])
   cashierStaffId  String
   cashierStaff    Staff                @relation(fields: [cashierStaffId], references: [id])
   customerId      String
@@ -236,8 +243,8 @@ model Invoice {
   damageCharge    Float
   deposit         Float
   grandTotal      Float
-  paymentMethodId String
-  paymentMethod   PaymentMethod        @relation(fields: [paymentMethodId], references: [id])
+  paymentMethodId String?
+  paymentMethod   PaymentMethod?        @relation(fields: [paymentMethodId], references: [id])
   paymentStatus   InvoicePaymentStatus @default(Unpaid)
   createdAt       DateTime             @default(now())
   updatedAt       DateTime             @updatedAt

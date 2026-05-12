@@ -9,20 +9,29 @@ const mockPasswordHash = bcrypt.hashSync("123456", 10);
 export const SEED_USER_ID_ADMIN = "550e8400-e29b-41d4-a716-446655440000";
 export const SEED_USER_ID_CUSTOMER = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
 
-const mockUsers: User[] = [
-  {
-    id: SEED_USER_ID_ADMIN,
-    username: "admin",
-    passwordHash: mockPasswordHash,
-    role: "Admin",
-  },
-  {
-    id: SEED_USER_ID_CUSTOMER,
-    username: "customer1",
-    passwordHash: mockPasswordHash,
-    role: "Customer",
-  },
-];
+// Sử dụng globalThis để đảm bảo chia sẻ dữ liệu giữa các module cache khác nhau trong môi trường test
+const getMockUsers = (): User[] => {
+  const g = globalThis as any;
+  if (!g.__MOCK_USERS__) {
+    g.__MOCK_USERS__ = [
+      {
+        id: SEED_USER_ID_ADMIN,
+        username: "admin",
+        passwordHash: mockPasswordHash,
+        role: "Admin",
+      },
+      {
+        id: SEED_USER_ID_CUSTOMER,
+        username: "customer1",
+        passwordHash: mockPasswordHash,
+        role: "Customer",
+      },
+    ];
+  }
+  return g.__MOCK_USERS__;
+};
+
+const mockUsers = getMockUsers();
 
 const userRepository: IUserRepository = {
   findAll: async (): Promise<User[]> => {

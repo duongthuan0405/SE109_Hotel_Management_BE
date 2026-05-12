@@ -4,25 +4,34 @@ import customerRepository from "./CustomerRepository.js";
 import roomRepository from "./RoomRepository.js";
 import crypto from "crypto";
 
-const mockBookings: Booking[] = [
-  {
-    id: "booking-1",
-    code: "DP001",
-    customerId: "cust-1",
-    roomClass: "STD",
-    startDate: new Date("2026-05-01"),
-    endDate: new Date("2026-05-03"),
-    roomQuantity: 1,
-    deposit: 500000,
-    totalAmount: 1000000,
-    details: [
-      { code: "CTDP1", roomId: "room-1" }
-    ],
-    status: "Confirmed",
-    createdAt: new Date(),
-    updatedAt: new Date(),
+// Sử dụng globalThis để đảm bảo chia sẻ dữ liệu giữa các module cache khác nhau trong môi trường test
+const getMockBookings = (): Booking[] => {
+  const g = globalThis as any;
+  if (!g.__MOCK_BOOKINGS__) {
+    g.__MOCK_BOOKINGS__ = [
+      {
+        id: "booking-1",
+        code: "DP001",
+        customerId: "cust-1",
+        roomClass: "STD",
+        startDate: new Date("2026-05-01"),
+        endDate: new Date("2026-05-03"),
+        roomQuantity: 1,
+        deposit: 500000,
+        totalAmount: 1000000,
+        details: [
+          { code: "CTDP1", roomId: "room-1" }
+        ],
+        status: "Confirmed",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
+    ];
   }
-];
+  return g.__MOCK_BOOKINGS__;
+};
+
+const mockBookings = getMockBookings();
 
 const applyInclude = async (booking: Booking, include?: BookingInclude): Promise<Booking> => {
   if (!include) return { ...booking };
@@ -40,6 +49,12 @@ const applyInclude = async (booking: Booking, include?: BookingInclude): Promise
         return { ...d, room: room || undefined };
       })
     );
+  }
+
+  if ((include as any).rentalSlips) {
+    const { default: rentalReceiptRepository } = await import("./RentalReceiptRepository.js");
+    const allSlips = await rentalReceiptRepository.findAll();
+    (result as any).rentalSlips = allSlips.filter((s: any) => s.bookingId === booking.id);
   }
 
   return result;
@@ -105,17 +120,34 @@ const bookingRepositoryImpl: IBookingRepository = {
     return mockBookings.length;
   },
   generateNextCode: async (): Promise<string> => {
-    const nextId = mockBookings.length + 1;
-    return `DP${String(nextId).padStart(3, "0")}`;
+    const codes = await bookingRepositoryImpl.generateNextCodes(1);
+    return codes[0] as string;
   },
+
+  generateNextCodes: async (quantity: number): Promise<string[]> => {
+    // Tìm mã lớn nhất trong mock data
+    let maxNumber = 0;
+    mockBookings.forEach(b => {
+      const num = parseInt(b.code.replace("DP", ""), 10);
+      if (!isNaN(num) && num > maxNumber) maxNumber = num;
+    });
+
+    const codes: string[] = [];
+    for (let i = 1; i <= quantity; i++) {
+      codes.push(`DP${String(maxNumber + i).padStart(4, "0")}`);
+    }
+    return codes;
+  },
+
   generateNextDetailCode: (index: number): string => {
     return `CTDP-${Date.now()}-${index}`;
   },
+
   findOverlappingByRoom: async (roomId: string, startDate: Date, endDate: Date, excludeBookingId?: string): Promise<Booking | null> => {
     const overlap = mockBookings.find((b) => {
       if (excludeBookingId && b.id === excludeBookingId) return false;
       if (["Cancelled", "CheckedOut", "NoShow"].includes(b.status)) return false;
-      
+
       const hasRoom = b.details.some(d => d.roomId === roomId);
       if (!hasRoom) return false;
 
@@ -124,6 +156,7 @@ const bookingRepositoryImpl: IBookingRepository = {
     });
     return overlap || null;
   },
+
   updateStatus: async (id: string, status: Booking["status"]): Promise<void> => {
     const booking = mockBookings.find(b => b.id === id);
     if (booking) {
@@ -131,6 +164,8 @@ const bookingRepositoryImpl: IBookingRepository = {
       booking.updatedAt = new Date();
     }
   },
+
+
 };
 
 

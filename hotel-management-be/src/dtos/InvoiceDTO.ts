@@ -82,32 +82,6 @@
  *           type: number
  *         ThanhTien:
  *           type: number
- *     CreateInvoiceRequestDTO:
- *       type: object
- *       required:
- *         - PhieuThuePhong
- *         - PhuongThucThanhToan
- *       properties:
- *         PhieuThuePhong:
- *           type: string
- *         KhachHang:
- *           type: string
- *         PhuongThucThanhToan:
- *           type: string
- *         TongTienPhong:
- *           type: number
- *         TongTienDichVu:
- *           type: number
- *         PhuThu:
- *           type: number
- *         TienBoiThuong:
- *           type: number
- *         TienDaCoc:
- *           type: number
- *         ChiTietHoaDon:
- *           type: array
- *           items:
- *             $ref: '#/components/schemas/CreateInvoiceDetailDTO'
  */
 export type CreateInvoiceDetailDTO = {
   TenHang: string;
@@ -138,18 +112,6 @@ export type InvoiceDetailDTO = CreateInvoiceDetailDTO & {
   MaCTHD: string;
 };
 
-export type CreateInvoiceRequestDTO = {
-  PhieuThuePhong: string;
-  KhachHang?: string;
-  PhuongThucThanhToan: string;
-  TongTienPhong?: number;
-  TongTienDichVu?: number;
-  PhuThu?: number;
-  TienBoiThuong?: number;
-  TienDaCoc?: number;
-  ChiTietHoaDon?: CreateInvoiceDetailDTO[];
-};
-
 /**
  * @swagger
  * components:
@@ -157,32 +119,38 @@ export type CreateInvoiceRequestDTO = {
  *     CreateCheckoutInvoiceRequestDTO:
  *       type: object
  *       required:
- *         - PhieuThuePhong
- *         - PhuongThucThanhToan
+ *         - DatPhong
  *       properties:
- *         PhieuThuePhong:
- *           type: string
- *         KhachHang:
+ *         DatPhong:
  *           type: string
  *         PhuongThucThanhToan:
  *           type: string
- *         TongTienPhong:
- *           type: number
  *         PhuThu:
  *           type: number
  *         TienBoiThuong:
  *           type: number
- *         TienDaCoc:
- *           type: number
  */
 export type CreateCheckoutInvoiceRequestDTO = {
-  PhieuThuePhong: string;
-  KhachHang?: string;
-  PhuongThucThanhToan: string;
-  TongTienPhong?: number;
+  DatPhong: string;
+  PhuongThucThanhToan?: string;
   PhuThu?: number;
   TienBoiThuong?: number;
-  TienDaCoc?: number;
+};
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ConfirmPaymentRequestDTO:
+ *       type: object
+ *       required:
+ *         - PhuongThucThanhToan
+ *       properties:
+ *         PhuongThucThanhToan:
+ *           type: string
+ */
+export type ConfirmPaymentRequestDTO = {
+  PhuongThucThanhToan: string;
 };
 
 /**
@@ -196,12 +164,12 @@ export type CreateCheckoutInvoiceRequestDTO = {
  *           type: string
  *         MaHD:
  *           type: string
- *         PhieuThuePhong:
+ *         DatPhong:
  *           type: object
  *           properties:
  *             _id:
  *               type: string
- *             MaPTP:
+ *             MaDatPhong:
  *               type: string
  *         NhanVienThuNgan:
  *           type: object
@@ -249,7 +217,7 @@ export type CreateCheckoutInvoiceRequestDTO = {
 export type InvoiceDataDTO = {
   _id: string;
   MaHD: string;
-  PhieuThuePhong: any;
+  DatPhong: any;
   NhanVienThuNgan: any;
   KhachHang: any;
   NgayLap: Date;

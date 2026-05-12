@@ -81,8 +81,12 @@ const servicePrismaRepository: IServiceRepository = {
   },
 
   generateNextCode: async (): Promise<string> => {
-    const count = await prisma.service.count();
-    return `DV${(count + 1).toString().padStart(3, "0")}`;
+    const last = await prisma.service.findFirst({
+      orderBy: { code: "desc" },
+      select: { code: true }
+    });
+    const lastNumber = last ? parseInt(last.code.replace("DV", ""), 10) : 0;
+    return `DV${(lastNumber + 1).toString().padStart(5, "0")}`;
   },
 };
 

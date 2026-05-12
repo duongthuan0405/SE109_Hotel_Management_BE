@@ -10,7 +10,7 @@ export const getCustomerInvoices: IGetCustomerInvoicesUseCase = {
     }
 
     return await invoiceRepository.findByCustomerId(customer.id, {
-      rentalSlip: true,
+      booking: true,
       cashierStaff: true,
       customer: true,
       paymentMethod: true,

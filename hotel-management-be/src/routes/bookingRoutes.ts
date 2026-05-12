@@ -155,7 +155,7 @@ bookingRoutes.post("/customer/:id/cancel", authMiddleware, roleMiddleware(["Cust
  */
 bookingRoutes.delete("/customer/:id", authMiddleware, roleMiddleware(["Customer"]), bookingController.customerDelete);
 
-const staffRoles = ["Admin", "Manager", "Staff"];
+const staffRoles = ["Admin", "Manager", "Receptionist"];
 
 /**
  * @swagger

@@ -65,8 +65,12 @@ const paymentMethodPrismaRepository: IPaymentMethodRepository = {
   },
 
   generateNextCode: async (): Promise<string> => {
-    const count = await prisma.paymentMethod.count();
-    return `PM${(count + 1).toString().padStart(2, "0")}`;
+    const last = await prisma.paymentMethod.findFirst({
+      orderBy: { code: "desc" },
+      select: { code: true }
+    });
+    const lastNumber = last ? parseInt(last.code.replace("PM", ""), 10) : 0;
+    return `PM${(lastNumber + 1).toString().padStart(5, "0")}`;
   },
 };
 

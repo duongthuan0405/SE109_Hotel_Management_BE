@@ -3,19 +3,28 @@ import { type IStaffRepository, type StaffInclude } from "../../types/IStaffRepo
 import userRepository, { SEED_USER_ID_ADMIN } from "./UserRepository.js";
 import crypto from "crypto";
 
-const mockStaffs: Staff[] = [
-  {
-    id: "f47ac10b-58cc-4372-a567-0e02b2c3d479", // UUID chuẩn cho Admin Staff
-    code: "NV001",
-    fullName: "Admin Staff",
-    position: "Manager",
-    phone: "0999999999",
-    email: "admin@hotel.com",
-    userId: SEED_USER_ID_ADMIN,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+// Sử dụng globalThis để đảm bảo chia sẻ dữ liệu giữa các module cache khác nhau trong môi trường test
+const getMockStaffs = (): Staff[] => {
+  const g = globalThis as any;
+  if (!g.__MOCK_STAFFS__) {
+    g.__MOCK_STAFFS__ = [
+      {
+        id: "f47ac10b-58cc-4372-a567-0e02b2c3d479", // UUID chuẩn cho Admin Staff
+        code: "NV001",
+        fullName: "Admin Staff",
+        position: "Manager",
+        phone: "0999999999",
+        email: "admin@hotel.com",
+        userId: SEED_USER_ID_ADMIN,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
+    ];
   }
-];
+  return g.__MOCK_STAFFS__;
+};
+
+const mockStaffs = getMockStaffs();
 
 const applyInclude = async (staff: Staff, include?: StaffInclude): Promise<Staff> => {
   if (!include) return { ...staff };
@@ -77,9 +86,22 @@ const staffRepository: IStaffRepository = {
     return false;
   },
   generateNextCode: async (): Promise<string> => {
-    const nextNum = mockStaffs.length + 1;
-    return `NV${nextNum.toString().padStart(3, "0")}`;
+    const codes = await staffRepository.generateNextCodes(1);
+    return codes[0] as string;
   },
+  generateNextCodes: async (quantity: number): Promise<string[]> => {
+    let maxNumber = 0;
+    mockStaffs.forEach(s => {
+      const num = parseInt(s.code.replace("NV", ""), 10);
+      if (!isNaN(num) && num > maxNumber) maxNumber = num;
+    });
+    const codes: string[] = [];
+    for (let i = 1; i <= quantity; i++) {
+      codes.push(`NV${(maxNumber + i).toString().padStart(3, "0")}`);
+    }
+    return codes;
+  },
+
 };
 
 

@@ -16,4 +16,6 @@ export interface IRentalReceiptRepository {
   delete(id: string): Promise<boolean>;
   countAll(): Promise<number>;
   generateNextCode(): Promise<string>;
+  generateNextCodes(quantity: number): Promise<string[]>;
 }
+

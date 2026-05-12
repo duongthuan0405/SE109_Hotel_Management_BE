@@ -14,4 +14,6 @@ export interface IStaffRepository {
   update(id: string, staff: Partial<Omit<Staff, "user">>, include?: StaffInclude): Promise<Staff | null>;
   delete(id: string): Promise<boolean>;
   generateNextCode(): Promise<string>;
+  generateNextCodes(quantity: number): Promise<string[]>;
 }
+

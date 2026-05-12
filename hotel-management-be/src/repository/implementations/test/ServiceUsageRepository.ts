@@ -5,7 +5,16 @@ import rentalReceiptRepository from "./RentalReceiptRepository.js";
 import serviceRepository from "./ServiceRepository.js";
 import bookingRepository from "./BookingRepository.js";
 
-let serviceUsages: ServiceUsage[] = [];
+// Sử dụng globalThis để đảm bảo chia sẻ dữ liệu giữa các module cache khác nhau trong môi trường test
+const getMockServiceUsages = (): ServiceUsage[] => {
+  const g = globalThis as any;
+  if (!g.__MOCK_SERVICE_USAGES__) {
+    g.__MOCK_SERVICE_USAGES__ = [];
+  }
+  return g.__MOCK_SERVICE_USAGES__;
+};
+
+let serviceUsages = getMockServiceUsages();
 
 const applyInclude = async (usage: ServiceUsage, include?: ServiceUsageInclude): Promise<ServiceUsage> => {
   if (!include) return { ...usage };

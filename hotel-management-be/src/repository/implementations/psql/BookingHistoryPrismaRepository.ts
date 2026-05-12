@@ -89,8 +89,12 @@ const bookingHistoryPrismaRepository: IBookingHistoryRepository = {
   },
 
   generateNextCode: async (): Promise<string> => {
-    const count = await prisma.bookingHistory.count();
-    return `LSDP${(count + 1).toString().padStart(4, "0")}`;
+    const last = await prisma.bookingHistory.findFirst({
+      orderBy: { code: "desc" },
+      select: { code: true }
+    });
+    const lastNumber = last ? parseInt(last.code.replace("LSDP", ""), 10) : 0;
+    return `LSDP${(lastNumber + 1).toString().padStart(5, "0")}`;
   },
 };
 
