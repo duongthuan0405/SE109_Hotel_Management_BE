@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import request from "supertest";
 import app from "../../../server.js";
+import { bookingRepository, rentalReceiptRepository, serviceUsageRepository } from "../../../repository/index.js";
 
 describe("Invoice API Integration Tests", () => {
   let adminToken = "";
@@ -11,6 +12,7 @@ describe("Invoice API Integration Tests", () => {
   // slip-1 corresponds to booking-1 (Customer 1, deposit 500k, 2 nights at Normal = 400k/night * 2 = 800k)
   let testStaffId = "";
   let testCustomerId = "";
+  let testBookingId = "";
   let rentalSlipId = "";
   let bookingId = "";
   let createdInvoiceId = "";
@@ -33,7 +35,6 @@ describe("Invoice API Integration Tests", () => {
 
     // Create mock dependencies for Invoice Tests
     // 1. Create a Booking
-    const { bookingRepository, rentalReceiptRepository, serviceUsageRepository } = await import("../../../repository/index.js");
     
     // We need customer id and roomClass
     const booking = await bookingRepository.create({
@@ -61,7 +62,8 @@ describe("Invoice API Integration Tests", () => {
       checkInDate: new Date(),
       expectedCheckOutDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
     });
-    // Set slipId
+    // Set ids
+    testBookingId = booking.id;
     rentalSlipId = slip.id;
 
     // 3. Create Service Usages for this slip
@@ -90,7 +92,7 @@ describe("Invoice API Integration Tests", () => {
   describe("GET /api/invoices/preview", () => {
     it("should calculate correct preview totals for slip-1", async () => {
       const res = await request(app)
-        .get(`/api/invoices/preview?bookingId=${bookingId}`)
+        .get(`/api/invoices/preview?bookingId=${testBookingId}`)
         .set("Authorization", `Bearer ${adminToken}`);
 
       expect(res.status).toBe(200);
@@ -121,7 +123,7 @@ describe("Invoice API Integration Tests", () => {
         .post("/api/invoices/checkout")
         .set("Authorization", `Bearer ${adminToken}`)
         .send({
-          MaDatPhong: bookingId,
+          DatPhong: testBookingId,
           PhuongThucThanhToan: paymentMethodId,
           // TUYỆT ĐỐI KHÔNG gửi NhanVienThuNgan ở đây
         });
@@ -179,7 +181,7 @@ describe("Invoice API Integration Tests", () => {
 
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.MaDatPhong).toBeDefined();
+      expect(res.body.data.DatPhong).toBeDefined();
     });
   });
 

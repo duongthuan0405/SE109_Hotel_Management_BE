@@ -9,18 +9,19 @@ import { createBookingHistory as createBookingHistoryUseCase } from "./CreateBoo
 export const createRentalReceipt: ICreateRentalReceiptUseCase = {
   execute: async (input: CreateRentalReceiptUCInput): Promise<RentalSlip[]> => {
     return await unitOfWork.runInTransaction(async () => {
-      // 1. Tìm Staff từ UserID (Mapping ở UseCase)
+      // 1. Tìm Staff từ UserID
       const staff = await staffRepository.findByUserId(input.checkInStaffUserId);
       if (!staff) {
         throw { status: 403, message: "Nhân viên thực hiện không tồn tại" };
       }
 
-      // 2. Tìm Booking để lấy thông tin phòng & ngày kết thúc
+      // 2. Tìm Booking và lấy kèm chi tiết phòng
       const booking = await bookingRepository.findById(input.bookingId, { rooms: true });
       if (!booking) {
         throw { status: 404, message: "Đơn đặt phòng không tồn tại" };
       }
 
+      // Xác thực trạng thái booking trước khi check-in
       if (booking.status === "CheckedIn") {
         throw { status: 400, message: "Đơn đặt phòng đã được Check-in rồi" };
       }
@@ -31,65 +32,63 @@ export const createRentalReceipt: ICreateRentalReceiptUseCase = {
         throw { status: 400, message: "Đơn đặt phòng đã bị hủy, không thể Check-in" };
       }
 
-      // Lấy Ngày trả dự kiến chung cho toàn bộ phòng
-      let finalExpectedCheckOutDate = input.expectedCheckOutDate;
-      if (!finalExpectedCheckOutDate || isNaN(finalExpectedCheckOutDate.getTime())) {
-        finalExpectedCheckOutDate = booking.endDate;
-      }
-
-      // Tìm toàn bộ danh sách Room ID cần Check-in (Từ chi tiết đặt phòng)
-      const roomIds: string[] = [];
-      if (booking.details && booking.details.length > 0) {
-        booking.details.forEach(detail => {
-          if (detail.roomId) roomIds.push(detail.roomId);
-        });
-      } else if (input.roomId) {
-        roomIds.push(input.roomId);
-      }
-
-      if (roomIds.length === 0) {
-        throw { status: 400, message: "Đơn đặt phòng chưa được gán phòng nào để Check-in" };
-      }
+      console.log(`[CheckIn] Tìm thấy ${booking.details?.length || 0} chi tiết phòng cho Booking ${booking.code}`);
 
       const createdSlips: RentalSlip[] = [];
 
-      // 3. Duyệt qua toàn bộ các phòng để tạo Phiếu thuê phòng (Rental Slip)
-      for (const rid of roomIds) {
-        // Xác định đơn giá cho từng phòng cụ thể
-        let finalAdjustedPrice = input.adjustedPrice;
-        if (finalAdjustedPrice === undefined || finalAdjustedPrice === null) {
-          const matchingDetail = booking.details.find(d => d.roomId === rid);
-          finalAdjustedPrice = matchingDetail?.room?.price || 0;
+      // 3. Chuẩn bị mã số hàng loạt từ Repository
+      const detailCount = booking.details?.length || 0;
+      const nextCodes = await rentalReceiptRepository.generateNextCodes(detailCount);
+      let codeIndex = 0;
+
+      // 4. Check-in TOÀN BỘ các phòng đã đặt trong Booking
+      for (const detail of booking.details || []) {
+        const roomId = detail.roomId;
+        if (!roomId) continue;
+
+        // Kiểm tra xem Client có gửi thông tin điều chỉnh cho phòng này không
+        const override = input.rooms?.find((r) => r.roomId === roomId);
+
+        const finalPrice = override?.adjustedPrice ?? detail.room?.price ?? 0;
+        const finalCheckOutDate = override?.expectedCheckOutDate ?? booking.endDate;
+
+        // Kiểm tra tính hợp lệ của ngày trả
+        if (finalCheckOutDate && isNaN(new Date(finalCheckOutDate).getTime())) {
+          console.error(`[CheckIn] Ngày trả phòng không hợp lệ cho phòng ${roomId}`);
+          codeIndex++;
+          continue; 
         }
 
-        // Tạo phiếu mới (Mã PTP được Repo tự sinh)
+        const generatedCode = nextCodes[codeIndex++];
+
+        console.log(`[CheckIn] Đang tạo phiếu ${generatedCode} cho phòng ${roomId}`);
+
         const slip = await rentalReceiptRepository.create({
+          code: generatedCode,
           bookingId: input.bookingId,
-          roomId: rid,
+          roomId: roomId,
           checkInDate: new Date(),
-          expectedCheckOutDate: finalExpectedCheckOutDate,
-          adjustedPrice: finalAdjustedPrice,
+          expectedCheckOutDate: finalCheckOutDate,
+          adjustedPrice: finalPrice,
           checkInStaffId: staff.id,
           status: "CheckedIn",
         });
 
-        // Cập nhật trạng thái phòng sang Occupied
-        await roomRepository.updateStatus(rid, "Occupied");
+        // 5. Cập nhật trạng thái phòng sang Occupied
+        await roomRepository.updateStatus(roomId, "Occupied");
 
-        // Lấy bản ghi đã populate
         const populatedSlip = await rentalReceiptRepository.findById(slip.id, {
           booking: true,
           room: true,
           checkInStaff: true,
         });
-        if (populatedSlip) {
-          createdSlips.push(populatedSlip);
-        }
+        if (populatedSlip) createdSlips.push(populatedSlip);
       }
 
-      // 4. TỰ ĐỘNG HÓA: Cập nhật trạng thái Booking và ghi lịch sử
-     
-        const oldStatus = booking.status;
+      console.log(`[CheckIn] Đã tạo thành công ${createdSlips.length} phiếu thuê`);
+
+      // 5. Cập nhật trạng thái Booking sang CheckedIn nếu chưa
+      const oldStatus = booking.status;
         await bookingRepository.updateStatus(booking.id, "CheckedIn");
 
         // Ghi lịch sử tự động
@@ -99,10 +98,8 @@ export const createRentalReceipt: ICreateRentalReceiptUseCase = {
           newStatus: "CheckedIn",
           userId: input.checkInStaffUserId,
         });
-      
 
       return createdSlips;
     });
   },
 };
-

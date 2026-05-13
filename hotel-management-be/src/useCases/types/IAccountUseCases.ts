@@ -11,7 +11,7 @@ export type IGetAccountByIdUseCase = IUseCase<GetAccountByIdUCInput, AccountUCOu
 export type CreateAccountUCInput = {
   username: string;
   password: string;
-  role: string;
+  role: string; // Vẫn để string để nhận từ DTO, sẽ cast sau hoặc đổi sang UserRole nếu muốn chặt chẽ hơn
 };
 export type ICreateAccountUseCase = IUseCase<CreateAccountUCInput, AccountUCOutput>;
 

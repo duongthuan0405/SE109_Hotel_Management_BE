@@ -23,7 +23,7 @@ const applyInclude = async (invoice: Invoice, include?: InvoiceInclude): Promise
     result.customer = (await customerRepository.findById(invoice.customerId)) || undefined;
   }
   if (include.paymentMethod) {
-    result.paymentMethod = (await paymentMethodRepository.findById(invoice.paymentMethodId)) || undefined;
+    result.paymentMethod = (await paymentMethodRepository.findById(invoice.paymentMethodId ?? "")) || undefined;
   }
 
   return result;
@@ -94,11 +94,15 @@ const invoiceRepository: IInvoiceRepository = {
   countAll: async (): Promise<number> => {
     return invoices.length;
   },
+
   generateNextCode: async (): Promise<string> => {
-    const nextId = invoices.length + 1;
-    return `HD${String(nextId).padStart(3, "0")}`;
+    let maxNumber = 0;
+    invoices.forEach(inv => {
+      const num = parseInt(inv.code.replace("HD", ""), 10);
+      if (!isNaN(num) && num > maxNumber) maxNumber = num;
+    });
+    return `HD${String(maxNumber + 1).padStart(4, "0")}`;
   },
 };
-
 
 export default invoiceRepository;

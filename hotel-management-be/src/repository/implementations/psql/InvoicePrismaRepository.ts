@@ -15,7 +15,7 @@ const mapToEntity = (invoice: any): Invoice => ({
   damageCharge: invoice.damageCharge,
   deposit: invoice.deposit,
   grandTotal: invoice.grandTotal,
-  paymentMethodId: invoice.paymentMethodId,
+  paymentMethodId: invoice.paymentMethodId || undefined,
   paymentStatus: invoice.paymentStatus as Invoice["paymentStatus"],
   createdAt: invoice.createdAt,
   updatedAt: invoice.updatedAt,
@@ -30,17 +30,20 @@ const mapToEntity = (invoice: any): Invoice => ({
   booking: invoice.booking ? {
     id: invoice.booking.id,
     code: invoice.booking.code,
+    customerId: invoice.booking.customerId,
     roomClass: invoice.booking.roomClass,
     startDate: invoice.booking.startDate,
     endDate: invoice.booking.endDate,
+    roomQuantity: invoice.booking.roomQuantity,
     deposit: invoice.booking.deposit,
     totalAmount: invoice.booking.totalAmount,
     status: invoice.booking.status,
-    details: [], // Not strictly needed to populate fully here
-    roomQuantity: invoice.booking.roomQuantity,
+    details: [], // Initializing to satisfy type
+    rentalSlips: [], // Initializing to satisfy type
     createdAt: invoice.booking.createdAt,
     updatedAt: invoice.booking.updatedAt,
   } : undefined,
+
   cashierStaff: invoice.cashierStaff ? {
     id: invoice.cashierStaff.id,
     code: invoice.cashierStaff.code,
@@ -87,7 +90,7 @@ const invoicePrismaRepository: IInvoiceRepository = {
         damageCharge: data.damageCharge,
         deposit: data.deposit,
         grandTotal: data.grandTotal,
-        paymentMethodId: data.paymentMethodId,
+        paymentMethodId: data.paymentMethodId ?? "",
         paymentStatus: data.paymentStatus,
         details: {
           create: data.details.map((d) => ({
@@ -209,8 +212,15 @@ const invoicePrismaRepository: IInvoiceRepository = {
   },
 
   generateNextCode: async (): Promise<string> => {
-    const count = await prisma.invoice.count();
-    return `HD${(count + 1).toString().padStart(4, "0")}`;
+    const lastInvoice = await prisma.invoice.findFirst({
+      orderBy: { code: "desc" },
+      select: { code: true }
+    });
+
+    if (!lastInvoice) return "HD00001";
+
+    const lastNumber = parseInt(lastInvoice.code.replace("HD", ""), 10);
+    return `HD${(lastNumber + 1).toString().padStart(5, "0")}`;
   },
 };
 

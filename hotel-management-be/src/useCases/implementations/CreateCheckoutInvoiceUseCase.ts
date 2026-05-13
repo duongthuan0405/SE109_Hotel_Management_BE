@@ -1,9 +1,9 @@
 import { type ICreateCheckoutInvoiceUseCase, type CreateCheckoutInvoiceUCInput, type CreateInvoiceDetailUCInput } from "../types/IInvoiceUseCases.js";
 import { type Invoice } from "../../models/Invoice.js";
-import { serviceUsageRepository, rentalReceiptRepository, staffRepository, unitOfWork } from "../../repository/index.js";
+import { invoiceRepository, serviceUsageRepository, rentalReceiptRepository, bookingRepository, staffRepository, roomRepository, unitOfWork } from "../../repository/index.js";
 import { getPreviewInvoice } from "./GetPreviewInvoiceUseCase.js";
 import { createInvoice } from "./CreateInvoiceUseCase.js";
-import { checkOut as checkOutUseCase } from "./CheckOutUseCase.js";
+import { createBookingHistory as createBookingHistoryUseCase } from "./CreateBookingHistoryUseCase.js";
 
 export const createCheckoutInvoice: ICreateCheckoutInvoiceUseCase = {
   execute: async (input: CreateCheckoutInvoiceUCInput): Promise<Invoice> => {
@@ -14,23 +14,47 @@ export const createCheckoutInvoice: ICreateCheckoutInvoiceUseCase = {
         throw { status: 403, message: "Nhân viên thực hiện không tồn tại" };
       }
 
-      // 2. Lấy thông tin Preview để tính toán tự động cho toàn đơn đặt phòng
-      const preview = await getPreviewInvoice.execute({ bookingId: input.bookingId });
+      // 2. Lấy thông tin Preview để tính toán tự động
+      let bookingId = input.bookingId;
+      let booking = await bookingRepository.findById(bookingId, { rentalSlips: true });
 
-      const customerId = input.customerId || preview.customerId;
-      const roomTotal = input.roomTotal ?? preview.roomTotal;
-      const deposit = input.deposit ?? preview.deposit;
+      // Fallback: Tìm Booking từ RentalSlipId nếu ID truyền vào là RentalSlipId
+      if (!booking) {
+        const slip = await rentalReceiptRepository.findById(bookingId);
+        if (slip) {
+          bookingId = slip.bookingId;
+          booking = await bookingRepository.findById(bookingId, { rentalSlips: true });
+        }
+      }
 
-      // 3. Xây dựng chi tiết hóa đơn từ TẤT CẢ DỊCH VỤ của CÁC PHÒNG trong Đơn đặt
-      const rentalSlips = await rentalReceiptRepository.findByBookingId(input.bookingId);
-      const slipIds = rentalSlips.map(s => s.id);
+      if (!booking) {
+        throw { status: 404, message: "Không tìm thấy Đơn đặt phòng" };
+      }
+
+      const preview = await getPreviewInvoice.execute({ bookingId });
+
+      const customerId = preview.customerId;
+      const roomTotal = preview.roomTotal;
+      const deposit = preview.deposit;
+      const surcharge = input.surcharge || 0;
+      const damageCharge = input.damageCharge || 0;
+
+      // 3. Xây dựng chi tiết hóa đơn từ các dịch vụ của TẤT CẢ các phòng
+      const slips = booking.rentalSlips || [];
+      const slipIds = slips.map(s => s.id);
+      
+      let completedUsages: any[] = [];
+      if (slipIds.length > 0) {
+        const serviceUsages = await serviceUsageRepository.findByRentalSlipIds(slipIds, { service: true });
+        completedUsages = serviceUsages.filter(u => u.status === "Completed");
+      }
 
       const details: CreateInvoiceDetailUCInput[] = [];
       
-      // Thêm dòng tiền phòng tổng cộng
+      // Thêm dòng tiền phòng (Tổng cộng)
       if (roomTotal > 0) {
         details.push({
-          itemName: "Tổng tiền các phòng trong Booking",
+          itemName: `Tiền phòng (Tổng ${slips.length} phòng)`,
           quantity: 1,
           unitPrice: roomTotal,
           totalAmount: roomTotal,
@@ -38,50 +62,78 @@ export const createCheckoutInvoice: ICreateCheckoutInvoiceUseCase = {
       }
 
       let serviceTotal = 0;
-      
-      if (slipIds.length > 0) {
-        const serviceUsages = await serviceUsageRepository.findByRentalSlipIds(slipIds, { service: true });
-        const completedUsages = serviceUsages.filter(u => u.status === "Completed");
+      // Thêm các dòng dịch vụ gom từ tất cả các phòng
+      completedUsages.forEach((usage) => {
+        details.push({
+          itemName: `${usage.service?.name || "Dịch vụ"} (P.${slips.find(s => s.id === usage.rentalSlipId)?.room?.code || usage.rentalSlipId.substring(0,8)})`,
+          quantity: usage.quantity,
+          unitPrice: usage.service?.price || (usage.totalAmount / usage.quantity),
+          totalAmount: usage.totalAmount,
+        });
+        serviceTotal += usage.totalAmount;
+      });
 
-        // Thêm từng dòng dịch vụ của từng phòng
-        completedUsages.forEach((usage) => {
-          details.push({
-            itemName: usage.service?.name || `Dịch vụ ${usage.code}`,
-            quantity: usage.quantity,
-            unitPrice: usage.service?.price || (usage.totalAmount / usage.quantity),
-            totalAmount: usage.totalAmount,
-          });
-          serviceTotal += usage.totalAmount;
+      // Thêm dòng Phụ thu nếu có
+      if (surcharge > 0) {
+        details.push({
+          itemName: "Phụ thu / Phí bổ sung",
+          quantity: 1,
+          unitPrice: surcharge,
+          totalAmount: surcharge,
         });
       }
 
-      // 4. Tạo Hóa đơn chính thức (Trạng thái mặc định ban đầu là Unpaid)
+      // Thêm dòng Bồi thường nếu có
+      if (damageCharge > 0) {
+        details.push({
+          itemName: "Phí bồi thường hư hại",
+          quantity: 1,
+          unitPrice: damageCharge,
+          totalAmount: damageCharge,
+        });
+      }
+
+      // 4. Tạo Hóa đơn chính thức cho cả Booking
       const invoice = await createInvoice.execute({
-        bookingId: input.bookingId,
+        bookingId: bookingId,
         cashierUserId: input.cashierUserId,
         customerId: customerId,
         paymentMethodId: input.paymentMethodId,
         roomTotal,
         serviceTotal,
-        surcharge: input.surcharge,
-        damageCharge: input.damageCharge,
+        surcharge: surcharge,
+        damageCharge: damageCharge,
         deposit,
         details,
       });
 
-      // 5. THỰC HIỆN CHECKOUT CHO TOÀN BỘ PHIẾU THUÊ PHÒNG
-      // Điều này sẽ tự động cập nhật trạng thái tất cả phòng liên quan sang trống/dọn dẹp
-      for (const slip of rentalSlips) {
-        if (slip.status !== "CheckedOut" && slip.status !== "Cancelled") {
-          await checkOutUseCase.execute({ 
-            id: slip.id,
-            executorUserId: input.cashierUserId 
-          });
+      // 5. THỰC HIỆN CHECKOUT HÀNG LOẠT (Tối ưu hóa)
+      const oldBookingStatus = booking.status;
+      for (const slip of slips) {
+        if (slip.status === "CheckedIn") {
+          // Cập nhật Slip
+          await rentalReceiptRepository.update(slip.id, { status: "CheckedOut" });
+          // Cập nhật Phòng
+          await roomRepository.updateStatus(slip.roomId, "Cleaning");
         }
+      }
+
+      // Cập nhật trạng thái Đơn đặt phòng
+      if (oldBookingStatus !== "CheckedOut") {
+        await bookingRepository.updateStatus(booking.id, "CheckedOut");
+        
+        // Ghi lịch sử 1 lần duy nhất cho cả Booking
+        await createBookingHistoryUseCase.execute({
+          bookingId: booking.id,
+          oldStatus: oldBookingStatus as any,
+          newStatus: "CheckedOut",
+          userId: input.cashierUserId,
+        });
       }
 
       return invoice;
     });
+
   },
 };
 

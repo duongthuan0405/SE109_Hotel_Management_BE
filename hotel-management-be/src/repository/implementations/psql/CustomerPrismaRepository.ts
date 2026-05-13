@@ -126,8 +126,12 @@ const customerPrismaRepository: ICustomerRepository = {
   },
 
   generateNextCode: async (): Promise<string> => {
-    const count = await prisma.customer.count();
-    return `KH${(count + 1).toString().padStart(3, "0")}`;
+    const last = await prisma.customer.findFirst({
+      orderBy: { code: "desc" },
+      select: { code: true }
+    });
+    const lastNumber = last ? parseInt(last.code.replace("KH", ""), 10) : 0;
+    return `KH${(lastNumber + 1).toString().padStart(5, "0")}`;
   },
 };
 

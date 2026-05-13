@@ -17,7 +17,7 @@ export type CreateInvoiceUCInput = {
   bookingId: string;
   cashierUserId: string;
   customerId?: string | undefined;
-  paymentMethodId: string;
+  paymentMethodId?: string | undefined;
   roomTotal?: number | undefined;
   serviceTotal?: number | undefined;
   surcharge?: number | undefined;
@@ -30,12 +30,9 @@ export type ICreateInvoiceUseCase = IUseCase<CreateInvoiceUCInput, Invoice>;
 export type CreateCheckoutInvoiceUCInput = {
   bookingId: string;
   cashierUserId: string; // Truyền User ID từ Token
-  customerId?: string | undefined;
-  paymentMethodId: string;
-  roomTotal?: number | undefined;
+  paymentMethodId?: string | undefined;
   surcharge?: number | undefined;
   damageCharge?: number | undefined;
-  deposit?: number | undefined;
 };
 export type ICreateCheckoutInvoiceUseCase = IUseCase<CreateCheckoutInvoiceUCInput, Invoice>;
 
@@ -44,6 +41,7 @@ export type GetPreviewInvoiceUCInput = {
   bookingId: string;
 };
 export type IGetPreviewInvoiceUseCase = IUseCase<GetPreviewInvoiceUCInput, InvoicePreview>;
+
 
 // Get All
 export type IGetAllInvoicesUseCase = IUseCase<{}, Invoice[]>;
@@ -65,12 +63,12 @@ export type UpdateInvoiceUCInput = {
 export type IUpdateInvoiceUseCase = IUseCase<UpdateInvoiceUCInput, Invoice>;
 
 // Confirm Payment
-export type ConfirmInvoicePaymentUCInput = {
-  id: string;
-  paymentMethodId?: string | undefined;
-  executorUserId: string;
+export type ConfirmPaymentUCInput = {
+  invoiceId: string;
+  paymentMethodId: string;
+  cashierUserId: string;
 };
-export type IConfirmInvoicePaymentUseCase = IUseCase<ConfirmInvoicePaymentUCInput, Invoice>;
+export type IConfirmPaymentUseCase = IUseCase<ConfirmPaymentUCInput, Invoice>;
 
 // Delete
 export type DeleteInvoiceUCInput = { id: string };

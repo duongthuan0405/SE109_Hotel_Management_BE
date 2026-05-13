@@ -72,8 +72,12 @@ const roomTypePrismaRepository: IRoomTypeRepository = {
   },
 
   generateNextCode: async (): Promise<string> => {
-    const count = await prisma.roomType.count();
-    return `LP${(count + 1).toString().padStart(2, "0")}`;
+    const last = await prisma.roomType.findFirst({
+      orderBy: { code: "desc" },
+      select: { code: true }
+    });
+    const lastNumber = last ? parseInt(last.code.replace("LP", ""), 10) : 0;
+    return `LP${(lastNumber + 1).toString().padStart(5, "0")}`;
   },
 };
 

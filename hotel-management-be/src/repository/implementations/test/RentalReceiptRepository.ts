@@ -5,7 +5,16 @@ import bookingRepository from "./BookingRepository.js";
 import roomRepository from "./RoomRepository.js";
 import staffRepository from "./StaffRepository.js";
 
-let rentalSlips: RentalSlip[] = [];
+// Sử dụng globalThis để đảm bảo chia sẻ dữ liệu giữa các module cache khác nhau trong môi trường test
+const getMockRentalSlips = (): RentalSlip[] => {
+  const g = globalThis as any;
+  if (!g.__MOCK_RENTAL_SLIPS__) {
+    g.__MOCK_RENTAL_SLIPS__ = [];
+  }
+  return g.__MOCK_RENTAL_SLIPS__;
+};
+
+let rentalSlips = getMockRentalSlips();
 
 const applyInclude = async (slip: RentalSlip, include?: RentalReceiptInclude): Promise<RentalSlip> => {
   if (!include) return { ...slip };
@@ -85,9 +94,22 @@ const rentalReceiptRepository: IRentalReceiptRepository = {
     return rentalSlips.length;
   },
   generateNextCode: async (): Promise<string> => {
-    const nextId = rentalSlips.length + 1;
-    return `PTP${String(nextId).padStart(3, "0")}`;
+    const codes = await rentalReceiptRepository.generateNextCodes(1);
+    return codes[0] as string;
   },
+  generateNextCodes: async (quantity: number): Promise<string[]> => {
+    let maxNumber = 0;
+    rentalSlips.forEach(s => {
+      const num = parseInt(s.code.replace("PTP", ""), 10);
+      if (!isNaN(num) && num > maxNumber) maxNumber = num;
+    });
+    const codes: string[] = [];
+    for (let i = 1; i <= quantity; i++) {
+      codes.push(`PTP${(maxNumber + i).toString().padStart(4, "0")}`);
+    }
+    return codes;
+  },
+
 };
 
 

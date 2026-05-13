@@ -9,17 +9,17 @@ const staffRoutes = Router();
  * @swagger
  * /api/staffs/me:
  *   get:
- *     summary: Get current staff profile
- *     tags: [Staff]
+ *     summary: Get current receptionist profile
+ *     tags: [Receptionist]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Staff profile details
+ *         description: Receptionist profile details
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/StaffResponse'
+ *               $ref: '#/components/schemas/ReceptionistResponse'
 
  */
 staffRoutes.get("/me", authMiddleware, roleMiddleware(["Admin", "Manager", "Receptionist"]), staffController.getMyProfile);

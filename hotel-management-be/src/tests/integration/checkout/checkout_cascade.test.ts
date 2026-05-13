@@ -42,7 +42,7 @@ describe("Checkout Cascade Integration Tests", () => {
         { code: "CT-2", roomId: "room-2" }
       ],
     });
-    multiRoomBookingId = booking.id;
+    multiRoomBookingId = booking.id;  
 
     // 4. Check-in phòng 1
     const slip1 = await rentalReceiptRepository.create({
@@ -75,34 +75,42 @@ describe("Checkout Cascade Integration Tests", () => {
     await roomRepository.updateStatus("room-2", "Occupied");
   });
 
-  it("should handle multi-room checkout cascade in a single invoice correctly", async () => {
-    console.log("Execute booking-wide checkout...");
+  it("should handle multi-room checkout correctly for the entire booking", async () => {
+    // --- Thực hiện Checkout cho Booking (thông qua 1 trong các slip) ---
+    console.log("Step: Checkout via slip1Id");
     const res = await request(app)
       .post("/api/invoices/checkout")
       .set("Authorization", `Bearer ${adminToken}`)
       .send({
-        MaDatPhong: multiRoomBookingId,
+        DatPhong: multiRoomBookingId,
         PhuongThucThanhToan: paymentMethodId,
       });
 
     expect(res.status).toBe(201);
 
-    // 1. Kiểm tra trạng thái cả 2 phòng đều -> Cleaning
+    // KIỂM TRA: Cả hai phòng đều phải được chuyển sang Cleaning
     const room1 = await roomRepository.findById("room-1");
     expect(room1?.status).toBe("Cleaning");
 
     const room2 = await roomRepository.findById("room-2");
     expect(room2?.status).toBe("Cleaning");
 
-    // 2. Kiểm tra Đơn đặt phòng -> Phải được tự động kết thúc sang CheckedOut
+    // KIỂM TRA: Cả hai slip đều phải được CheckedOut
+    const slip1 = await rentalReceiptRepository.findById(slip1Id);
+    expect(slip1?.status).toBe("CheckedOut");
+
+    const slip2 = await rentalReceiptRepository.findById(slip2Id);
+    expect(slip2?.status).toBe("CheckedOut");
+
+    // KIỂM TRA: Đơn đặt phòng phải là CheckedOut
     const bookingFinal = await bookingRepository.findById(multiRoomBookingId);
     expect(bookingFinal?.status).toBe("CheckedOut");
 
-    // 3. Kiểm tra Lịch sử: Phải có log ghi lại việc chuyển sang CheckedOut
+    // Kiểm tra Lịch sử
     const history = await bookingHistoryRepository.findByBookingId(multiRoomBookingId);
     const hasCheckoutLog = history.some(h => h.newStatus === "CheckedOut");
     expect(hasCheckoutLog).toBe(true);
     
-    console.log("Cascade Test Passed!");
+    console.log("Bulk Checkout Test Passed!");
   });
 });

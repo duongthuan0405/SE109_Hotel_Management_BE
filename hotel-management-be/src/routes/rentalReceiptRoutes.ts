@@ -129,29 +129,5 @@ rentalReceiptRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Recept
 
  */
   rentalReceiptRoutes.delete("/:id", authMiddleware, roleMiddleware(["Admin"]), rentalReceiptController.deleteRentalReceipt);
-  
-  /**
-   * @swagger
-   * /api/rental-receipts/{id}/checkout:
-   *   post:
-   *     summary: Process check-out for a rental receipt
-   *     tags: [RentalReceipts]
-   *     security:
-   *       - bearerAuth: []
-   *     parameters:
-   *       - in: path
-   *         name: id
-   *         required: true
-   *         schema:
-   *           type: string
-   *     responses:
-   *       200:
-   *         description: Check-out successful
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/RentalReceiptResponse'
-   */
-  rentalReceiptRoutes.post("/:id/checkout", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), rentalReceiptController.checkOut);
 
 export default rentalReceiptRoutes;

@@ -113,8 +113,12 @@ const roomPrismaRepository: IRoomRepository = {
   },
 
   generateNextCode: async (): Promise<string> => {
-    const count = await prisma.room.count();
-    return `P${(count + 1).toString().padStart(3, "0")}`;
+    const last = await prisma.room.findFirst({
+      orderBy: { code: "desc" },
+      select: { code: true }
+    });
+    const lastNumber = last ? parseInt(last.code.replace("P", ""), 10) : 0;
+    return `P${(lastNumber + 1).toString().padStart(5, "0")}`;
   },
 };
 

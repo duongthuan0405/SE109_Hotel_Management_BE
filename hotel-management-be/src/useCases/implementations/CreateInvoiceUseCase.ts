@@ -10,19 +10,30 @@ export const createInvoice: ICreateInvoiceUseCase = {
       throw { status: 403, message: "Nhân viên thực hiện không tồn tại" };
     }
 
-    // 2. Truy xuất Booking
-    const booking = await bookingRepository.findById(input.bookingId);
-    if (!booking) {
-      throw { status: 404, message: "Không tìm thấy Đơn đặt phòng liên quan" };
+    let bookingId = input.bookingId;
+    let booking = null;
+
+    if (bookingId) {
+      booking = await bookingRepository.findById(bookingId);
+      
+      if (!booking) {
+        // Hỗ trợ tìm Booking từ RentalSlipId
+        const { rentalReceiptRepository } = await import("../../repository/index.js");
+        const slip = await rentalReceiptRepository.findById(bookingId);
+        if (slip) {
+          bookingId = slip.bookingId;
+          booking = await bookingRepository.findById(bookingId);
+        }
+      }
     }
 
     // 3. Tự động điền thông tin
-    const customerId = input.customerId || booking.customerId;
+    const customerId = input.customerId || booking?.customerId;
     if (!customerId) {
       throw { status: 400, message: "Không xác định được Khách hàng" };
     }
 
-    const deposit = input.deposit ?? booking.deposit ?? 0;
+    const deposit = input.deposit ?? booking?.deposit ?? 0;
     const roomTotal = input.roomTotal ?? 0;
     const serviceTotal = input.serviceTotal ?? 0;
     const surcharge = input.surcharge ?? 0;
@@ -32,8 +43,8 @@ export const createInvoice: ICreateInvoiceUseCase = {
     const grandTotal = Math.max(0, roomTotal + serviceTotal + surcharge + damageCharge - deposit);
 
     const invoice = await invoiceRepository.create({
-      bookingId: booking.id,
-      cashierStaffId: staff.id,
+      bookingId: bookingId as string,
+      cashierStaffId: staff.id, // Dùng ID Staff đã tìm thấy
       customerId,
       paymentMethodId: input.paymentMethodId,
       invoiceDate: new Date(),
@@ -43,7 +54,7 @@ export const createInvoice: ICreateInvoiceUseCase = {
       damageCharge,
       deposit,
       grandTotal,
-      paymentStatus: "Unpaid", // Theo yêu cầu mới: Khởi tạo ở trạng thái CHƯA THANH TOÁN
+      paymentStatus: "Unpaid", // Set as Unpaid by default as per new flow
       details: input.details || [],
     });
 
