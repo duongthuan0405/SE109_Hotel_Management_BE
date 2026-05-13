@@ -25,9 +25,9 @@ import { type RentalSlip } from "../models/RentalSlip.js";
  */
 export type CreateRentalReceiptRequestDTO = {
   DatPhong: string;
-  Phong: string;
-  NgayTraDuKien: Date;
-  DonGiaSauDieuChinh: number;
+  Phong?: string | undefined;
+  NgayTraDuKien?: string | Date | undefined;
+  DonGiaSauDieuChinh?: number | undefined;
 };
 
 
@@ -163,7 +163,7 @@ export type RentalReceiptDataDTO = {
 export type RentalReceiptResponseDTO = {
   success: boolean;
   message: string;
-  data: RentalReceiptDataDTO;
+  data: RentalReceiptDataDTO[];
 };
 
 /**

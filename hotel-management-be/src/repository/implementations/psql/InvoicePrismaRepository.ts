@@ -5,7 +5,7 @@ import prisma from "../../../config/prisma.js";
 const mapToEntity = (invoice: any): Invoice => ({
   id: invoice.id,
   code: invoice.code,
-  rentalSlipId: invoice.rentalSlipId,
+  bookingId: invoice.bookingId,
   cashierStaffId: invoice.cashierStaffId,
   customerId: invoice.customerId,
   invoiceDate: invoice.invoiceDate,
@@ -27,18 +27,19 @@ const mapToEntity = (invoice: any): Invoice => ({
     unitPrice: d.unitPrice,
     totalAmount: d.totalAmount,
   })),
-  rentalSlip: invoice.rentalSlip ? {
-    id: invoice.rentalSlip.id,
-    code: invoice.rentalSlip.code,
-    bookingId: invoice.rentalSlip.bookingId,
-    roomId: invoice.rentalSlip.roomId,
-    checkInDate: invoice.rentalSlip.checkInDate,
-    expectedCheckOutDate: invoice.rentalSlip.expectedCheckOutDate,
-    adjustedPrice: invoice.rentalSlip.adjustedPrice,
-    checkInStaffId: invoice.rentalSlip.checkInStaffId,
-    status: invoice.rentalSlip.status,
-    createdAt: invoice.rentalSlip.createdAt,
-    updatedAt: invoice.rentalSlip.updatedAt,
+  booking: invoice.booking ? {
+    id: invoice.booking.id,
+    code: invoice.booking.code,
+    roomClass: invoice.booking.roomClass,
+    startDate: invoice.booking.startDate,
+    endDate: invoice.booking.endDate,
+    deposit: invoice.booking.deposit,
+    totalAmount: invoice.booking.totalAmount,
+    status: invoice.booking.status,
+    details: [], // Not strictly needed to populate fully here
+    roomQuantity: invoice.booking.roomQuantity,
+    createdAt: invoice.booking.createdAt,
+    updatedAt: invoice.booking.updatedAt,
   } : undefined,
   cashierStaff: invoice.cashierStaff ? {
     id: invoice.cashierStaff.id,
@@ -71,12 +72,12 @@ const mapToEntity = (invoice: any): Invoice => ({
 });
 
 const invoicePrismaRepository: IInvoiceRepository = {
-  create: async (data: Omit<Invoice, "id" | "createdAt" | "updatedAt" | "rentalSlip" | "cashierStaff" | "customer" | "paymentMethod" | "code" | "details"> & { code?: string | undefined; details: (Omit<any, "code"> & { code?: string | undefined })[]; }): Promise<Invoice> => {
+  create: async (data: Omit<Invoice, "id" | "createdAt" | "updatedAt" | "booking" | "cashierStaff" | "customer" | "paymentMethod" | "code" | "details"> & { code?: string | undefined; details: (Omit<any, "code"> & { code?: string | undefined })[]; }): Promise<Invoice> => {
     const code = data.code || (await invoicePrismaRepository.generateNextCode());
     const newInvoice = await prisma.invoice.create({
       data: {
         code,
-        rentalSlipId: data.rentalSlipId,
+        bookingId: data.bookingId,
         cashierStaffId: data.cashierStaffId,
         customerId: data.customerId,
         invoiceDate: data.invoiceDate,
@@ -99,7 +100,7 @@ const invoicePrismaRepository: IInvoiceRepository = {
         },
       },
       include: {
-        rentalSlip: true,
+        booking: true,
         cashierStaff: true,
         customer: true,
         paymentMethod: true,
@@ -113,7 +114,7 @@ const invoicePrismaRepository: IInvoiceRepository = {
     const invoice = await prisma.invoice.findUnique({
       where: { id },
       include: {
-        rentalSlip: include?.rentalSlip || false,
+        booking: include?.booking || false,
         cashierStaff: include?.cashierStaff || false,
         customer: include?.customer || false,
         paymentMethod: include?.paymentMethod || false,
@@ -127,7 +128,7 @@ const invoicePrismaRepository: IInvoiceRepository = {
     const invoice = await prisma.invoice.findUnique({
       where: { code },
       include: {
-        rentalSlip: include?.rentalSlip || false,
+        booking: include?.booking || false,
         cashierStaff: include?.cashierStaff || false,
         customer: include?.customer || false,
         paymentMethod: include?.paymentMethod || false,
@@ -140,7 +141,7 @@ const invoicePrismaRepository: IInvoiceRepository = {
   findAll: async (include?: InvoiceInclude): Promise<Invoice[]> => {
     const invoices = await prisma.invoice.findMany({
       include: {
-        rentalSlip: include?.rentalSlip || false,
+        booking: include?.booking || false,
         cashierStaff: include?.cashierStaff || false,
         customer: include?.customer || false,
         paymentMethod: include?.paymentMethod || false,
@@ -154,7 +155,7 @@ const invoicePrismaRepository: IInvoiceRepository = {
     const invoices = await prisma.invoice.findMany({
       where: { customerId },
       include: {
-        rentalSlip: include?.rentalSlip || false,
+        booking: include?.booking || false,
         cashierStaff: include?.cashierStaff || false,
         customer: include?.customer || false,
         paymentMethod: include?.paymentMethod || false,
@@ -164,9 +165,9 @@ const invoicePrismaRepository: IInvoiceRepository = {
     return invoices.map(mapToEntity);
   },
 
-  update: async (id: string, data: Partial<Omit<Invoice, "id" | "createdAt" | "updatedAt" | "rentalSlip" | "cashierStaff" | "customer" | "paymentMethod">>, include?: InvoiceInclude): Promise<Invoice | null> => {
+  update: async (id: string, data: Partial<Omit<Invoice, "id" | "createdAt" | "updatedAt" | "booking" | "cashierStaff" | "customer" | "paymentMethod">>, include?: InvoiceInclude): Promise<Invoice | null> => {
     const updateData: any = {};
-    if (data.rentalSlipId !== undefined) updateData.rentalSlipId = data.rentalSlipId;
+    if (data.bookingId !== undefined) updateData.bookingId = data.bookingId;
     if (data.cashierStaffId !== undefined) updateData.cashierStaffId = data.cashierStaffId;
     if (data.customerId !== undefined) updateData.customerId = data.customerId;
     if (data.invoiceDate !== undefined) updateData.invoiceDate = data.invoiceDate;
@@ -183,7 +184,7 @@ const invoicePrismaRepository: IInvoiceRepository = {
       where: { id },
       data: updateData,
       include: {
-        rentalSlip: include?.rentalSlip || false,
+        booking: include?.booking || false,
         cashierStaff: include?.cashierStaff || false,
         customer: include?.customer || false,
         paymentMethod: include?.paymentMethod || false,

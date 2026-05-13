@@ -1,6 +1,6 @@
 import { type ICreateInvoiceUseCase, type CreateInvoiceUCInput } from "../types/IInvoiceUseCases.js";
 import { type Invoice } from "../../models/Invoice.js";
-import { invoiceRepository, rentalReceiptRepository, staffRepository } from "../../repository/index.js";
+import { invoiceRepository, bookingRepository, staffRepository } from "../../repository/index.js";
 
 export const createInvoice: ICreateInvoiceUseCase = {
   execute: async (input: CreateInvoiceUCInput): Promise<Invoice> => {
@@ -10,22 +10,19 @@ export const createInvoice: ICreateInvoiceUseCase = {
       throw { status: 403, message: "Nhân viên thực hiện không tồn tại" };
     }
 
-    // 3. Tự động điền thông tin (giữ nguyên)
-    let customerId = input.customerId;
-    let deposit = input.deposit ?? 0;
-    
-    if (input.rentalSlipId && (!customerId || deposit === 0)) {
-      const rentalSlip = await rentalReceiptRepository.findById(input.rentalSlipId, { booking: true });
-      if (rentalSlip?.booking) {
-        if (!customerId) customerId = rentalSlip.booking.customerId;
-        if (input.deposit === undefined) deposit = rentalSlip.booking.deposit;
-      }
+    // 2. Truy xuất Booking
+    const booking = await bookingRepository.findById(input.bookingId);
+    if (!booking) {
+      throw { status: 404, message: "Không tìm thấy Đơn đặt phòng liên quan" };
     }
 
+    // 3. Tự động điền thông tin
+    const customerId = input.customerId || booking.customerId;
     if (!customerId) {
       throw { status: 400, message: "Không xác định được Khách hàng" };
     }
 
+    const deposit = input.deposit ?? booking.deposit ?? 0;
     const roomTotal = input.roomTotal ?? 0;
     const serviceTotal = input.serviceTotal ?? 0;
     const surcharge = input.surcharge ?? 0;
@@ -35,8 +32,8 @@ export const createInvoice: ICreateInvoiceUseCase = {
     const grandTotal = Math.max(0, roomTotal + serviceTotal + surcharge + damageCharge - deposit);
 
     const invoice = await invoiceRepository.create({
-      rentalSlipId: input.rentalSlipId,
-      cashierStaffId: staff.id, // Dùng ID Staff đã tìm thấy
+      bookingId: booking.id,
+      cashierStaffId: staff.id,
       customerId,
       paymentMethodId: input.paymentMethodId,
       invoiceDate: new Date(),
@@ -46,16 +43,16 @@ export const createInvoice: ICreateInvoiceUseCase = {
       damageCharge,
       deposit,
       grandTotal,
-      paymentStatus: "Paid", // Default to paid as per legacy
+      paymentStatus: "Unpaid", // Theo yêu cầu mới: Khởi tạo ở trạng thái CHƯA THANH TOÁN
       details: input.details || [],
     });
 
-    // Populate để Controller mapping đúng object
+    // Populate đầy đủ quan hệ
     const populated = await invoiceRepository.findById(invoice.id, {
       cashierStaff: true,
       customer: true,
       paymentMethod: true,
-      rentalSlip: true,
+      booking: true,
       details: true,
     });
 

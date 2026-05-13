@@ -22,7 +22,7 @@ const rentalReceiptRoutes = Router();
  *               $ref: '#/components/schemas/RentalReceiptListResponse'
 
  */
-rentalReceiptRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Manager", "Staff"]), rentalReceiptController.getAllRentalReceipts);
+rentalReceiptRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Manager", "Receptionist"]), rentalReceiptController.getAllRentalReceipts);
 
 /**
  * @swagger
@@ -47,7 +47,7 @@ rentalReceiptRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Manager",
  *               $ref: '#/components/schemas/RentalReceiptResponse'
 
  */
-rentalReceiptRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Manager", "Staff"]), rentalReceiptController.getRentalReceiptById);
+rentalReceiptRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Manager", "Receptionist"]), rentalReceiptController.getRentalReceiptById);
 
 /**
  * @swagger
@@ -72,7 +72,7 @@ rentalReceiptRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Manage
  *               $ref: '#/components/schemas/RentalReceiptResponse'
 
  */
-rentalReceiptRoutes.post("/", authMiddleware, roleMiddleware(["Admin", "Staff"]), rentalReceiptController.createRentalReceipt);
+rentalReceiptRoutes.post("/", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), rentalReceiptController.createRentalReceipt);
 
 /**
  * @swagger
@@ -103,7 +103,7 @@ rentalReceiptRoutes.post("/", authMiddleware, roleMiddleware(["Admin", "Staff"])
  *               $ref: '#/components/schemas/RentalReceiptResponse'
 
  */
-rentalReceiptRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Staff"]), rentalReceiptController.updateRentalReceipt);
+rentalReceiptRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), rentalReceiptController.updateRentalReceipt);
 
 /**
  * @swagger
@@ -152,6 +152,6 @@ rentalReceiptRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Staff"
    *             schema:
    *               $ref: '#/components/schemas/RentalReceiptResponse'
    */
-  rentalReceiptRoutes.post("/:id/checkout", authMiddleware, roleMiddleware(["Admin", "Staff"]), rentalReceiptController.checkOut);
+  rentalReceiptRoutes.post("/:id/checkout", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), rentalReceiptController.checkOut);
 
 export default rentalReceiptRoutes;

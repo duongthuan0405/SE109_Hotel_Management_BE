@@ -29,7 +29,7 @@ const maintenanceRoutes = Router();
  *             schema:
  *               $ref: '#/components/schemas/NextCodeResponseDTO'
  */
-maintenanceRoutes.get("/next-code", authMiddleware, roleMiddleware(["Admin", "Staff"]), maintenanceController.getNextCode);
+maintenanceRoutes.get("/next-code", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), maintenanceController.getNextCode);
 
 /**
  * @swagger
@@ -53,7 +53,7 @@ maintenanceRoutes.get("/next-code", authMiddleware, roleMiddleware(["Admin", "St
  *             schema:
  *               $ref: '#/components/schemas/MaintenanceResponse'
  */
-maintenanceRoutes.post("/", authMiddleware, roleMiddleware(["Admin", "Staff"]), maintenanceController.create);
+maintenanceRoutes.post("/", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), maintenanceController.create);
 
 /**
  * @swagger
@@ -163,7 +163,7 @@ maintenanceRoutes.get("/:id", authMiddleware, maintenanceController.getById);
  *       200:
  *         description: Cập nhật thành công
  */
-maintenanceRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Staff"]), maintenanceController.update);
+maintenanceRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), maintenanceController.update);
 
 /**
  * @swagger

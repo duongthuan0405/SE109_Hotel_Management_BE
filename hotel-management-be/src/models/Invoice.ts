@@ -1,4 +1,4 @@
-import { type RentalSlip } from "./RentalSlip.js";
+import { type Booking } from "./Booking.js";
 import { type Staff } from "./Staff.js";
 import { type Customer } from "./Customer.js";
 import { type PaymentMethod } from "./PaymentMethod.js";
@@ -16,8 +16,8 @@ export type InvoiceDetail = {
 export type Invoice = {
   id: string;
   code: string; // MaHD
-  rentalSlipId: string; // PhieuThuePhong
-  rentalSlip?: RentalSlip | undefined;
+  bookingId: string; // Đơn đặt phòng
+  booking?: Booking | undefined;
   cashierStaffId: string; // NhanVienThuNgan
   cashierStaff?: Staff | undefined;
   customerId: string; // KhachHang

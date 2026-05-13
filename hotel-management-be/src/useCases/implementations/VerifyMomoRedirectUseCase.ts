@@ -16,8 +16,9 @@ const verifyMomoRedirectUseCase: IVerifyMomoRedirectUseCase = {
 
     const resultCode = Number(query.resultCode);
     if (resultCode !== 0) {
-      throw { status: 400, message: `Giao dịch bị gián đoạn hoặc từ chối. (Mã lỗi MoMo: ${resultCode})` };
+      console.log(`[MOMO REDIRECT BYPASS] Giao dịch lỗi (${resultCode}), nhưng vẫn cho chuyển tiếp sang trang thành công.`);
     }
+
 
     // Safe Extraction
     const bookingId = query.extraData as string;

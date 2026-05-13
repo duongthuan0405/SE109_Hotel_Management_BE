@@ -9,6 +9,7 @@ import {
   getCustomerInvoicesUseCase,
   getCustomerByUserIdUseCase,
   updateInvoiceUseCase,
+  confirmInvoicePaymentUseCase,
   deleteInvoiceUseCase,
 } from "../useCases/index.js";
 import { type Invoice, type InvoicePaymentStatus } from "../models/Invoice.js";
@@ -22,7 +23,11 @@ const mapToDTO = (inv: Invoice): InvoiceDataDTO => {
   return {
     _id: inv.id,
     MaHD: inv.code,
-    PhieuThuePhong: mapPopulated(inv.rentalSlip) || inv.rentalSlipId,
+    MaDatPhong: inv.booking ? {
+      _id: inv.booking.id,
+      MaDatPhong: inv.booking.code,
+      TrangThai: inv.booking.status,
+    } : inv.bookingId,
     NhanVienThuNgan: mapPopulated(inv.cashierStaff) || inv.cashierStaffId,
     KhachHang: mapPopulated(inv.customer) || inv.customerId,
     NgayLap: inv.invoiceDate,
@@ -52,13 +57,13 @@ const invoiceController = {
       const body = req.body as CreateInvoiceRequestDTO;
       const userId = (req as any).user?.id;
 
-      if (!body.PhieuThuePhong || !body.PhuongThucThanhToan) {
+      if (!body.MaDatPhong || !body.PhuongThucThanhToan) {
         res.status(400).json({ success: false, message: "Thiếu thông tin bắt buộc" });
         return;
       }
 
       const result = await createInvoiceUseCase.execute({
-        rentalSlipId: body.PhieuThuePhong,
+        bookingId: body.MaDatPhong,
         cashierUserId: userId, // Lấy từ Token
         customerId: body.KhachHang,
         paymentMethodId: body.PhuongThucThanhToan,
@@ -86,13 +91,13 @@ const invoiceController = {
       const body = req.body as CreateCheckoutInvoiceRequestDTO;
       const userId = (req as any).user?.id;
 
-      if (!body.PhieuThuePhong || !body.PhuongThucThanhToan) {
+      if (!body.MaDatPhong || !body.PhuongThucThanhToan) {
         res.status(400).json({ success: false, message: "Thiếu thông tin bắt buộc" });
         return;
       }
 
       const result = await createCheckoutInvoiceUseCase.execute({
-        rentalSlipId: body.PhieuThuePhong,
+        bookingId: body.MaDatPhong,
         cashierUserId: userId,
         customerId: body.KhachHang,
         paymentMethodId: body.PhuongThucThanhToan,
@@ -110,14 +115,47 @@ const invoiceController = {
 
   getPreview: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const phieuId = req.query.phieuId as string;
-      if (!phieuId) {
-        res.status(400).json({ success: false, message: "Thiếu phieuId" });
+      const bookingId = req.query.bookingId as string;
+      if (!bookingId) {
+        res.status(400).json({ success: false, message: "Thiếu bookingId (ID đơn đặt phòng)" });
         return;
       }
 
-      const result = await getPreviewInvoiceUseCase.execute({ rentalSlipId: phieuId });
-      res.status(200).json({ success: true, data: result });
+      const result = await getPreviewInvoiceUseCase.execute({ bookingId });
+      
+      res.status(200).json({ 
+        success: true, 
+        data: {
+          KhachHang: result.customerId,
+          HoTenKhachHang: result.customerName,
+          TongTienPhong: result.roomTotal,
+          TongTienDichVu: result.serviceTotal,
+          TienDaCoc: result.deposit,
+          MaDatPhong: result.bookingId,
+        } 
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  confirmPayment: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const { PhuongThucThanhToan } = req.body; // Cho phép đổi PTTT lúc xác nhận nếu cần
+      const userId = (req as any).user?.id;
+
+      const result = await confirmInvoicePaymentUseCase.execute({
+        id: id as string,
+        paymentMethodId: PhuongThucThanhToan,
+        executorUserId: userId,
+      });
+
+      res.status(200).json({ 
+        success: true, 
+        message: "Xác nhận thanh toán hóa đơn thành công", 
+        data: mapToDTO(result) 
+      });
     } catch (error) {
       next(error);
     }

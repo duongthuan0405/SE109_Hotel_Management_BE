@@ -7,7 +7,7 @@ export const updateInvoice: IUpdateInvoiceUseCase = {
     const updated = await invoiceRepository.update(input.id, {
       ...(input.paymentStatus && { paymentStatus: input.paymentStatus }),
     }, {
-      rentalSlip: true,
+      booking: true,
       cashierStaff: true,
       customer: true,
       paymentMethod: true,

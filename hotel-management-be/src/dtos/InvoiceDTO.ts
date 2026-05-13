@@ -65,8 +65,6 @@
  * components:
  *   schemas:
  *     CreateInvoiceDetailDTO:
-
-
  *       type: object
  *       required:
  *         - TenHang
@@ -85,10 +83,10 @@
  *     CreateInvoiceRequestDTO:
  *       type: object
  *       required:
- *         - PhieuThuePhong
+ *         - MaDatPhong
  *         - PhuongThucThanhToan
  *       properties:
- *         PhieuThuePhong:
+ *         MaDatPhong:
  *           type: string
  *         KhachHang:
  *           type: string
@@ -139,7 +137,7 @@ export type InvoiceDetailDTO = CreateInvoiceDetailDTO & {
 };
 
 export type CreateInvoiceRequestDTO = {
-  PhieuThuePhong: string;
+  MaDatPhong: string;
   KhachHang?: string;
   PhuongThucThanhToan: string;
   TongTienPhong?: number;
@@ -157,10 +155,10 @@ export type CreateInvoiceRequestDTO = {
  *     CreateCheckoutInvoiceRequestDTO:
  *       type: object
  *       required:
- *         - PhieuThuePhong
+ *         - MaDatPhong
  *         - PhuongThucThanhToan
  *       properties:
- *         PhieuThuePhong:
+ *         MaDatPhong:
  *           type: string
  *         KhachHang:
  *           type: string
@@ -176,7 +174,7 @@ export type CreateInvoiceRequestDTO = {
  *           type: number
  */
 export type CreateCheckoutInvoiceRequestDTO = {
-  PhieuThuePhong: string;
+  MaDatPhong: string;
   KhachHang?: string;
   PhuongThucThanhToan: string;
   TongTienPhong?: number;
@@ -196,12 +194,12 @@ export type CreateCheckoutInvoiceRequestDTO = {
  *           type: string
  *         MaHD:
  *           type: string
- *         PhieuThuePhong:
+ *         MaDatPhong:
  *           type: object
  *           properties:
  *             _id:
  *               type: string
- *             MaPTP:
+ *             MaDatPhong:
  *               type: string
  *         NhanVienThuNgan:
  *           type: object
@@ -249,7 +247,7 @@ export type CreateCheckoutInvoiceRequestDTO = {
 export type InvoiceDataDTO = {
   _id: string;
   MaHD: string;
-  PhieuThuePhong: any;
+  MaDatPhong: any;
   NhanVienThuNgan: any;
   KhachHang: any;
   NgayLap: Date;
@@ -283,7 +281,7 @@ export type InvoiceDataDTO = {
  *           type: number
  *         TienDaCoc:
  *           type: number
- *         PhieuThuePhong:
+ *         MaDatPhong:
  *           type: string
  */
 export type PreviewInvoiceResponseDTO = {
@@ -292,5 +290,5 @@ export type PreviewInvoiceResponseDTO = {
   TongTienPhong: number;
   TongTienDichVu: number;
   TienDaCoc: number;
-  PhieuThuePhong: string;
+  MaDatPhong: string;
 };

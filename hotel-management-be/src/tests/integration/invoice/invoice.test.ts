@@ -12,6 +12,7 @@ describe("Invoice API Integration Tests", () => {
   let testStaffId = "";
   let testCustomerId = "";
   let rentalSlipId = "";
+  let bookingId = "";
   let createdInvoiceId = "";
 
   beforeAll(async () => {
@@ -47,6 +48,7 @@ describe("Invoice API Integration Tests", () => {
       status: "CheckedIn",
       details: [],
     });
+    bookingId = booking.id;
 
     // 2. Create a RentalSlip mapped to the booking
     const slip = await rentalReceiptRepository.create({
@@ -88,7 +90,7 @@ describe("Invoice API Integration Tests", () => {
   describe("GET /api/invoices/preview", () => {
     it("should calculate correct preview totals for slip-1", async () => {
       const res = await request(app)
-        .get(`/api/invoices/preview?phieuId=${rentalSlipId}`)
+        .get(`/api/invoices/preview?bookingId=${bookingId}`)
         .set("Authorization", `Bearer ${adminToken}`);
 
       expect(res.status).toBe(200);
@@ -98,12 +100,12 @@ describe("Invoice API Integration Tests", () => {
       // Normal room: 400k. 2 nights => 800k. (Assume adjustedPrice is 400k or fallback to base)
       // Service usage for slip-1: In ServiceUsageRepository mock, slip-1 has "su-1" (Completed, 100k) and "su-2" (Completed, 150k). Total = 250k.
       // Deposit: booking-1 has 500k deposit.
-      expect(data.roomTotal).toBe(800000);
-      expect(data.serviceTotal).toBe(250000);
-      expect(data.deposit).toBe(500000);
+      expect(data.TongTienPhong).toBe(800000);
+      expect(data.TongTienDichVu).toBe(250000);
+      expect(data.TienDaCoc).toBe(500000);
     });
 
-    it("should fail without phieuId", async () => {
+    it("should fail without bookingId", async () => {
       const res = await request(app)
         .get(`/api/invoices/preview`)
         .set("Authorization", `Bearer ${adminToken}`);
@@ -119,7 +121,7 @@ describe("Invoice API Integration Tests", () => {
         .post("/api/invoices/checkout")
         .set("Authorization", `Bearer ${adminToken}`)
         .send({
-          PhieuThuePhong: rentalSlipId,
+          MaDatPhong: bookingId,
           PhuongThucThanhToan: paymentMethodId,
           // TUYỆT ĐỐI KHÔNG gửi NhanVienThuNgan ở đây
         });
@@ -177,7 +179,7 @@ describe("Invoice API Integration Tests", () => {
 
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.PhieuThuePhong).toBeDefined();
+      expect(res.body.data.MaDatPhong).toBeDefined();
     });
   });
 

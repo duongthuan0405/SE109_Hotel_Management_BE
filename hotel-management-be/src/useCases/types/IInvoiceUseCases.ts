@@ -7,14 +7,14 @@ export type InvoicePreview = {
   roomTotal: number;
   serviceTotal: number;
   deposit: number;
-  rentalSlipId: string;
+  bookingId: string;
 };
 
 export type CreateInvoiceDetailUCInput = Omit<InvoiceDetail, "code">;
 
 // Create (Manual)
 export type CreateInvoiceUCInput = {
-  rentalSlipId: string;
+  bookingId: string;
   cashierUserId: string;
   customerId?: string | undefined;
   paymentMethodId: string;
@@ -28,7 +28,7 @@ export type CreateInvoiceUCInput = {
 export type ICreateInvoiceUseCase = IUseCase<CreateInvoiceUCInput, Invoice>;
 
 export type CreateCheckoutInvoiceUCInput = {
-  rentalSlipId: string;
+  bookingId: string;
   cashierUserId: string; // Truyền User ID từ Token
   customerId?: string | undefined;
   paymentMethodId: string;
@@ -41,7 +41,7 @@ export type ICreateCheckoutInvoiceUseCase = IUseCase<CreateCheckoutInvoiceUCInpu
 
 // Get Preview
 export type GetPreviewInvoiceUCInput = {
-  rentalSlipId: string;
+  bookingId: string;
 };
 export type IGetPreviewInvoiceUseCase = IUseCase<GetPreviewInvoiceUCInput, InvoicePreview>;
 
@@ -63,6 +63,14 @@ export type UpdateInvoiceUCInput = {
   // (In legacy code, full update was allowed, but usually just status is updated)
 };
 export type IUpdateInvoiceUseCase = IUseCase<UpdateInvoiceUCInput, Invoice>;
+
+// Confirm Payment
+export type ConfirmInvoicePaymentUCInput = {
+  id: string;
+  paymentMethodId?: string | undefined;
+  executorUserId: string;
+};
+export type IConfirmInvoicePaymentUseCase = IUseCase<ConfirmInvoicePaymentUCInput, Invoice>;
 
 // Delete
 export type DeleteInvoiceUCInput = { id: string };

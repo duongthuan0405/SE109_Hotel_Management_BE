@@ -4,13 +4,13 @@ import { type RentalSlip, type RentalSlipStatus } from "../../models/RentalSlip.
 // Create
 export type CreateRentalReceiptUCInput = {
   bookingId: string;
-  roomId: string;
-  expectedCheckOutDate: Date;
-  adjustedPrice: number;
+  roomId?: string | undefined;
+  expectedCheckOutDate?: Date | undefined;
+  adjustedPrice?: number | undefined;
   checkInStaffUserId: string;
   executorUserId?: string;
 };
-export type ICreateRentalReceiptUseCase = IUseCase<CreateRentalReceiptUCInput, RentalSlip>;
+export type ICreateRentalReceiptUseCase = IUseCase<CreateRentalReceiptUCInput, RentalSlip[]>;
 
 // Get All
 export type IGetAllRentalReceiptsUseCase = IUseCase<{}, RentalSlip[]>;

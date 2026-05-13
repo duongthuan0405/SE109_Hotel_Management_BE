@@ -1,7 +1,7 @@
 import { type IInvoiceRepository, type InvoiceInclude } from "../../types/IInvoiceRepository.js";
 import { type Invoice, type InvoiceDetail } from "../../../models/Invoice.js";
 import crypto from "crypto";
-import rentalReceiptRepository from "./RentalReceiptRepository.js";
+import bookingRepository from "./BookingRepository.js";
 import staffRepository from "./StaffRepository.js";
 import customerRepository from "./CustomerRepository.js";
 import paymentMethodRepository from "./PaymentMethodRepository.js";
@@ -13,8 +13,8 @@ const applyInclude = async (invoice: Invoice, include?: InvoiceInclude): Promise
 
   const result = { ...invoice };
 
-  if (include.rentalSlip) {
-    result.rentalSlip = (await rentalReceiptRepository.findById(invoice.rentalSlipId)) || undefined;
+  if (include.booking) {
+    result.booking = (await bookingRepository.findById(invoice.bookingId)) || undefined;
   }
   if (include.cashierStaff) {
     result.cashierStaff = (await staffRepository.findById(invoice.cashierStaffId)) || undefined;
@@ -30,7 +30,7 @@ const applyInclude = async (invoice: Invoice, include?: InvoiceInclude): Promise
 };
 
 const invoiceRepository: IInvoiceRepository = {
-  create: async (data: Omit<Invoice, "id" | "createdAt" | "updatedAt" | "rentalSlip" | "cashierStaff" | "customer" | "paymentMethod" | "code" | "details"> & { 
+  create: async (data: Omit<Invoice, "id" | "createdAt" | "updatedAt" | "booking" | "cashierStaff" | "customer" | "paymentMethod" | "code" | "details"> & { 
     code?: string | undefined;
     details: (Omit<InvoiceDetail, "code"> & { code?: string | undefined })[];
   }): Promise<Invoice> => {
@@ -71,7 +71,7 @@ const invoiceRepository: IInvoiceRepository = {
     return Promise.all(filtered.map((inv) => applyInclude(inv, include)));
   },
 
-  update: async (id: string, data: Partial<Invoice>, include?: InvoiceInclude): Promise<Invoice | null> => {
+  update: async (id: string, data: Partial<Omit<Invoice, "id" | "createdAt" | "updatedAt" | "booking" | "cashierStaff" | "customer" | "paymentMethod">>, include?: InvoiceInclude): Promise<Invoice | null> => {
     const index = invoices.findIndex((inv) => inv.id === id);
     if (index === -1) return null;
 

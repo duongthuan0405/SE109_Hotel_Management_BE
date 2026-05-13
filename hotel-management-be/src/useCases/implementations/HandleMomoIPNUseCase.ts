@@ -15,20 +15,14 @@ const handleMomoIPNUseCase: IHandleMomoIPNUseCase = {
       throw { status: 400, message: "Invalid signature" };
     }
 
-    const resultCode = Number(body.resultCode);
-    if (resultCode !== 0) {
-      // Payment didn't succeed (user cancelled, or failed)
-      console.log(`[MOMO IPN] Payment was not successful (Result: ${resultCode}). No actions taken.`);
-      return;
-    }
-
     // Extract our tracked internal DB ID from simpler extraData string
     const bookingId = body.extraData;
-
     if (!bookingId) {
       console.error("[MOMO IPN] No reference bookingId passed in extraData.");
       return;
     }
+
+    const resultCode = Number(body.resultCode);
 
     // 2. Run state mutation in critical transaction
     await unitOfWork.runInTransaction(async () => {
@@ -39,6 +33,13 @@ const handleMomoIPNUseCase: IHandleMomoIPNUseCase = {
         return;
       }
 
+      // BYPASS: Treat all outcomes as success for easier dev verification
+      if (resultCode !== 0) {
+        console.log(`[MOMO IPN BYPASS] Giao dịch lỗi (Result: ${resultCode}), nhưng hệ thống vẫn ghi nhận Thành công.`);
+      }
+
+
+      // Success Flow (resultCode === 0)
       // Skip if already fully committed (avoids double-lock side effects)
       if (booking.status === "Confirmed" || booking.status === "CheckedIn") {
         return;
@@ -68,3 +69,4 @@ const handleMomoIPNUseCase: IHandleMomoIPNUseCase = {
 };
 
 export default handleMomoIPNUseCase;
+

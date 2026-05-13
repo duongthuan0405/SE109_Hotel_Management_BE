@@ -4,19 +4,19 @@ import { authMiddleware } from "../middlewares/authMiddleware.js";
 import { roleMiddleware } from "../middlewares/roleMiddleware.js";
 
 const invoiceRoutes = Router();
-const staffRoles = ["Admin", "Manager", "Staff"];
+const staffRoles = ["Admin", "Manager", "Receptionist"];
 
 /**
  * @swagger
  * /api/invoices/preview:
  *   get:
- *     summary: Preview invoice for a rental slip
+ *     summary: Preview invoice for a booking
  *     tags: [Invoices]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: query
- *         name: rentalSlipId
+ *         name: bookingId
  *         required: true
  *         schema:
  *           type: string
@@ -143,6 +143,38 @@ invoiceRoutes.get("/me", authMiddleware, roleMiddleware(["Customer"]), invoiceCo
 
  */
 invoiceRoutes.get("/:id", authMiddleware, roleMiddleware([...staffRoles, "Customer"]), invoiceController.getInvoiceById);
+
+/**
+ * @swagger
+ * /api/invoices/{id}/confirm-payment:
+ *   post:
+ *     summary: Confirm and finalize payment for an unpaid invoice
+ *     tags: [Invoices]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               PhuongThucThanhToan:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Invoice marked as Paid
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InvoiceResponse'
+ */
+invoiceRoutes.post("/:id/confirm-payment", authMiddleware, roleMiddleware(staffRoles), invoiceController.confirmPayment);
 
 /**
  * @swagger

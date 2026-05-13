@@ -91,7 +91,7 @@ accountRoutes.post("/", authMiddleware, roleMiddleware(["Admin"]), accountContro
  *               $ref: '#/components/schemas/AccountListResponse'
 
  */
-accountRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Staff"]), accountController.getAllAccounts);
+accountRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), accountController.getAllAccounts);
 
 /**
  * @swagger
@@ -116,7 +116,7 @@ accountRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Staff"]), accou
  *               $ref: '#/components/schemas/AccountResponse'
 
  */
-accountRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Staff"]), accountController.getAccountById);
+accountRoutes.get("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), accountController.getAccountById);
 
 /**
  * @swagger

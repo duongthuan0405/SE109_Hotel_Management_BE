@@ -5,7 +5,7 @@ import { invoiceRepository } from "../../repository/index.js";
 export const getInvoiceById: IGetInvoiceByIdUseCase = {
   execute: async (input: GetInvoiceByIdUCInput): Promise<Invoice> => {
     const invoice = await invoiceRepository.findById(input.id, {
-      rentalSlip: true,
+      booking: true,
       cashierStaff: true,
       customer: true,
       paymentMethod: true,

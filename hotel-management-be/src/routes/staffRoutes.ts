@@ -22,7 +22,7 @@ const staffRoutes = Router();
  *               $ref: '#/components/schemas/StaffResponse'
 
  */
-staffRoutes.get("/me", authMiddleware, roleMiddleware(["Admin", "Manager", "Staff"]), staffController.getMyProfile);
+staffRoutes.get("/me", authMiddleware, roleMiddleware(["Admin", "Manager", "Receptionist"]), staffController.getMyProfile);
 
 /**
  * @swagger
@@ -47,7 +47,7 @@ staffRoutes.get("/me", authMiddleware, roleMiddleware(["Admin", "Manager", "Staf
  *               $ref: '#/components/schemas/StaffResponse'
 
  */
-staffRoutes.put("/me", authMiddleware, roleMiddleware(["Admin", "Manager", "Staff"]), staffController.updateMyProfile);
+staffRoutes.put("/me", authMiddleware, roleMiddleware(["Admin", "Manager", "Receptionist"]), staffController.updateMyProfile);
 
 /**
  * @swagger
@@ -66,7 +66,7 @@ staffRoutes.put("/me", authMiddleware, roleMiddleware(["Admin", "Manager", "Staf
  *               $ref: '#/components/schemas/StaffListResponse'
 
  */
-staffRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Staff"]), staffController.getAllStaffs);
+staffRoutes.get("/", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), staffController.getAllStaffs);
 
 /**
  * @swagger

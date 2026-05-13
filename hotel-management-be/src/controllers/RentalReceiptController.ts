@@ -80,7 +80,7 @@ const rentalReceiptController = {
       const result = await createRentalReceiptUseCase.execute({
         bookingId: body.DatPhong,
         roomId: body.Phong,
-        expectedCheckOutDate: new Date(body.NgayTraDuKien),
+        expectedCheckOutDate: body.NgayTraDuKien ? new Date(body.NgayTraDuKien) : undefined,
         adjustedPrice: body.DonGiaSauDieuChinh,
         checkInStaffUserId: userId,
       });
@@ -88,7 +88,7 @@ const rentalReceiptController = {
       res.status(201).json({
         success: true,
         message: "Tạo phiếu thuê phòng thành công",
-        data: mapToDTO(result),
+        data: result.map(mapToDTO),
       });
     } catch (error) {
       next(error);
