@@ -10,13 +10,11 @@ export const createInvoice: ICreateInvoiceUseCase = {
       throw { status: 403, message: "Nhân viên thực hiện không tồn tại" };
     }
 
-    // 3. Tự động điền thông tin (giữ nguyên)
-    let customerId = input.customerId;
-    let deposit = input.deposit ?? 0;
-    
     let bookingId = input.bookingId;
-    if (bookingId && (!customerId || deposit === 0)) {
-      let booking = await bookingRepository.findById(bookingId);
+    let booking = null;
+
+    if (bookingId) {
+      booking = await bookingRepository.findById(bookingId);
       
       if (!booking) {
         // Hỗ trợ tìm Booking từ RentalSlipId
@@ -27,17 +25,15 @@ export const createInvoice: ICreateInvoiceUseCase = {
           booking = await bookingRepository.findById(bookingId);
         }
       }
-
-      if (booking) {
-        if (!customerId) customerId = booking.customerId;
-        if (input.deposit === undefined) deposit = booking.deposit;
-      }
     }
 
+    // 3. Tự động điền thông tin
+    const customerId = input.customerId || booking?.customerId;
     if (!customerId) {
       throw { status: 400, message: "Không xác định được Khách hàng" };
     }
 
+    const deposit = input.deposit ?? booking?.deposit ?? 0;
     const roomTotal = input.roomTotal ?? 0;
     const serviceTotal = input.serviceTotal ?? 0;
     const surcharge = input.surcharge ?? 0;
@@ -62,7 +58,7 @@ export const createInvoice: ICreateInvoiceUseCase = {
       details: input.details || [],
     });
 
-    // Populate để Controller mapping đúng object
+    // Populate đầy đủ quan hệ
     const populated = await invoiceRepository.findById(invoice.id, {
       cashierStaff: true,
       customer: true,
@@ -70,7 +66,6 @@ export const createInvoice: ICreateInvoiceUseCase = {
       booking: true,
       details: true,
     });
-
 
     return populated!;
   },

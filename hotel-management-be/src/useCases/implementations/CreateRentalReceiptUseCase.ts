@@ -21,6 +21,17 @@ export const createRentalReceipt: ICreateRentalReceiptUseCase = {
         throw { status: 404, message: "Đơn đặt phòng không tồn tại" };
       }
 
+      // Xác thực trạng thái booking trước khi check-in
+      if (booking.status === "CheckedIn") {
+        throw { status: 400, message: "Đơn đặt phòng đã được Check-in rồi" };
+      }
+      if (booking.status === "CheckedOut") {
+        throw { status: 400, message: "Đơn đặt phòng đã được Check-out, không thể Check-in" };
+      }
+      if (booking.status === "Cancelled") {
+        throw { status: 400, message: "Đơn đặt phòng đã bị hủy, không thể Check-in" };
+      }
+
       console.log(`[CheckIn] Tìm thấy ${booking.details?.length || 0} chi tiết phòng cho Booking ${booking.code}`);
 
       const createdSlips: RentalSlip[] = [];
@@ -52,7 +63,6 @@ export const createRentalReceipt: ICreateRentalReceiptUseCase = {
 
         console.log(`[CheckIn] Đang tạo phiếu ${generatedCode} cho phòng ${roomId}`);
 
-
         const slip = await rentalReceiptRepository.create({
           code: generatedCode,
           bookingId: input.bookingId,
@@ -77,10 +87,8 @@ export const createRentalReceipt: ICreateRentalReceiptUseCase = {
 
       console.log(`[CheckIn] Đã tạo thành công ${createdSlips.length} phiếu thuê`);
 
-
       // 5. Cập nhật trạng thái Booking sang CheckedIn nếu chưa
-      if (booking.status !== "CheckedIn") {
-        const oldStatus = booking.status;
+      const oldStatus = booking.status;
         await bookingRepository.updateStatus(booking.id, "CheckedIn");
 
         // Ghi lịch sử tự động
@@ -90,11 +98,8 @@ export const createRentalReceipt: ICreateRentalReceiptUseCase = {
           newStatus: "CheckedIn",
           userId: input.checkInStaffUserId,
         });
-      }
 
       return createdSlips;
     });
   },
 };
-
-

@@ -65,8 +65,6 @@
  * components:
  *   schemas:
  *     CreateInvoiceDetailDTO:
-
-
  *       type: object
  *       required:
  *         - TenHang
@@ -251,7 +249,7 @@ export type InvoiceDataDTO = {
  *           type: number
  *         TienDaCoc:
  *           type: number
- *         PhieuThuePhong:
+ *         MaDatPhong:
  *           type: string
  */
 export type PreviewInvoiceResponseDTO = {
@@ -260,5 +258,5 @@ export type PreviewInvoiceResponseDTO = {
   TongTienPhong: number;
   TongTienDichVu: number;
   TienDaCoc: number;
-  PhieuThuePhong: string;
+  MaDatPhong: string;
 };
