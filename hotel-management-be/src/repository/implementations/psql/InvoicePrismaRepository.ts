@@ -38,8 +38,16 @@ const mapToEntity = (invoice: any): Invoice => ({
     deposit: invoice.booking.deposit,
     totalAmount: invoice.booking.totalAmount,
     status: invoice.booking.status,
-    details: [], // Initializing to satisfy type
-    rentalSlips: [], // Initializing to satisfy type
+    details: [], 
+    rentalSlips: (invoice.booking.rentalSlips || []).map((rs: any) => ({
+      id: rs.id,
+      code: rs.code,
+      roomId: rs.roomId,
+      room: rs.room ? {
+        id: rs.room.id,
+        code: rs.room.code,
+      } : undefined,
+    })),
     createdAt: invoice.booking.createdAt,
     updatedAt: invoice.booking.updatedAt,
   } : undefined,
@@ -117,7 +125,15 @@ const invoicePrismaRepository: IInvoiceRepository = {
     const invoice = await prisma.invoice.findUnique({
       where: { id },
       include: {
-        booking: include?.booking || false,
+        booking: {
+          include: {
+            rentalSlips: {
+              include: {
+                room: true,
+              }
+            },
+          }
+        },
         cashierStaff: include?.cashierStaff || false,
         customer: include?.customer || false,
         paymentMethod: include?.paymentMethod || false,
@@ -131,7 +147,15 @@ const invoicePrismaRepository: IInvoiceRepository = {
     const invoice = await prisma.invoice.findUnique({
       where: { code },
       include: {
-        booking: include?.booking || false,
+        booking: {
+          include: {
+            rentalSlips: {
+              include: {
+                room: true,
+              }
+            },
+          }
+        },
         cashierStaff: include?.cashierStaff || false,
         customer: include?.customer || false,
         paymentMethod: include?.paymentMethod || false,
@@ -144,7 +168,15 @@ const invoicePrismaRepository: IInvoiceRepository = {
   findAll: async (include?: InvoiceInclude): Promise<Invoice[]> => {
     const invoices = await prisma.invoice.findMany({
       include: {
-        booking: include?.booking || false,
+        booking: {
+          include: {
+            rentalSlips: {
+              include: {
+                room: true,
+              }
+            },
+          }
+        },
         cashierStaff: include?.cashierStaff || false,
         customer: include?.customer || false,
         paymentMethod: include?.paymentMethod || false,
@@ -158,7 +190,15 @@ const invoicePrismaRepository: IInvoiceRepository = {
     const invoices = await prisma.invoice.findMany({
       where: { customerId },
       include: {
-        booking: include?.booking || false,
+        booking: {
+          include: {
+            rentalSlips: {
+              include: {
+                room: true,
+              }
+            },
+          }
+        },
         cashierStaff: include?.cashierStaff || false,
         customer: include?.customer || false,
         paymentMethod: include?.paymentMethod || false,
@@ -187,7 +227,15 @@ const invoicePrismaRepository: IInvoiceRepository = {
       where: { id },
       data: updateData,
       include: {
-        booking: include?.booking || false,
+        booking: {
+          include: {
+            rentalSlips: {
+              include: {
+                room: true,
+              }
+            },
+          }
+        },
         cashierStaff: include?.cashierStaff || false,
         customer: include?.customer || false,
         paymentMethod: include?.paymentMethod || false,

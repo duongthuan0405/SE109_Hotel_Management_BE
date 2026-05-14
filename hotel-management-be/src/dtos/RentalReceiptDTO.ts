@@ -32,7 +32,7 @@ import { type RentalSlip } from "../models/RentalSlip.js";
  */
 export type CreateRentalReceiptRequestDTO = {
   DatPhong: string;
-  ChiTietCheckIn: {
+  ChiTietCheckIn?: {
     Phong: string;
     DonGiaSauDieuChinh?: number;
     NgayTraDuKien?: Date;

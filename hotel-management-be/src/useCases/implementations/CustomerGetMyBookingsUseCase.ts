@@ -9,6 +9,11 @@ const customerGetMyBookingsUseCase: ICustomerGetMyBookingsUseCase = {
     return await bookingRepository.findByCustomerId(customer.id, {
       customer: true,
       rooms: true,
+      rentalSlips: {
+        include: {
+          room: true
+        }
+      },
     });
   },
 };

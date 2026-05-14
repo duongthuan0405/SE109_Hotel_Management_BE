@@ -22,8 +22,17 @@ const mapToDTO = (usage: ServiceUsage): ServiceUsageDataDTO => ({
   PhieuThuePhong: usage.rentalSlip ? {
     _id: usage.rentalSlip.id,
     MaPTP: usage.rentalSlip.code,
-    DatPhong: usage.rentalSlip.bookingId,
-    Phong: usage.rentalSlip.roomId,
+    DatPhong: usage.rentalSlip.booking ? {
+      _id: usage.rentalSlip.booking.id,
+      MaDatPhong: usage.rentalSlip.booking.code || usage.rentalSlip.bookingId || "N/A",
+    } : {
+      _id: usage.rentalSlip.bookingId,
+      MaDatPhong: "N/A"
+    },
+    Phong: usage.rentalSlip.room ? {
+      _id: usage.rentalSlip.room.id,
+      MaPhong: usage.rentalSlip.room.code,
+    } : usage.rentalSlip.roomId,
     NgayNhanPhong: usage.rentalSlip.checkInDate,
     NgayTraDuKien: usage.rentalSlip.expectedCheckOutDate,
     TrangThai: usage.rentalSlip.status,

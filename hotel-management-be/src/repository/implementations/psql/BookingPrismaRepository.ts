@@ -46,6 +46,15 @@ const mapToEntity = (booking: any): Booking => ({
     code: s.code,
     bookingId: s.bookingId,
     roomId: s.roomId,
+    room: s.room ? {
+      id: s.room.id,
+      code: s.room.code,
+      roomTypeId: s.room.roomTypeId,
+      price: s.room.price,
+      status: s.room.status,
+      createdAt: s.room.createdAt,
+      updatedAt: s.room.updatedAt,
+    } : undefined,
     checkInDate: s.checkInDate,
     expectedCheckOutDate: s.expectedCheckOutDate,
     adjustedPrice: s.adjustedPrice,
@@ -62,7 +71,7 @@ const bookingPrismaRepository: IBookingRepository = {
       include: {
         customer: include?.customer || false,
         details: include?.rooms ? { include: { room: true } } : true,
-        rentalSlips: include?.rentalSlips || false,
+        rentalSlips: include?.rentalSlips ?? false,
       },
     });
     return bookings.map(mapToEntity);
@@ -74,7 +83,7 @@ const bookingPrismaRepository: IBookingRepository = {
       include: {
         customer: include?.customer || false,
         details: include?.rooms ? { include: { room: true } } : true,
-        rentalSlips: include?.rentalSlips || false,
+        rentalSlips: include?.rentalSlips ?? false,
       },
     });
     return booking ? mapToEntity(booking) : null;
@@ -87,7 +96,7 @@ const bookingPrismaRepository: IBookingRepository = {
       include: {
         customer: include?.customer || false,
         details: include?.rooms ? { include: { room: true } } : true,
-        rentalSlips: include?.rentalSlips || false,
+        rentalSlips: include?.rentalSlips ?? false,
       },
     });
     return booking ? mapToEntity(booking) : null;
@@ -99,7 +108,7 @@ const bookingPrismaRepository: IBookingRepository = {
       include: {
         customer: include?.customer || false,
         details: include?.rooms ? { include: { room: true } } : true,
-        rentalSlips: include?.rentalSlips || false,
+        rentalSlips: include?.rentalSlips ?? false,
       },
     });
     return bookings.map(mapToEntity);
@@ -147,7 +156,7 @@ const bookingPrismaRepository: IBookingRepository = {
       include: {
         customer: include?.customer || false,
         details: include?.rooms ? { include: { room: true } } : true,
-        rentalSlips: include?.rentalSlips || false,
+        rentalSlips: include?.rentalSlips ?? false,
       },
     });
     return mapToEntity(saved);

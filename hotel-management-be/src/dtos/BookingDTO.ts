@@ -132,6 +132,8 @@ export type BookingDetailDTO = {
  *               type: string
  *         HangPhong:
  *           type: string
+ *         HangPhongDisplayName:
+ *           type: string
  *         NgayDen:
  *           type: string
  *           format: date-time
@@ -147,19 +149,34 @@ export type BookingDetailDTO = {
  *           type: array
  *           items:
  *             $ref: '#/components/schemas/BookingDetailDTO'
+ *         PhieuThuePhongs:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               _id:
+ *                 type: string
+ *               MaPTP:
+ *                 type: string
+ *               MaPhong:
+ *                 type: string
  *         TrangThai:
  *           type: string
+ *           enum: [Pending, Confirmed, CheckedIn, CheckedOut, Cancelled, NoShow, DepositPaid]
  */
 export type BookingDataDTO = {
   _id: string;
   MaDatPhong: string;
   KhachHang: any; 
   HangPhong: string;
+  HangPhongDisplayName?: string;
   NgayDen: Date;
   NgayDi: Date;
   SoLuongPhong: number;
   TienCoc: number;
   ChiTietDatPhong: BookingDetailDTO[];
+  PhieuThuePhong?: any | undefined;
+  PhieuThuePhongs?: { _id: string; MaPTP: string; MaPhong: string }[] | undefined;
   TrangThai: string;
   createdAt?: Date | undefined;
   updatedAt?: Date | undefined;
