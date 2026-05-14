@@ -18,7 +18,6 @@ export interface IInvoiceRepository {
   findAll(include?: InvoiceInclude): Promise<Invoice[]>;
   findByCustomerId(customerId: string, include?: InvoiceInclude): Promise<Invoice[]>;
   update(id: string, data: Partial<Omit<Invoice, "id" | "createdAt" | "updatedAt" | "booking" | "cashierStaff" | "customer" | "paymentMethod">>, include?: InvoiceInclude): Promise<Invoice | null>;
-
   delete(id: string): Promise<boolean>;
   countAll(): Promise<number>;
   generateNextCode(): Promise<string>;

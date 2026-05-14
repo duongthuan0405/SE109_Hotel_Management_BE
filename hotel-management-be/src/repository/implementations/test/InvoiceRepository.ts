@@ -71,7 +71,7 @@ const invoiceRepository: IInvoiceRepository = {
     return Promise.all(filtered.map((inv) => applyInclude(inv, include)));
   },
 
-  update: async (id: string, data: Partial<Invoice>, include?: InvoiceInclude): Promise<Invoice | null> => {
+  update: async (id: string, data: Partial<Omit<Invoice, "id" | "createdAt" | "updatedAt" | "booking" | "cashierStaff" | "customer" | "paymentMethod">>, include?: InvoiceInclude): Promise<Invoice | null> => {
     const index = invoices.findIndex((inv) => inv.id === id);
     if (index === -1) return null;
 

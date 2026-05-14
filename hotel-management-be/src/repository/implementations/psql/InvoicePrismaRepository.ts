@@ -98,7 +98,7 @@ const invoicePrismaRepository: IInvoiceRepository = {
         damageCharge: data.damageCharge,
         deposit: data.deposit,
         grandTotal: data.grandTotal,
-        paymentMethodId: data.paymentMethodId ?? null,
+        paymentMethodId: data.paymentMethodId ?? "",
         paymentStatus: data.paymentStatus,
         details: {
           create: data.details.map((d) => ({

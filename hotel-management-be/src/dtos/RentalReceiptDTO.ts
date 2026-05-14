@@ -174,7 +174,7 @@ export type RentalReceiptDataDTO = {
 export type RentalReceiptResponseDTO = {
   success: boolean;
   message: string;
-  data: RentalReceiptDataDTO;
+  data: RentalReceiptDataDTO[];
 };
 
 /**

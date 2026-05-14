@@ -51,7 +51,7 @@ describe("Staff API Integration Tests", () => {
         .send({
           MaNV: "NV002",
           HoTen: "New Staff",
-          ChucVu: "Staff",
+          ChucVu: "Receptionist",
           SDT: "0111222333",
           Email: "recep@test.com",
           TaiKhoanId: "new-user-id" // Đã sửa từ TaiKhoan sang TaiKhoanId

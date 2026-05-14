@@ -254,3 +254,11 @@ export const deleteServiceUsageHistoryUseCase = deleteServiceUsageHistoryUseCase
 
 import { getDashboardData as getDashboardDataImpl } from "./implementations/GetDashboardDataUseCase.js";
 export const getDashboardDataUseCase = getDashboardDataImpl;
+
+import createMomoSessionUseCaseImpl from "./implementations/CreateMomoSessionUseCase.js";
+import handleMomoIPNUseCaseImpl from "./implementations/HandleMomoIPNUseCase.js";
+import verifyMomoRedirectUseCaseImpl from "./implementations/VerifyMomoRedirectUseCase.js";
+
+export const createMomoSessionUseCase = createMomoSessionUseCaseImpl;
+export const handleMomoIPNUseCase = handleMomoIPNUseCaseImpl;
+export const verifyMomoRedirectUseCase = verifyMomoRedirectUseCaseImpl;

@@ -15,7 +15,6 @@ export type CreateRentalReceiptUCInput = {
 };
 export type ICreateRentalReceiptUseCase = IUseCase<CreateRentalReceiptUCInput, RentalSlip[]>;
 
-
 // Get All
 export type IGetAllRentalReceiptsUseCase = IUseCase<{}, RentalSlip[]>;
 

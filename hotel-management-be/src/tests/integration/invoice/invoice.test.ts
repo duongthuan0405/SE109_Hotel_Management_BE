@@ -14,6 +14,7 @@ describe("Invoice API Integration Tests", () => {
   let testCustomerId = "";
   let testBookingId = "";
   let rentalSlipId = "";
+  let bookingId = "";
   let createdInvoiceId = "";
 
   beforeAll(async () => {
@@ -48,6 +49,7 @@ describe("Invoice API Integration Tests", () => {
       status: "CheckedIn",
       details: [],
     });
+    bookingId = booking.id;
 
     // 2. Create a RentalSlip mapped to the booking
     const slip = await rentalReceiptRepository.create({
@@ -100,9 +102,9 @@ describe("Invoice API Integration Tests", () => {
       // Normal room: 400k. 2 nights => 800k. (Assume adjustedPrice is 400k or fallback to base)
       // Service usage for slip-1: In ServiceUsageRepository mock, slip-1 has "su-1" (Completed, 100k) and "su-2" (Completed, 150k). Total = 250k.
       // Deposit: booking-1 has 500k deposit.
-      expect(data.roomTotal).toBe(800000);
-      expect(data.serviceTotal).toBe(250000);
-      expect(data.deposit).toBe(500000);
+      expect(data.TongTienPhong).toBe(800000);
+      expect(data.TongTienDichVu).toBe(250000);
+      expect(data.TienDaCoc).toBe(500000);
     });
 
     it("should fail without bookingId", async () => {
