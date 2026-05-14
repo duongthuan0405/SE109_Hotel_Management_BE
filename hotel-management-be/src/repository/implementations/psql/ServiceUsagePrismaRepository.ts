@@ -20,19 +20,30 @@ const mapToEntity = (usage: any): ServiceUsage => ({
     name: usage.service.name,
     price: usage.service.price,
   } : undefined,
-  rentalSlip: usage.rentalSlip ? {
-    id: usage.rentalSlip.id,
-    code: usage.rentalSlip.code,
-    bookingId: usage.rentalSlip.bookingId,
-    roomId: usage.rentalSlip.roomId,
-    checkInDate: usage.rentalSlip.checkInDate,
-    expectedCheckOutDate: usage.rentalSlip.expectedCheckOutDate,
-    adjustedPrice: usage.rentalSlip.adjustedPrice,
-    checkInStaffId: usage.rentalSlip.checkInStaffId,
-    status: usage.rentalSlip.status,
-    createdAt: usage.rentalSlip.createdAt,
-    updatedAt: usage.rentalSlip.updatedAt,
-  } : undefined,
+    rentalSlip: usage.rentalSlip ? {
+      id: usage.rentalSlip.id,
+      code: usage.rentalSlip.code,
+      bookingId: usage.rentalSlip.bookingId,
+      booking: usage.rentalSlip.booking ? {
+        id: usage.rentalSlip.booking.id,
+        code: usage.rentalSlip.booking.code,
+      } as any : undefined,
+      roomId: usage.rentalSlip.roomId,
+      room: usage.rentalSlip.room ? {
+        id: usage.rentalSlip.room.id,
+        code: usage.rentalSlip.room.code,
+        roomTypeId: usage.rentalSlip.room.roomTypeId,
+        price: usage.rentalSlip.room.price,
+        status: usage.rentalSlip.room.status,
+      } : undefined,
+      checkInDate: usage.rentalSlip.checkInDate,
+      expectedCheckOutDate: usage.rentalSlip.expectedCheckOutDate,
+      adjustedPrice: usage.rentalSlip.adjustedPrice,
+      checkInStaffId: usage.rentalSlip.checkInStaffId,
+      status: usage.rentalSlip.status,
+      createdAt: usage.rentalSlip.createdAt,
+      updatedAt: usage.rentalSlip.updatedAt,
+    } : undefined,
 });
 
 const serviceUsagePrismaRepository: IServiceUsageRepository = {
@@ -50,7 +61,12 @@ const serviceUsagePrismaRepository: IServiceUsageRepository = {
       },
       include: {
         service: true,
-        rentalSlip: true,
+        rentalSlip: {
+          include: {
+            room: true,
+            booking: true,
+          }
+        },
       },
     });
     return mapToEntity(newUsage);
@@ -61,7 +77,12 @@ const serviceUsagePrismaRepository: IServiceUsageRepository = {
       where: { id },
       include: {
         service: include?.service || false,
-        rentalSlip: include?.rentalSlip || false,
+        rentalSlip: {
+          include: {
+            room: true,
+            booking: true,
+          }
+        },
       },
     });
     return usage ? mapToEntity(usage) : null;
@@ -72,7 +93,12 @@ const serviceUsagePrismaRepository: IServiceUsageRepository = {
       where: { code },
       include: {
         service: true,
-        rentalSlip: true,
+        rentalSlip: {
+          include: {
+            room: true,
+            booking: true,
+          }
+        },
       },
     });
     return usage ? mapToEntity(usage) : null;
@@ -82,7 +108,12 @@ const serviceUsagePrismaRepository: IServiceUsageRepository = {
     const usages = await prisma.serviceUsage.findMany({
       include: {
         service: include?.service || false,
-        rentalSlip: include?.rentalSlip || false,
+        rentalSlip: {
+          include: {
+            room: true,
+            booking: true,
+          }
+        },
       },
     });
     return usages.map(mapToEntity);
@@ -93,7 +124,12 @@ const serviceUsagePrismaRepository: IServiceUsageRepository = {
       where: { rentalSlipId: { in: ids } },
       include: {
         service: include?.service || false,
-        rentalSlip: include?.rentalSlip || false,
+        rentalSlip: {
+          include: {
+            room: true,
+            booking: true,
+          }
+        },
       },
     });
     return usages.map(mapToEntity);
@@ -110,7 +146,12 @@ const serviceUsagePrismaRepository: IServiceUsageRepository = {
       },
       include: {
         service: include?.service || false,
-        rentalSlip: include?.rentalSlip || false,
+        rentalSlip: {
+          include: {
+            room: true,
+            booking: true,
+          }
+        },
       },
     });
     return usages.map(mapToEntity);
@@ -130,7 +171,12 @@ const serviceUsagePrismaRepository: IServiceUsageRepository = {
       data: updateData,
       include: {
         service: include?.service || false,
-        rentalSlip: include?.rentalSlip || false,
+        rentalSlip: {
+          include: {
+            room: true,
+            booking: true,
+          }
+        },
       },
     });
     return mapToEntity(updated);

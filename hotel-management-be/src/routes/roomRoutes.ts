@@ -133,7 +133,7 @@ roomRoutes.put("/:id", authMiddleware, roleMiddleware(["Admin", "Receptionist"])
  *               $ref: '#/components/schemas/RoomResponse'
 
  */
-roomRoutes.post("/:id/status", authMiddleware, roleMiddleware(["Admin", "Receptionist"]), roomController.updateStatus);
+roomRoutes.post("/:id/status", authMiddleware, roleMiddleware(["Admin", "Receptionist", "MaintenanceStaff"]), roomController.updateStatus);
 
 /**
  * @swagger

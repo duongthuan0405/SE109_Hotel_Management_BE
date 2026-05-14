@@ -4,7 +4,7 @@ import { type RentalSlip, type RentalSlipStatus } from "../../models/RentalSlip.
 // Create
 export type CreateRentalReceiptUCInput = {
   bookingId: string;
-  rooms: {
+  rooms?: {
     roomId: string;
     expectedCheckOutDate?: Date | undefined;
     adjustedPrice?: number | undefined;
