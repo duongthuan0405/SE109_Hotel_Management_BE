@@ -6,6 +6,11 @@ const staffGetAllBookingsUseCase: IStaffGetAllBookingsUseCase = {
     return await bookingRepository.findAll({
       customer: true,
       rooms: true,
+      rentalSlips: {
+        include: {
+          room: true
+        }
+      },
     });
   },
 };

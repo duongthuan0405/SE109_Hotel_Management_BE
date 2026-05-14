@@ -3,7 +3,7 @@ import { type Booking, type BookingDetail } from "../../models/Booking.js";
 export type BookingInclude = {
   customer?: boolean;
   rooms?: boolean; // Populate rooms in details
-  rentalSlips?: boolean;
+  rentalSlips?: boolean | { include: { room: boolean } };
 };
 
 
