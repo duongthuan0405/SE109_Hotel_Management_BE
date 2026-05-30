@@ -161,6 +161,7 @@ export type BookingDataDTO = {
   TienCoc: number;
   ChiTietDatPhong: BookingDetailDTO[];
   TrangThai: string;
+  PhieuThuePhongs?: any[] | undefined;
   createdAt?: Date | undefined;
   updatedAt?: Date | undefined;
 };

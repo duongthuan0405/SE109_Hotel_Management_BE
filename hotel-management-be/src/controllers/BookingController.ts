@@ -44,6 +44,13 @@ const mapToDTO = (booking: BookingUCOutput): BookingDataDTO => ({
     } : d.roomId
   })),
   TrangThai: booking.status,
+  PhieuThuePhongs: booking.rentalSlips?.map(rs => ({
+    _id: rs.id,
+    MaPTP: rs.code,
+    MaPhong: rs.room?.code || rs.roomId,
+    Phong: { MaPhong: rs.room?.code || rs.roomId },
+    TrangThai: rs.status,
+  })) || [],
   createdAt: booking.createdAt,
   updatedAt: booking.updatedAt,
 });
