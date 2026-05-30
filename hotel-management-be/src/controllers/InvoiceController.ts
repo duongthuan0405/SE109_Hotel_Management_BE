@@ -58,6 +58,11 @@ const invoiceController = {
         return;
       }
 
+      if (!body.PhuongThucThanhToan) {
+        res.status(400).json({ success: false, message: "Thiếu Phương thức thanh toán" });
+        return;
+      }
+
       const result = await createCheckoutInvoiceUseCase.execute({
         bookingId: bookingId,
         cashierUserId: userId,

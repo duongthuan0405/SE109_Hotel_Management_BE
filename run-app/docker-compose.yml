@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  backend:
+    image: backendserverprojects/hotel-management-be:latest
+    container_name: hotel_management_be
+    ports:
+      - "4000:4000"
+    env_file: 
+      - .env.be
+    restart: unless-stopped
+    networks:
+      - hotel_network
+
+  frontend:
+    image: backendserverprojects/hotel-management-fe:latest
+    container_name: hotel_management_fe
+    ports:
+      - "8000:8000" # Map 5173 to container's exposed port 8000 (from Nginx)
+    env_file:
+      - .env.fe
+    restart: unless-stopped
+    networks:
+      - hotel_network
+    depends_on:
+      - backend
+
+networks:
+  hotel_network:
+    driver: bridge
